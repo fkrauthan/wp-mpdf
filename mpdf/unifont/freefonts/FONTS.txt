@@ -1,0 +1,17 @@
+http://unifont.org/fontguide/
+
+Scheherazade from SIL - Arabic  1,200 glyphs
+SIL International recently released two Unicode OpenType fonts for Arabic, Scheherazade and Lateef. Both fonts provide so-called "simplified" rendering of Arabic script using basic connecting glyphs but not including a wide variety of additional ligatures or contextual alternates, other than lam-alef. However, the fonts do provide language-specific features for rendering Kurdish, Sindhi, and Urdu, as well as both Arabic-Indic and Eastern Arabic digits. The fonts are available in both OpenType format (for Uniscribe, ICU, and Pango-based applications) and AAT format (for ATSUI applications on Mac OS X). They can be downloaded from SIL's NRSI Arabic Script Unicode Fonts page. 
+
+DejaVu - http://dejavu.sourceforge.net/	Approx 4,000 glyphs - Sans; 2,490 Mono; 1,900 Serif
+The Bitstream license accompanying the Vera font set explicitely permits additions and modifications if the modified fonts are released under a different name. Št?pán Roh and the entire team of the DejaVu project have taken advantage of this liberal license to produce greatly expanded derivative font families which now provide extensive coverage of Latin, Greek, Cyrillic, Armenian, IPA and additional Unicode ranges. In addition to providing sans serif, serif, and sans-serif monospaced, the project now has experimental sans condensed and serif condensed families.
+ 
+
+Garuda and Norasi are Thai Fonts (Sans and serif respectively)
+
+
+Gujarati - 522 Glyphs
+The Utkarsh project seeks to bring the power of computers to speakers of Gujarati. The Rekha Gujarati font - http://utkarsh.org/downloads/Rekha-medium.ttf
+
+http://www.typenow.net/language.htm
+Indian fonts

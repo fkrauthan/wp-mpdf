@@ -1,0 +1,36 @@
+=== wp-mpdf ===
+Contributors: fkrauthan
+Donate link: http://www.fkrauthan.de
+Tags: print, printer, wp-mpdf, pdf
+Requires at least: 2.8
+Tested up to: 2.8
+Stable tag: 1.0
+
+Print Wordpress Posts as PDF. Optional with Geshi highlighting.
+
+== Description ==
+
+Print Wordpress Posts as PDF. Optional with Geshi highlighting. It is written for a online games programming magazine
+
+== Changelog ==  
+
+= 1.0 =  
+* Release the Plugin  
+
+== Installation ==
+
+1. Upload the whole plugin folder to your /wp-content/plugins/ folder.
+2. Give the folders in the Plugin dir write permission (777) => wp-mpdf/cache AND wp-mpdf/graph_cache
+3. Go to the Plugins page and activate the plugin.
+4. Add to your template "<?php if(function_exists('mpdf_pdfbutton')) mpdf_pdfbutton(); ?>" for a small button or "<?php if(function_exists('mpdf_pdfbutton')) mpdf_pdfbutton('my link'); ?>" for a textlink.
+
+== License ==
+
+This file is part of wp-mpdf.
+
+wp-mpdf is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+wp-mpdf is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with wp-mpdf. If not, see <http://www.gnu.org/licenses/>.
+

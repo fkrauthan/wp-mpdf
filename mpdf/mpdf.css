@@ -1,0 +1,46 @@
+/*
+   This is a secondary default stylesheet for mPDF
+   It will only parse element-level CSS here 
+   Remove the comment marks below and edit as required
+*/
+
+/*
+body {
+	font-family: sans-serif;
+}
+a {
+	color: #000066;
+	text-decoration: none;
+}
+table {
+	border-collapse: collapse;
+}
+thead {
+	vertical-align: bottom;
+	text-align: center;
+	font-weight: bold;
+}
+tfoot {
+	text-align: center;
+	font-weight: bold;
+}
+th {
+	text-align: left;
+	padding-left: 0.35em;
+	padding-right: 0.35em;
+	padding-top: 0.35em;
+	padding-bottom: 0.35em;
+	vertical-align: top;
+}
+td {
+	padding-left: 0.35em;
+	padding-right: 0.35em;
+	padding-top: 0.35em;
+	padding-bottom: 0.35em;
+	vertical-align: top;
+}
+img {
+	margin: 0.2em;
+	vertical-align: middle;
+}
+*/
