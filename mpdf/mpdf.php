@@ -8692,15 +8692,7 @@ function _file_exists($srcpath) {
 			if (file_exists($localsrcpath)) { return true; }
 		}
 		// if not use full URL
-		if (!ini_get('allow_url_fopen') && function_exists("curl_init")) {
-			$ch = curl_init($srcpath);
-			curl_setopt($ch, CURLOPT_HEADER, 0);
-      			curl_setopt ( $ch , CURLOPT_RETURNTRANSFER , 1 );
-			$test = curl_exec($ch);
-			curl_close($ch);
-			if ($test) { return true; }
-		}
-		else if(function_exists("curl_init") && substr(strtoupper($srcpath), 0, 4)=='HTTP') {
+		else if (!ini_get('allow_url_fopen') && function_exists("curl_init")) {
 			$ch = curl_init($srcpath);
 			curl_setopt($ch, CURLOPT_HEADER, 0);
       			curl_setopt ( $ch , CURLOPT_RETURNTRANSFER , 1 );
@@ -13943,10 +13935,13 @@ function OpenTag($tag,$attr)
 		// Image file
 		// Check if file is available
 		// Edited mPDF 2.0
+		if(substr($srcpath, 0, 3)=='://') $srcpath = substr($srcpath, 3);
 		$found_img = $this->_file_exists($srcpath);
 		$imageset = false;
 		while(!$imageset) {
 			if (!$found_img) {
+				die($srcpath);
+
 				if(!$this->shownoimg) break;
 				$srcpath = str_replace("\\","/",dirname(__FILE__)) . "/";
 				$srcpath .= 'no_img2.gif';
