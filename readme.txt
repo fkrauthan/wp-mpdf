@@ -1,10 +1,10 @@
 === wp-mpdf ===
 Contributors: fkrauthan
 Donate link: http://www.fkrauthan.de
-Tags: print, printer, wp-mpdf, pdf
+Tags: print, printer, wp-mpdf, pdf, mpdf
 Requires at least: 2.8
 Tested up to: 2.8
-Stable tag: 1.0
+Stable tag: 1.1
 
 Print Wordpress Posts as PDF. Optional with Geshi highlighting.
 
@@ -13,6 +13,9 @@ Print Wordpress Posts as PDF. Optional with Geshi highlighting.
 Print Wordpress Posts as PDF. Optional with Geshi highlighting. It is written for a online games programming magazine
 
 == Changelog ==  
+
+= 1.1 =
+* Create a admin panel
 
 = 1.0 =  
 * Release the Plugin  
