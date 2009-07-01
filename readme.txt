@@ -16,7 +16,7 @@ Print Wordpress Posts as PDF. Optional with Geshi highlighting. It is written fo
 
 = 1.2 =
 * Fix a encoding problem
-* convert <pre> to <div class="pre"> to prevent a pdf print bug
+* convert < pre > to < div class="pre" > to prevent a pdf print bug
 
 = 1.1 =
 * Create a admin panel
