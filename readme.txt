@@ -16,7 +16,7 @@ Print Wordpress Posts as PDF. Optional with Geshi highlighting. It is written fo
 
 = 1.2 =
 * Fix a encoding problem
-* convert < pre > to < div class="pre" > to prevent a pdf print bug
+* convert &lt;pre&gt; to &lt;div class="pre"&gt; to prevent a pdf print bug
 
 = 1.1 =
 * Create a admin panel
@@ -28,7 +28,7 @@ Print Wordpress Posts as PDF. Optional with Geshi highlighting. It is written fo
 1. Upload the whole plugin folder to your /wp-content/plugins/ folder.
 2. Give the folders in the Plugin dir write permission (777) => wp-mpdf/cache AND wp-mpdf/graph_cache
 3. Go to the Plugins page and activate the plugin.
-4. Add to your template "<?php if(function_exists('mpdf_pdfbutton')) mpdf_pdfbutton(); ?>" for a small button or "<?php if(function_exists('mpdf_pdfbutton')) mpdf_pdfbutton('my link'); ?>" for a textlink.
+4. Add to your template "&lt;?php if(function_exists('mpdf_pdfbutton')) mpdf_pdfbutton(); ?&gt;" for a small button or "<?php if(function_exists('mpdf_pdfbutton')) mpdf_pdfbutton('my link'); ?>" for a textlink.
 
 == License ==
 
