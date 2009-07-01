@@ -14,9 +14,11 @@ Print Wordpress Posts as PDF. Optional with Geshi highlighting. It is written fo
 
 == Changelog ==  
 
+= 1.2 =
+* Fix a encoding problem
+
 = 1.1 =
 * Create a admin panel
-
 = 1.0 =  
 * Release the Plugin  
 

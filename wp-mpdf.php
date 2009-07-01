@@ -98,10 +98,7 @@ function mpdf_output($wp_content = '', $do_pdf = false ) {
 	}
 }
 
-function mpdf_filter($wp_content = '', $replace_me = array(), $do_pdf = false, $convert = true) {
-	$wp_content = str_replace(array_keys($replace_me), array_values($replace_me), $wp_content);
-
-
+function mpdf_filter($wp_content = '', $replace_me = array(), $do_pdf = false, $convert = false) {
 	$delimiter1 = 'screen';
 	$delimiter2 = 'print';
 
