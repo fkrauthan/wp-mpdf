@@ -4,7 +4,7 @@ Donate link: http://www.fkrauthan.de
 Tags: print, printer, wp-mpdf, pdf, mpdf
 Requires at least: 2.8
 Tested up to: 2.8
-Stable tag: 1.1
+Stable tag: 1.2
 
 Print Wordpress Posts as PDF. Optional with Geshi highlighting.
 
@@ -16,6 +16,7 @@ Print Wordpress Posts as PDF. Optional with Geshi highlighting. It is written fo
 
 = 1.2 =
 * Fix a encoding problem
+* convert <pre> to <div class="pre"> to prevent a pdf print bug
 
 = 1.1 =
 * Create a admin panel

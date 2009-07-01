@@ -18,6 +18,16 @@
 		return $content;
 	}
 	
+	function mpdf_prefix($content) {
+		$tmpPre = get_mark($content, '<pre*>');
+		for($i=0;$i<count($tmpPre);$i++) {
+			$content = str_replace('<pre'.$tmpPre[$i].'>', '<div class="pre">', $content);
+		}
+		$content = str_replace('<pre/>', '</div>', $content);
+
+		return $content;
+	}
+
 	function mpdf_clearcaption($content) {
 		$tmpBlock = get_mark($content, '[caption *]');
 		for($i=0;$i<count($tmpBlock);$i++) {
