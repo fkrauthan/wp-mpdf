@@ -14,6 +14,7 @@
 	function mpdf_myfilters($content) {
 		$content = mpdf_clearcaption($content);
 		$content = mpdf_buildmenu($content);
+		$content = mpdf_prefix($content);
 		
 		return $content;
 	}
