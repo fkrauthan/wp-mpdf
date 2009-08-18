@@ -4,7 +4,7 @@ Donate link: http://www.fkrauthan.de
 Tags: print, printer, wp-mpdf, pdf, mpdf
 Requires at least: 2.8
 Tested up to: 2.8
-Stable tag: 1.3
+Stable tag: 1.4
 
 Print Wordpress Posts as PDF. Optional with Geshi highlighting.
 
@@ -14,6 +14,9 @@ Print Wordpress Posts as PDF. Optional with Geshi highlighting. It is written fo
 
 == Changelog ==  
 
+= 1.4 =
+* Add function parameter for pdfbutton to link to a new page for PDF Print
+* Add function to display only for some Posts and Pages the PDF print
 = 1.3 =
 * Fix a pre problem with newlines
 = 1.2 =
@@ -29,7 +32,9 @@ Print Wordpress Posts as PDF. Optional with Geshi highlighting. It is written fo
 1. Upload the whole plugin folder to your /wp-content/plugins/ folder.
 2. Give the folders in the Plugin dir write permission (777) => wp-mpdf/cache AND wp-mpdf/graph_cache
 3. Go to the Plugins page and activate the plugin.
-4. Add to your template "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton(); ?&gt;" for a small button or "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton('my link'); ?&gt;" for a textlink.
+4. Add to your template "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton(); ?&gt;" for a small button or "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton('my link'); ?&gt;" for a textlink.
+ (if you wish to open the pdf print in a new tab you can add as first parameter true)
+5. You can adjust some options if you go to your admin interface, klick on plugins and then on wp-mpdf. For pdf allow you can use the checkbox when you create or edit a Post or Site.
 
 == License ==
 
