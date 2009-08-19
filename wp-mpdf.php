@@ -3,7 +3,7 @@
 Plugin Name: wp-mpdf
 Plugin URI: http://www.fkrauthan.de/wordpress/wp-mpdf
 Description: Print a wordpress page as PDF with optional Geshi Parsing.
-Version: 1.4
+Version: 1.5
 Author: Florian 'fkrauthan' Krauthan
 Author URI: http://www.fkrauthan.de
 
@@ -122,7 +122,7 @@ function mpdf_output($wp_content = '', $do_pdf = false ) {
 	}
 }
 
-function mpdf_filter($wp_content = '', $replace_me = array(), $do_pdf = false, $convert = true) {
+function mpdf_filter($wp_content = '', $replace_me = array(), $do_pdf = false, $convert = false) {
 	$wp_content = str_replace(array_keys($replace_me), array_values($replace_me), $wp_content);
 
 
