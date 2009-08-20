@@ -3,7 +3,7 @@
 Plugin Name: wp-mpdf
 Plugin URI: http://www.fkrauthan.de/wordpress/wp-mpdf
 Description: Print a wordpress page as PDF with optional Geshi Parsing.
-Version: 1.5
+Version: 1.6
 Author: Florian 'fkrauthan' Krauthan
 Author URI: http://www.fkrauthan.de
 
@@ -22,6 +22,7 @@ Copyright 2009  Florian Krauthan
  */
 
 define('WP_MPDF_ALLOWED_POSTS_DB', 'wp_mpdf_allowed');
+
 function mpdf_install() {
 	global $wpdb;
 
@@ -44,22 +45,36 @@ function mpdf_install() {
 		add_option('mpdf_caching', true);
 		add_option('mpdf_allow_all', true);
 	}
+
+	if(is_dir(dirname(__FILE__).'/themes/')) {
+		//Move the Theme dir
+		if(!is_dir(dirname(__FILE__).'/../../wp-mpdf-themes')) {
+			if(!@mkdir(dirname(__FILE__).'/../../wp-mpdf-themes')) {
+				echo '<p>Can\'t create mpdf themes dir. Please create the dir "wp-content/wp-mpdf-themes" and give your webserver write permission to it.</p>';
+			}
+		}
+
+		$dh = opendir(dirname(__FILE__).'/themes/');
+		while(($file = readdir($dh)) !== false) {
+    			if($file != "." && $file != "..") {
+				if(!@rename(dirname(__FILE__).'/themes/'.$file, dirname(__FILE__).'/../../wp-mpdf-themes/'.$file)) {
+					echo '<p>Can\'t move the file "'.'wp-content/plugins/wp-mpdf/themes/'.$file.'" to "'.'wp-content/wp-mpdf-themes/'.$file.'". Please do this by your self.</p>';
+				}
+			}
+		}
+		closedir($dh);
+
+		if(!@rmdir(dirname(__FILE__).'/themes/')) {
+			echo '<p>Can\'t delete the folder "wp-content/plugins/wp-mpdf/themes/". Please to this by your self.</p>';
+		}
+	}
 }
 
 function mpdf_output($wp_content = '', $do_pdf = false ) {
 	global $post;
 	$pdf_filename = $post->post_name . '.pdf';
 	
-	$replace_me = array(
-		  'src="/' => 'src="' . $_SERVER['DOCUMENT_ROOT'] . '/'
-		, 'src="' . get_bloginfo('home') . '/' => 'src="' . $_SERVER['DOCUMENT_ROOT'] . '/'
-		, '–' => '-'
-		, '&ndash;' => '-'
-		, '&#8211;' => '-'
-		, '' => '' // add your own stuff
-	);
-	
-	$wp_content = mpdf_filter($wp_content, $replace_me, $mpdf_delimiter1, $mpdf_delimiter2);
+	$wp_content = mpdf_filter($wp_content, $do_pdf);
 	if(function_exists('polyglot_filter')) $wp_content = polyglot_filter($wp_content);
 	if(function_exists('filter_bbcode')) $wp_content = filter_bbcode($wp_content);
 	
@@ -86,8 +101,10 @@ function mpdf_output($wp_content = '', $do_pdf = false ) {
 		//$mpdf->annotMargin = 12;
 		$mpdf->use_embeddedfonts_1252 = true;	// false is default
 		$mpdf->SetBasePath(dirname('../../../'.dirname(__FILE__)));
-		$mpdf->SetAuthor('Sppro Community Magazin');
-		$mpdf->SetCreator('Sppro Community Magazin');
+
+		$user_info = get_userdata($post->post_author);
+		$mpdf->SetAuthor($user_info->first_name.' '.$user_info->last_name.' ('.$user_info->user_login.')');
+		$mpdf->SetCreator('wp-mpdf');
 		
 		
 		//The Header and Footer
@@ -99,9 +116,9 @@ function mpdf_output($wp_content = '', $do_pdf = false ) {
 		$mpdf->setFooter($pdf_footer);
 		
 		
-		if(get_option('mpdf_theme')!=''&&file_exists('wp-content/plugins/wp-mpdf/themes/'.get_option('mpdf_theme').'.css')) {
+		if(get_option('mpdf_theme')!=''&&file_exists('wp-content/wp-mpdf-themes/'.get_option('mpdf_theme').'.css')) {
 			//Read the StyleCSS
-			$tmpCSS = file_get_contents('wp-content/plugins/wp-mpdf/themes/'.get_option('mpdf_theme').'.css');
+			$tmpCSS = file_get_contents('wp-content/wp-mpdf-themes/'.get_option('mpdf_theme').'.css');
 			$mpdf->WriteHTML($tmpCSS, 1);
 		}
 		
@@ -122,10 +139,7 @@ function mpdf_output($wp_content = '', $do_pdf = false ) {
 	}
 }
 
-function mpdf_filter($wp_content = '', $replace_me = array(), $do_pdf = false, $convert = false) {
-	$wp_content = str_replace(array_keys($replace_me), array_values($replace_me), $wp_content);
-
-
+function mpdf_filter($wp_content = '', $do_pdf = false, $convert = false) {
 	$delimiter1 = 'screen';
 	$delimiter2 = 'print';
 
@@ -247,7 +261,7 @@ function mpdf_exec() {
 			}
 		} 
 		
-		require_once('wp-content/plugins/wp-mpdf/themes/'.get_option('mpdf_theme').'.php');
+		require_once('wp-content/wp-mpdf-themes/'.get_option('mpdf_theme').'.php');
 		
 		mpdf_output($pdf_output, true);
 		
@@ -261,7 +275,7 @@ function mpdf_admin() {
 }
 
 function mpdf_create_admin_menu() {
-	add_submenu_page('plugins.php', 'wp-mpdf - config', 'wp-mpdf', 8, dirname(__FILE__), 'mpdf_admin');
+	add_submenu_page('options-general.php', 'wp-mpdf - config', 'wp-mpdf', 8, dirname(__FILE__), 'mpdf_admin');
 	
 	if(function_exists('add_meta_box')) {
 		add_meta_box('mpdf_admin', 'wp-mpdf', 'mpdf_admin_printeditbox', 'post', 'normal', 'high');

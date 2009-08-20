@@ -39,7 +39,7 @@ function mpdf_admin_options() {
 	echo '<tr><td>Thema: </td><td>';
 	echo '<select name="theme">';
 	//Search for Themes
-	if($dir = opendir(dirname(__FILE__).'/themes')) {
+	if($dir = opendir(dirname(__FILE__).'/../../wp-mpdf-themes/')) {
 		while($file = readdir($dir)) {
 			if(!is_dir($path.$file) && $file != "." && $file != "..")  {
 				if(strtolower(substr($file, count($file)-4))=='php') {

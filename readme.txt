@@ -4,7 +4,7 @@ Donate link: http://www.fkrauthan.de
 Tags: print, printer, wp-mpdf, pdf, mpdf
 Requires at least: 2.8
 Tested up to: 2.8
-Stable tag: 1.5
+Stable tag: 1.6
 
 Print Wordpress Posts as PDF. Optional with Geshi highlighting.
 
@@ -12,8 +12,21 @@ Print Wordpress Posts as PDF. Optional with Geshi highlighting.
 
 Print Wordpress Posts as PDF. Optional with Geshi highlighting. It is written for a online games programming magazine
 
+!!!Important!!!
+1.) The themes folder has been moved from "wp-content/plugins/wp-mpdf/themes" to "wp-content/wp-mpdf-themes". The Movement of the templates on the folder themes would be made automaticli but if you have trouble then made this movment manualy.
+2.) The plugin config is now avaible at the Settings Submenu not longer on the Plugins Submenu
+!!!Important!!!
+
+
+
 == Changelog ==  
 
+= 1.6 =
+* Fix a image print bug
+* Clean some not needed code parts
+* Changing PDF author and creater string
+* Move the theme dir from the plugin dir to wp-content/wp-mpdf-themes
+* Now you can access the Plugin config under Settings and not any longer under Plugins
 = 1.5 =
 * Fix a encoding problem again
 = 1.4 =
