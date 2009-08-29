@@ -18,6 +18,11 @@ body {
 	color: black;
 }
 
+.pre {
+	background-color: grey;
+	font-family: courier;
+}
+
 #header {
 	margin: 0;
 	padding: 0;

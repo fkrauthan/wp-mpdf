@@ -15,16 +15,41 @@
 		$content = mpdf_clearcaption($content);
 		$content = mpdf_buildmenu($content);
 		$content = mpdf_prefix($content);
+		$content = mpdf_prefix_clear($content);
 		
 		return $content;
 	}
-	
+
+	function mpdf_prefix_clear($content) {
+		$tmpPre = get_mark($content, '<pre*>');
+		for($i=0;$i<count($tmpPre);$i++) {
+			$content = str_replace('<pre'.$tmpPre[$i].'>', '', $content);
+		}
+		$content = str_replace('</pre>', '', $content);
+
+		$tmpPre = get_mark($content, '<PRE*>');
+		for($i=0;$i<count($tmpPre);$i++) {
+			$content = str_replace('<PRE'.$tmpPre[$i].'>', '', $content);
+		}
+		$content = str_replace('</PRE>', '', $content);
+
+		return $content;
+	}
+
 	function mpdf_prefix($content) {
 		$tmpPre = get_mark($content, '<pre*>');
 		for($i=0;$i<count($tmpPre);$i++) {
 			$tmpPreBlock = get_mark($content, '<pre'.$tmpPre[$i].'>*</pre>');
 			for($i2=0;$i2<count($tmpPreBlock);$i2++) {
 				$content = str_replace('<pre'.$tmpPre[$i].'>'.$tmpPreBlock[$i2].'</pre>', '<div class="pre">'.str_replace("\n", "<br />\n", $tmpPreBlock[$i2]).'</div>', $content);
+			}
+		}
+
+		$tmpPre = get_mark($content, '<PRE*>');
+		for($i=0;$i<count($tmpPre);$i++) {
+			$tmpPreBlock = get_mark($content, '<PRE'.$tmpPre[$i].'>*</PRE>');
+			for($i2=0;$i2<count($tmpPreBlock);$i2++) {
+				$content = str_replace('<PRE'.$tmpPre[$i].'>'.$tmpPreBlock[$i2].'</PRE>', '<div class="PRE">'.str_replace("\n", "<br />\n", $tmpPreBlock[$i2]).'</div>', $content);
 			}
 		}
 
