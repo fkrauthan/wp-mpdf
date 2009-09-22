@@ -3,7 +3,7 @@
 Plugin Name: wp-mpdf
 Plugin URI: http://www.fkrauthan.de/wordpress/wp-mpdf
 Description: Print a wordpress page as PDF with optional Geshi Parsing.
-Version: 1.7
+Version: 1.8
 Author: Florian 'fkrauthan' Krauthan
 Author URI: http://www.fkrauthan.de
 
@@ -123,7 +123,7 @@ function mpdf_output($wp_content = '', $do_pdf = false ) {
 		}
 		
 		//My Filters
-		require_once(dirname(__FILE__).'/myfilters.inc.php');
+		require_once('wp-content/plugins/wp-mpdf/myfilters.inc.php');
 		$wp_content = mpdf_myfilters($wp_content);
 		//die($wp_content);
 		$mpdf->WriteHTML($wp_content);
@@ -203,10 +203,10 @@ function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $print_button = tru
 	if(empty($buttontext))
 		$buttontext = '<img src="' . get_bloginfo('home') . '/wp-content/plugins/wp-mpdf/pdf.png" alt="This page as PDF" border="0" />';
 	
-	$x = !strpos($_SERVER['REQUEST_URI'], '?') ? '?' : '&amp;';
+	$x = !strpos(apply_filters('the_permalink', get_permalink()), '?') ? '?' : '&amp;';
 	$pdf_button = '<a ';
 	if($opennewtab==true) $pdf_button .= 'target="_blank" ';
-	$pdf_button .= 'id="pdfbutton" href="' . $_SERVER['REQUEST_URI'] . $x . 'output=pdf">' . $buttontext . '</a>';
+	$pdf_button .= 'id="pdfbutton" href="' . apply_filters('the_permalink', get_permalink()) . $x . 'output=pdf">' . $buttontext . '</a>';
 	
 	if($print_button === true) {
 		echo $pdf_button;
