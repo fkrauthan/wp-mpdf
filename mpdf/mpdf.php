@@ -7372,7 +7372,7 @@ function _parsepng2($file, $problem) {
 			imagealphablending($im, 1);
 		}
 		imagecopy($dest, $im, 0, 0, 0, 0, $w, $h);
-		$tempfile = '_tempImgPNG'.RAND(1,10000).'.png';
+		$tempfile = dirname(__FILE__).'/graph_cache/_tempImgPNG'.RAND(1,10000).'.png';
 		imagepng($dest, $tempfile );
 		imagedestroy($im);
 		imagedestroy($dest);
@@ -8692,13 +8692,15 @@ function _file_exists($srcpath) {
 			if (file_exists($localsrcpath)) { return true; }
 		}
 		// if not use full URL
-		else if (!ini_get('allow_url_fopen') && function_exists("curl_init")) {
+		else if (function_exists("curl_init")) {
 			$ch = curl_init($srcpath);
 			curl_setopt($ch, CURLOPT_HEADER, 0);
       			curl_setopt ( $ch , CURLOPT_RETURNTRANSFER , 1 );
 			$test = curl_exec($ch);
+			$info = curl_getinfo($ch);
+
 			curl_close($ch);
-			if ($test) { return true; }
+			if ($test!==false&&$info['http_code']==200) { return true; }
 		}
 
 		return false;
@@ -13940,8 +13942,6 @@ function OpenTag($tag,$attr)
 		$imageset = false;
 		while(!$imageset) {
 			if (!$found_img) {
-				die($srcpath);
-
 				if(!$this->shownoimg) break;
 				$srcpath = str_replace("\\","/",dirname(__FILE__)) . "/";
 				$srcpath .= 'no_img2.gif';
