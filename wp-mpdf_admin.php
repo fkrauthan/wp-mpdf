@@ -137,7 +137,7 @@ function mpdf_admin_allowedprintedpages() {
 		echo '<br />';
 	}
 	
-	echo '<a href="?page='.$_GET['page'].'&amp;addallowedpage=1">New Entry</a> <a href="?page='.$_GET['page'].'&amp;clearallowedpage=1">Clear All Entrys</a>';
+	echo '<a href="?page='.$_GET['page'].'&amp;addallowedpage=1">New Entry</a> <a href="?page='.$_GET['page'].'&amp;clearallowedpage=1">Clear All Entries</a>';
 	echo '<table border="1">';
 	$sql = 'SELECT id,post_type,post_id,enabled FROM '.$table_name;
 	$data = $wpdb->get_results($sql, OBJECT);
