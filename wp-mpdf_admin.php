@@ -29,7 +29,13 @@ function mpdf_admin_options() {
 		update_option('mpdf_theme', $_POST['theme']);
 		update_option('mpdf_caching', isset($_POST['caching']));
 		update_option('mpdf_geshi', isset($_POST['geshi']));
-		update_option('mpdf_allow_all', isset($_POST['allow_all']));
+
+		if(isset($_POST['allow_all'])) {
+			update_option('mpdf_allow_all', true);
+		}
+		else {
+			update_option('mpdf_allow_all', $_POST['use_list_as']);
+		}
 		
 		echo '<p style="color: green;">Options Saved</p>';
 	}
@@ -61,8 +67,12 @@ function mpdf_admin_options() {
 	if(get_option('mpdf_geshi')==true) echo 'checked="checked"';
 	echo '/></td></tr>';
 	echo '<tr><td>Allow to Print all Pages: </td><td><input type="checkbox" name="allow_all" ';
-	if(get_option('mpdf_allow_all')==true) echo 'checked="checked"';
+	if(get_option('mpdf_allow_all')==1) echo 'checked="checked"';
 	echo '/></td></tr>';
+	echo '<tr><td>If not use list as: </td><td><select name="use_list_as">';
+	echo '<option value="2" '; if(get_option('mpdf_allow_all')==2) echo 'selected="selected"'; echo '>Whitelist</option>';
+	echo '<option value="3" '; if(get_option('mpdf_allow_all')==3) echo 'selected="selected"'; echo '>Blacklist</option>';
+	echo '</select></td></tr>';
 	echo '</table>';
 	echo '<input type="submit" value="Save" name="save_options" /> <input type="reset" />';
 	echo '</form>';
@@ -72,14 +82,18 @@ function mpdf_admin_allowedprintedpages() {
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'wp_mpdf_allowed';
 	
-	echo '<h2>Allow Printed Pages</h2>';
+	echo '<h2>Black/White List - Printed Pages</h2>';
 	
 	if(isset($_GET['delallowedprintedpage'])) {
 		$wpdb->query('DELETE FROM '.$table_name.' WHERE id='.$_GET['delallowedprintedpage'].' LIMIT 1');
 		
 		echo '<p style="color: green;">Delete allowed Page with id "'.$_GET['delallowedprintedpage'].'"</p>';
 	}
-	
+	if(isset($_GET['clearallowedpage'])) {
+		$wpdb->query('DELETE FROM '.$table_name);
+		
+		echo '<p style="color: green;">All posts are deleted from the black/white list.</p>';
+	}
 	if(isset($_POST['addallowedpage'])) {
 		$page_type = $_POST['allowedpage_type'];
 		if($page_type=='page'||$page_type=='post') {
@@ -123,7 +137,7 @@ function mpdf_admin_allowedprintedpages() {
 		echo '<br />';
 	}
 	
-	echo '<a href="?page='.$_GET['page'].'&amp;addallowedpage=1">New Entry</a>';
+	echo '<a href="?page='.$_GET['page'].'&amp;addallowedpage=1">New Entry</a> <a href="?page='.$_GET['page'].'&amp;clearallowedpage=1">Clear All Entrys</a>';
 	echo '<table border="1">';
 	$sql = 'SELECT id,post_type,post_id,enabled FROM '.$table_name;
 	$data = $wpdb->get_results($sql, OBJECT);

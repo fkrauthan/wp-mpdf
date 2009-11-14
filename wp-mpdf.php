@@ -3,7 +3,7 @@
 Plugin Name: wp-mpdf
 Plugin URI: http://www.fkrauthan.de/wordpress/wp-mpdf
 Description: Print a wordpress page as PDF with optional Geshi Parsing.
-Version: 1.8
+Version: 1.9
 Author: Florian 'fkrauthan' Krauthan
 Author URI: http://www.fkrauthan.de
 
@@ -182,14 +182,14 @@ function mpdf_mysql2unix($timestamp) {
 }
 
 function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $print_button = true) {
-	if(get_option('mpdf_allow_all')==false) {
+	if(get_option('mpdf_allow_all')!=true) {
 		global $wpdb;
 		global $post;
 		$table_name = $wpdb->prefix . WP_MPDF_ALLOWED_POSTS_DB;
 		
 		$sql = 'SELECT id FROM '.$table_name.' WHERE post_id='.$post->ID.' AND post_type="'.$post->post_type.'" AND enabled=1 LIMIT 1';
 		$db_id = $wpdb->get_var($sql);
-		if($db_id == null) {
+		if(($db_id == null&&get_option('mpdf_allow_all')==2)||($db_id != null&&get_option('mpdf_allow_all')==3)) {
 			if($print_button === true) {
 				echo '';
 				return;
@@ -230,14 +230,14 @@ function mpdf_readcachedfile($name) {
 function mpdf_exec() {
 	if($_GET['output'] == 'pdf') {
 		//Check if this Page is allwoed to print as PDF
-		if(get_option('mpdf_allow_all')==false) {
+		if(get_option('mpdf_allow_all')!=true) {
 			global $wpdb;
 			global $post;
 			$table_name = $wpdb->prefix . WP_MPDF_ALLOWED_POSTS_DB;
 			
 			$sql = 'SELECT id FROM '.$table_name.' WHERE post_id='.$post->ID.' AND post_type="'.$post->post_type.'" AND enabled=1 LIMIT 1';
 			$db_id = $wpdb->get_var($sql);
-			if($db_id == null) {
+			if(($db_id == null&&get_option('mpdf_allow_all')==2)||($db_id != null&&get_option('mpdf_allow_all')==3)) {
 				if($print_button === true) {
 					return;
 				} else {
