@@ -16,8 +16,44 @@
 		$content = mpdf_buildmenu($content);
 		$content = mpdf_prefix($content);
 		$content = mpdf_prefix_clear($content);
+		$content = mpdf_speedUpLocaleImages($content);
 		
 		return $content;
+	}
+
+	function mpdf_speedUpLocaleImages($content) {
+		$base_url = get_option('siteurl');
+
+		if(preg_match_all('#<img.*src="(.*)".*>#iU', $content, $matches)) {
+			foreach($matches[1] as $ikey => $img) {
+				if(strpos($img, $base_url) === 0 ) {
+					$local_img_path = str_replace($base_url, '', $img);
+					$new_img = ABSPATH . (substr($local_img_path, 0, 1) === '/' ? substr($local_img_path, 1) : $local_img_path);
+					$content = str_replace($img, $new_img, $content);
+				}
+				else {
+					if(substr($img, 0, 1) === '/') {
+						$new_img = ABSPATH . $img;
+						$content = str_replace($img, $new_img, $content);
+					}
+				}
+			}
+		}
+		if(preg_match_all("#<img.*src='(.*)'.*>#iU", $content, $matches)) {
+			foreach($matches[1] as $ikey => $img) {
+				if(strpos($img, $base_url) === 0 ) {
+					$local_img_path = str_replace($base_url, '', $img);
+					$new_img = ABSPATH . (substr($local_img_path, 0, 1) === '/' ? substr($local_img_path, 1) : $local_img_path);
+					$content = str_replace($img, $new_img, $content);
+				}
+				else {
+					if(substr($img, 0, 1) === '/') {
+						$new_img = ABSPATH . $img;
+						$content = str_replace($img, $new_img, $content);
+					}
+				}
+			}
+		}
 	}
 
 	function mpdf_prefix_clear($content) {
