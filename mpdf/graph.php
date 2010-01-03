@@ -2,6 +2,8 @@
 
 if (!defined('_TTF_FONT_NORMAL')) { define("_TTF_FONT_NORMAL", 'arial.ttf'); }
 if (!defined('_TTF_FONT_BOLD')) { define("_TTF_FONT_BOLD", 'arialbd.ttf'); }
+if (!defined('_TTF_FONT_ITALIC')) { define("_TTF_FONT_ITALIC", 'ariali.ttf'); }
+if (!defined('_TTF_FONT_BOLDITALIC')) { define("_TTF_FONT_BOLDITALIC", 'arialbi.ttf'); }
 
 //======================================================================================================
 // DELETE OLD GRAPH FILES FIRST - Housekeeping
@@ -44,24 +46,33 @@ if (!defined('_TTF_FONT_BOLD')) { define("_TTF_FONT_BOLD", 'arialbd.ttf'); }
 
 //======================================================================================================
 function print_graph($g,$pgwidth) {
+	$splines = false;
+	$bandw = false;
+	$percent = false;
+	$show_percent = false;
+	$stacked = false;
+	$h = false;
+	$show_values = false;
+	$hide_grid = false;
+	$hide_y_axis = false;
 
-	if ($g['attr']['TYPE']) { $type = strtolower($g['attr']['TYPE']); }
+	if (isset($g['attr']['TYPE']) && $g['attr']['TYPE']) { $type = strtolower($g['attr']['TYPE']); }
 	if (!in_array($type,array('bar','horiz_bar','line','radar','pie','pie3d','xy','scatter'))) { $type = 'bar'; } // Default=bar
 
-	if ($g['attr']['STACKED']) { $stacked = true; }	// stacked for bar or horiz_bar
-	if ($g['attr']['SPLINES'] && $type=='xy') { $splines = true; }	// splines for XY line graphs
-	if ($g['attr']['BANDW']) { $bandw = true; }	// black and white
-	if ($g['attr']['LEGEND-OVERLAP']) { $overlap = true; } // avoid overlap of Legends over graph (line, bar, horiz_bar only)
-	if ($g['attr']['PERCENT'] && $type != 'xy' && $type != 'scatter') { $percent = true; }	// Show data series as percent of total in series
-	if ($g['attr']['SHOW-VALUES']) { $show_values = true; }	// Show the individual data values
-	if ($g['attr']['HIDE-GRID']) { $hide_grid = true; }	// Hide the y-axis gridlines
-	if ($g['attr']['HIDE-Y-AXIS']) { $hide_y_axis = true; }	// Hide the y-axis
+	if (isset($g['attr']['STACKED']) && $g['attr']['STACKED']) { $stacked = true; }	// stacked for bar or horiz_bar
+	if (isset($g['attr']['SPLINES']) && $g['attr']['SPLINES'] && $type=='xy') { $splines = true; }	// splines for XY line graphs
+	if (isset($g['attr']['BANDW']) && $g['attr']['BANDW']) { $bandw = true; }	// black and white
+	if (isset($g['attr']['LEGEND-OVERLAP']) && $g['attr']['LEGEND-OVERLAP']) { $overlap = true; } // avoid overlap of Legends over graph (line, bar, horiz_bar only)
+	if (isset($g['attr']['PERCENT']) && $g['attr']['PERCENT'] && $type != 'xy' && $type != 'scatter') { $percent = true; }	// Show data series as percent of total in series
+	if (isset($g['attr']['SHOW-VALUES']) && $g['attr']['SHOW-VALUES']) { $show_values = true; }	// Show the individual data values
+	if (isset($g['attr']['HIDE-GRID']) && $g['attr']['HIDE-GRID']) { $hide_grid = true; }	// Hide the y-axis gridlines
+	if (isset($g['attr']['HIDE-Y-AXIS']) && $g['attr']['HIDE-Y-AXIS']) { $hide_y_axis = true; }	// Hide the y-axis
 
 
 	// Antialias: If true - better quality curves, but graph line will only be 1px even in PDF 300dpi 
 	// default=true for most except line and radar
 	if (isset($g['attr']['ANTIALIAS']) && ($g['attr']['ANTIALIAS']=='' || $g['attr']['ANTIALIAS']==0)) { $antialias = false; }
-	else if ($g['attr']['ANTIALIAS'] > 0) { $antialias = true; }
+	else if (isset($g['attr']['ANTIALIAS']) && $g['attr']['ANTIALIAS'] > 0) { $antialias = true; }
 	else if ($type=='line' || $type=='radar') { $antialias = false; }
 	else { $antialias = true; }
 
@@ -71,16 +82,16 @@ function print_graph($g,$pgwidth) {
 
 	$img_type = 'png'; 	// Can use jpeg or gif (gif is very slow)
 
-	if ($g['attr']['TITLE']) { $title = $g['attr']['TITLE']; }
+	if (isset($g['attr']['TITLE']) && $g['attr']['TITLE']) { $title = $g['attr']['TITLE']; }
 
-	if ($g['attr']['LABEL-X']) { $xlabel = $g['attr']['LABEL-X']; }		// NOT IMPLEMENTED??????
-	if ($g['attr']['LABEL-Y']) { $ylabel = $g['attr']['LABEL-Y']; }
+	if (isset($g['attr']['LABEL-X']) && $g['attr']['LABEL-X']) { $xlabel = $g['attr']['LABEL-X']; }		// NOT IMPLEMENTED??????
+	if (isset($g['attr']['LABEL-Y']) && $g['attr']['LABEL-Y']) { $ylabel = $g['attr']['LABEL-Y']; }
 
-	if ($g['attr']['AXIS-X']) { $xaxis = strtolower($g['attr']['AXIS-X']); }
+	if (isset($g['attr']['AXIS-X']) && $g['attr']['AXIS-X']) { $xaxis = strtolower($g['attr']['AXIS-X']); }
 	if (!in_array($xaxis,array('text','lin','linear','log'))) { $xaxis = 'text'; }	// Default=text
 	if ($xaxis == 'linear') { $xaxis = 'lin'; }
 
-	if ($g['attr']['AXIS-Y']) { $yaxis = strtolower($g['attr']['AXIS-Y']); }
+	if (isset($g['attr']['AXIS-Y']) && $g['attr']['AXIS-Y']) { $yaxis = strtolower($g['attr']['AXIS-Y']); }
 	if (!in_array($yaxis,array('lin','linear','log','percent'))) { $yaxis = 'lin'; }			// Default=lin
 	if ($yaxis == 'percent') { $show_percent = true; $yaxis = 'lin'; }	// Show percent sign on scales
 	if ($yaxis == 'linear') { $yaxis = 'lin'; }
@@ -88,11 +99,11 @@ function print_graph($g,$pgwidth) {
 	if ($splines) { $xaxis = 'lin'; }
 	$axes = $xaxis.$yaxis;	// e.g.textlin, textlog, loglog, loglin, linlog (XY)
 
-	if ($g['attr']['WIDTH']) { $w=(ConvertSize($g['attr']['WIDTH'],$pgwidth) / 0.2645); }	// pixels
-	if ($g['attr']['HEIGHT']) { $h=(ConvertSize($g['attr']['HEIGHT'],$pgwidth) / 0.2645); }
+	if (isset($g['attr']['WIDTH']) && $g['attr']['WIDTH']) { $w=(ConvertSize($g['attr']['WIDTH'],$pgwidth) / 0.2645); }	// pixels
+	if (isset($g['attr']['HEIGHT']) && $g['attr']['HEIGHT']) { $h=(ConvertSize($g['attr']['HEIGHT'],$pgwidth) / 0.2645); }
 
 
-	if (strtolower($g['attr']['SERIES']) == 'rows') { $dataseries = 'rows'; }
+	if (isset($g['attr']['SERIES']) && strtolower($g['attr']['SERIES']) == 'rows') { $dataseries = 'rows'; }
 	else { $dataseries = 'cols'; }
 
 	// Defaults - define data
@@ -105,12 +116,12 @@ function print_graph($g,$pgwidth) {
 	$rowend = 0;
 	$colend = 0;
 
-	if ($g['attr']['DATA-ROW-BEGIN'] === '0' || $g['attr']['DATA-ROW-BEGIN'] > 0) { $rowbegin = $g['attr']['DATA-ROW-BEGIN']; }
+	if (isset($g['attr']['DATA-ROW-BEGIN']) && ($g['attr']['DATA-ROW-BEGIN'] === '0' || $g['attr']['DATA-ROW-BEGIN'] > 0)) { $rowbegin = $g['attr']['DATA-ROW-BEGIN']; }
 
-	if ($g['attr']['DATA-COL-BEGIN'] === '0' || $g['attr']['DATA-COL-BEGIN'] > 0) { $colbegin = $g['attr']['DATA-COL-BEGIN']; }
+	if (isset($g['attr']['DATA-COL-BEGIN']) && ($g['attr']['DATA-COL-BEGIN'] === '0' || $g['attr']['DATA-COL-BEGIN'] > 0)) { $colbegin = $g['attr']['DATA-COL-BEGIN']; }
 
-	if ($g['attr']['DATA-ROW-END'] === '0' || $g['attr']['DATA-ROW-END'] <> 0) { $rowend = $g['attr']['DATA-ROW-END']; }
-	if ($g['attr']['DATA-COL-END'] === '0' || $g['attr']['DATA-COL-END'] <> 0) { $colend = $g['attr']['DATA-COL-END']; }
+	if (isset($g['attr']['DATA-ROW-END']) && ($g['attr']['DATA-ROW-END'] === '0' || $g['attr']['DATA-ROW-END'] <> 0)) { $rowend = $g['attr']['DATA-ROW-END']; }
+	if (isset($g['attr']['DATA-COL-END']) && ($g['attr']['DATA-COL-END'] === '0' || $g['attr']['DATA-COL-END'] <> 0)) { $colend = $g['attr']['DATA-COL-END']; }
 
 	$nr = count($g['data']);
 	$nc = 0;
@@ -128,21 +139,23 @@ function print_graph($g,$pgwidth) {
 	if ($colend < $colbegin) { $colend = $colbegin; }
 	if ($rowend < $rowbegin) { $rowend = $rowbegin; }
 
-	if ($type == 'xy' || $type=='scatter') { $colstart=0; }
+//	if ($type == 'xy' || $type=='scatter') { $colstart=0; }
 
 	// Get Data + Totals
 	$data = array();
 	$totals = array();
 	for ($r=($rowbegin-1);$r<$rowend;$r++) {
 		for ($c=($colbegin-1);$c<$colend;$c++) {
-		    $g['data'][$r][$c] = floatval($g['data'][$r][$c] ); 
+		    if (isset($g['data'][$r][$c])) { $g['data'][$r][$c] = floatval($g['data'][$r][$c] ); }
+		    else { $g['data'][$r][$c] = 0; }
 		    if ($dataseries=='rows') { 
 			$data[($r+1-$rowbegin)][($c+1-$colbegin)] = $g['data'][$r][$c] ; 
 			$totals[($r+1-$rowbegin)] += $g['data'][$r][$c] ; 
 		    }
 		    else { 
 			$data[($c+1-$colbegin)][($r+1-$rowbegin)] = $g['data'][$r][$c] ; 
-			$totals[($c+1-$colbegin)] += $g['data'][$r][$c] ; 
+			if (isset($totals[($c+1-$colbegin)])) { $totals[($c+1-$colbegin)] += $g['data'][$r][$c] ; }
+			else { $totals[($c+1-$colbegin)] = $g['data'][$r][$c] ; }
 		    }
 		}
 	}
@@ -187,7 +200,6 @@ function print_graph($g,$pgwidth) {
 			}
 		}
 	}
-
    // Default sizes
    $defsize = array();
    $defsize['pie'] = array('w' => 600, 'h' => 300);
@@ -453,7 +465,6 @@ function print_graph($g,$pgwidth) {
 			$graph->SetScale($axes);
 			// Setup font for axis
 			$graph->yaxis->SetFont(FF_USERFONT,FS_NORMAL,8*$k);
-
 			// Y-axis title
 			if ($labels[1]) {
 				$graph->yaxis->title->SetFont(FF_USERFONT,FS_NORMAL,8*$k);
@@ -474,7 +485,8 @@ function print_graph($g,$pgwidth) {
 
 			// Setup X-axis labels
 			$graph->xaxis->SetFont(FF_USERFONT,FS_NORMAL,8*$k);
-			$graph->xaxis->SetTickLabels($legends);
+// mPDF 2.5 Corrects labelling of x-axis
+//			$graph->xaxis->SetTickLabels($legends);
 			$graph->xaxis->SetLabelAngle(50);
 			$graph->xaxis->SetLabelMargin(4*$k); 
 			// X-axis title
@@ -512,7 +524,8 @@ function print_graph($g,$pgwidth) {
 			$cplot->mark->SetFillColor($fills[0]);
 			$cplot->mark->SetWidth(8*$k);
 			if ($show_values) {
-				$cplot->value->Show();	// Not if scatter
+// mPDF 2.5 
+				if ($type=='xy') { $cplot->value->Show(); }	// Not if scatter
 				$cplot->value->SetMargin(8*$k); 
 				$cplot->value->SetColor("darkred");
 				$cplot->value->SetFont( FF_USERFONT, FS_NORMAL, 6*$k);

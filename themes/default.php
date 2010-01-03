@@ -6,6 +6,16 @@
 	global $pdf_header;
 	global $pdf_footer;
 
+	global $pdf_template_pdfpage;
+	global $pdf_template_pdfpage_page;
+	global $pdf_template_pdfdoc;
+
+	//Set a pdf template. if both are set the pdfdoc is used. (You didn't need a pdf template)
+	$pdf_template_pdfpage 		= ''; //The filename off the pdf file (you need this for a page template)
+	$pdf_template_pdfpage_page 	= 1;  //The page off this page (you need this for a page template)
+
+	$pdf_template_pdfdoc  		= ''; //The filename off the complete pdf document (you need only this for a document template)
+
 	//Set the Footer and the Header
 	$pdf_header = array (
   		'odd' => 

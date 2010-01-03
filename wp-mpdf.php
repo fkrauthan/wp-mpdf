@@ -3,11 +3,11 @@
 Plugin Name: wp-mpdf
 Plugin URI: http://www.fkrauthan.de/wordpress/wp-mpdf
 Description: Print a wordpress page as PDF with optional Geshi Parsing.
-Version: 1.9.1
+Version: 2.0
 Author: Florian 'fkrauthan' Krauthan
 Author URI: http://www.fkrauthan.de
 
-Copyright 2009  Florian Krauthan
+Copyright 2010  Florian Krauthan
 */
 
 /*
@@ -93,14 +93,48 @@ function mpdf_output($wp_content = '', $do_pdf = false ) {
 	else {
 		define('_MPDF_PATH',dirname(__FILE__).'/mpdf/');
 		require_once(_MPDF_PATH.'mpdf.php');
+		require_once(_MPDF_PATH.'mpdfi/mpdfi.php');
 		
-		$mpdf=new mPDF(); 
+		global $pdf_margin_left;
+		global $pdf_margin_right;
+		global $pdf_margin_top;
+		global $pdf_margin_bottom;
+		global $pdf_margin_header;
+		global $pdf_margin_footer;
+
+		if($pdf_margin_left=='') $pdf_margin_left = 15;
+		if($pdf_margin_right=='') $pdf_margin_right = 15;
+		if($pdf_margin_top=='') $pdf_margin_top = 16;
+		if($pdf_margin_bottom=='') $pdf_margin_bottom = 16;
+		if($pdf_margin_header=='') $pdf_margin_header = 9;
+		if($pdf_margin_footer=='') $pdf_margin_footer = 9;
+
+		global $pdf_orientation;
+		if($pdf_orientation=='') $pdf_orientation = 'P';
+		
+		$mpdf=new mPDFI('win-1252', 'A4', '', '', $pdf_margin_left, $pdf_margin_right, $pdf_margin_top, $pdf_margin_bottom, $pdf_margin_header, $pdf_margin_footer, $pdf_orientation); 
 
 		$mpdf->SetUserRights();
 		$mpdf->title2annots = true;
 		//$mpdf->annotMargin = 12;
 		$mpdf->use_embeddedfonts_1252 = true;	// false is default
-		$mpdf->SetBasePath(dirname('../../../'.dirname(__FILE__)));
+		$mpdf->SetBasePath(dirname(__FILE__).'/../../wp-mpdf-themes/');
+
+		//Set PDF Template if it's set
+		global $pdf_template_pdfpage;
+		global $pdf_template_pdfpage_page;
+		global $pdf_template_pdfdoc;
+		if(isset($pdf_template_pdfdoc)&&$pdf_template_pdfdoc!='') {
+			$mpdf->SetDocTemplate(dirname(__FILE__).'/../../wp-mpdf-themes/'.$pdf_template_pdfdoc, true);
+		}
+		else if(isset($pdf_template_pdfpage)&&$pdf_template_pdfpage!=''&&isset($pdf_template_pdfpage_page)&&is_numeric($pdf_template_pdfpage_page)) {
+			$pagecount = $mpdf->SetSourceFile(dirname(__FILE__).'/../../wp-mpdf-themes/'.$pdf_template_pdfpage);
+			if($pdf_template_pdfpage_page<1) $pdf_template_pdfpage_page = 1;
+			else if($pdf_template_pdfpage_page>$pagecount) $pdf_template_pdfpage_page = $pagecount;
+			$tplId = $mpdf->ImportPage($pdf_template_pdfpage_page);
+			$mpdf->UseTemplate($tplId);
+		}
+
 
 		$user_info = get_userdata($post->post_author);
 		$mpdf->SetAuthor($user_info->first_name.' '.$user_info->last_name.' ('.$user_info->user_login.')');
@@ -295,7 +329,7 @@ function mpdf_admin_printeditbox() {
 	$sql = 'SELECT id FROM '.$table_name.' WHERE post_id='.$post->ID.' AND post_type="'.$post->post_type.'" LIMIT 1';
 	$db_id = $wpdb->get_var($sql);	
 	echo '<input type="hidden" name="wp_mpdf_noncename" id="wp_mpdf_noncename" value="' . wp_create_nonce(plugin_basename(__FILE__)) . '" />';
-	echo 'Can Download as PDF: <input ';
+	echo 'Put on whitelist/blacklist: <input ';
 	if($db_id != null) {
 		echo 'checked="checked" ';
 	}

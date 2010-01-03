@@ -49,7 +49,7 @@ $this->available_unifonts = array(
 // should include sans-serif, serif and monospace, arial, helvetica, times and courier
 // The order will determine preference when substituting fonts in certain circumstances
 $this->sans_fonts = array('dejavusanscondensed','dejavusans','freesans','franklin','tahoma','garuda','calibri','trebuchet',
-				'verdana','geneva','lucida','arial','helvetica','sans','sans-serif','cursive','fantasy',
+				'verdana','geneva','lucida','arial','helvetica','arialnarrow','arialblack','sans','sans-serif','cursive','fantasy',
 				'bengali-sans','devanagari-sans','malayalam-sans','oriya-sans',
 				'punjabi-sans','tamil-sans','telugu-sans'
 );

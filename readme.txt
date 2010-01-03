@@ -3,8 +3,8 @@ Contributors: fkrauthan
 Donate link: http://www.fkrauthan.de
 Tags: print, printer, wp-mpdf, pdf, mpdf
 Requires at least: 2.8
-Tested up to: 2.8
-Stable tag: 1.9.1
+Tested up to: 2.9
+Stable tag: 2.0
 
 Print Wordpress Posts as PDF. Optional with Geshi highlighting.
 
@@ -12,15 +12,14 @@ Print Wordpress Posts as PDF. Optional with Geshi highlighting.
 
 Print Wordpress Posts as PDF. Optional with Geshi highlighting. It is written for a online games programming magazine
 
-!!!Important!!!
-1.) The themes folder has been moved from "wp-content/plugins/wp-mpdf/themes" to "wp-content/wp-mpdf-themes". The Movement of the templates on the folder themes would be made automaticli but if you have trouble then made this movment manualy.
-2.) The plugin config is now avaible at the Settings Submenu not longer on the Plugins Submenu
-!!!Important!!!
-
-
 
 == Changelog ==  
 
+= 2.0 =
+* Some small Bugfixes
+* PDF Template support (now you can also use a pdf file as template) If you need this please write me a mail so i can tell you how it works.
+= 1.9.2 =
+* Add 2 vars to the templates for useing PDF Templates
 = 1.9 =
 * Add Option to make a black list instead of a white list
 * Add Button to clear all selecetet Posts at the black/white list
@@ -52,11 +51,13 @@ Print Wordpress Posts as PDF. Optional with Geshi highlighting. It is written fo
 == Installation ==
 
 1. Upload the whole plugin folder to your /wp-content/plugins/ folder.
-2. Give the folders in the Plugin dir write permission (777) => wp-mpdf/cache AND wp-mpdf/graph_cache
+2. Give the folders in the Plugin dir write permission (777) => wp-mpdf/cache AND wp-mpdf/mdpf/graph_cache
 3. Go to the Plugins page and activate the plugin.
 4. Add to your template "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton(); ?&gt;" for a small button or "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton('my link'); ?&gt;" for a textlink.
  (if you wish to open the pdf print in a new tab you can add as first parameter true)
-5. You can adjust some options if you go to your admin interface, klick on plugins and then on wp-mpdf. For pdf allow you can use the checkbox when you create or edit a Post or Site.
+5. You can adjust some options if you go to your admin interface, klick on plugins and then on wp-mpdf. For pdf allow you can use the checkbox when you create or edit a Post or Site.
+
+6. Your templates can you put to /wp-content/wp-mpdf-themes
 
 == License ==
 

@@ -1,4 +1,4 @@
-To install mPDF version 3.0beta -
+To install mPDF version 3.2 -
 simply upload all the files to a new directory
 (suggested /mpdf/), maintaining the folder structure.
 

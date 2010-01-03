@@ -1,11 +1,11 @@
 <?php
 /*******************************************************************************
 * Software: mPDF, Unicode-HTML Free PDF generator                              *
-* Version:  3.0beta based on                                                   *
+* Version:  3.2 based on                                                       *
 *           FPDF 1.52 by Olivier PLATHEY                                       *
 *           UFPDF 0.1 by Steven Wittens                                        *
 *           HTML2FPDF 3.0.2beta by Renato Coelho                               *
-* Date:     2009-06-14                                                         *
+* Date:     2009-10-25                                                         *
 * Author:   Ian Back <ianb@bpm1.com>                                           *
 * License:  GPL                                                                *
 *                                                                              *
@@ -138,7 +138,8 @@ function GetCodepage($llcc) {
 
 	$mpdf_pdf_unifonts_arr = array();
 	if ($mpdf_pdf_unifonts) {
-		$mpdf_pdf_unifonts_arr = explode(',',$mpdf_pdf_unifonts);
+		// mPDF 3.2 correct for any spaces left between font names
+		$mpdf_pdf_unifonts_arr = preg_split('/\s*,\s*/',$mpdf_pdf_unifonts);
 	}
 	return array($mpdf_codepage,$mpdf_pdf_unifonts_arr,$mpdf_directionality,$mpdf_jSpacing);
 }
@@ -486,7 +487,8 @@ function ConvertColor($color="#000000"){
 
   // mPDF 1.4
   // if ( ($color{0} != '#') and ( stristr($color,'rgb') === false ) and ( stristr($color,'cmyk') === false ) ) $color = $common_colors[strtolower($color)];
-  if ($common_colors[strtolower($color)]) $color = $common_colors[strtolower($color)];
+  // mPDF 3.0 
+  if (isset($common_colors[strtolower($color)])) $color = $common_colors[strtolower($color)];
 
   if ($color{0} == '#') //case of #nnnnnn or #nnn
   {
@@ -662,6 +664,8 @@ function AdjustHTML($html,$directionality='ltr',$usepre=true, $tabSpaces=8) {
 
 	// Get rid of empty <thead></thead>
 	$html = preg_replace('/<thead>\s*<\/thead>/i','',$html); // mPDF 3.0 changed from ereg_
+	$html = preg_replace('/<tfoot>\s*<\/tfoot>/i','',$html); // mPDF 3.2
+	$html = preg_replace('/<table[^>]*>\s*<\/table>/i','',$html); // mPDF 3.2
 
 	// mPDF 1.4 Remove spaces at end of table cells
 	$html = preg_replace("/[ ]+<\/t(d|h)/",'</t\\1',$html);
@@ -672,11 +676,13 @@ function AdjustHTML($html,$directionality='ltr',$usepre=true, $tabSpaces=8) {
 		for($i=0;$i<count($matches[0]);$i++) {
 		  $pre = '<table' . $matches[1][$i] . '>';
 		  $post = '</table>';
-		  $table = $matches[0][$i];
-		  if (preg_match('/(<thead[^>]*>)/is',$table,$m)) { $thead = $m[0]; } else { $thead = ''; }
-		  preg_match_all('/<tr(.*?)>(.*?)<\/tr>/is',$table,$tmatches);
-		  $newrows = array();
-		  for($j=0;$j<count($tmatches[0]);$j++) {
+		  // mPDF 3.2 Don't change if nested tables
+		  if (!preg_match('/<table/is',$matches[2][$i]) && !preg_match('/<\/table/is',$matches[2][$i]) ) {
+		    $table = $matches[0][$i];
+		    if (preg_match('/(<thead[^>]*>)/is',$table,$m)) { $thead = $m[0]; } else { $thead = ''; }
+		    preg_match_all('/<tr(.*?)>(.*?)<\/tr>/is',$table,$tmatches);
+		    $newrows = array();
+		    for($j=0;$j<count($tmatches[0]);$j++) {
 			$rpre = '<tr' . $tmatches[1][$j] . '>';
 			$rpost = '</tr>';
 			$row = $tmatches[0][$j];
@@ -693,9 +699,10 @@ function AdjustHTML($html,$directionality='ltr',$usepre=true, $tabSpaces=8) {
 			else {
 				$newrows[] = $rpre . implode('',$cells) . $rpost;
 			}
+		    }
+		    $newtable = $pre . implode('',$newrows) . $post;
+		    $html = str_replace($table,$newtable,$html);
 		  }
-		  $newtable = $pre . implode('',$newrows) . $post;
-		  $html = str_replace($table,$newtable,$html);
 		}
 	}
 
@@ -763,8 +770,8 @@ function AdjustHTML($html,$directionality='ltr',$usepre=true, $tabSpaces=8) {
 			$temp2[2][$iterator] = preg_replace('/&/',"&amp;",$temp2[2][$iterator]); // mPDF 3.0 changed from ereg_
 			$temp2[2][$iterator] = preg_replace('/</',"&lt;",$temp2[2][$iterator]); // mPDF 3.0 changed from ereg_
 
-			// mPDF 2.3
-			$temp[2][$iterator] = preg_replace('/\t/',str_repeat(" ",$tabSpaces),$temp[2][$iterator]); // mPDF 3.0 changed from ereg_
+			// mPDF 3.0 temp2 not temp
+			$temp2[2][$iterator] = preg_replace('/\t/',str_repeat(" ",$tabSpaces),$temp2[2][$iterator]); // mPDF 3.0 changed from ereg_
 			$temp2[2][$iterator] = preg_replace('/[ ]/',"&nbsp;",$temp2[2][$iterator]); // mPDF 3.0 changed from ereg_
 
 			//=================================================================================
@@ -805,9 +812,8 @@ function AdjustHTML($html,$directionality='ltr',$usepre=true, $tabSpaces=8) {
 	$html = preg_replace('/<textarea([^>]*)><\/textarea>/si','<textarea\\1> </textarea>',$html);
 	//=================================================================================
 	//=================================================================================
-	// mPDF 1.4 Added to allow keep heading together with table
-	//$html = preg_replace('/<(h[1-6][^>]*)(>.*?<\/\\1>\s*<table)/si','<\\1 keep-with-table="1"\\2',$html);
-	$html = preg_replace('/<(h[1-6][^>]*)(>(?:(?!h[1-6]).)*<\/\\1>\s*<table)/si','<\\1 keep-with-table="1"\\2',$html);
+	// mPDF 3.2 Keep heading together with table - allows <h1 style="..">
+	$html = preg_replace('/<(h[1-6])([^>]*)(>(?:(?!h[1-6]).)*<\/\\1>\s*<table)/si','<\\1\\2 keep-with-table="1"\\3',$html);
 	//=================================================================================
 	// mPDF 2.3 Annotations
 	$html = preg_replace("/\xbb\xa4\xac/", "\n", $html);
@@ -846,6 +852,7 @@ function dec2alpha($valor,$toupper="true"){
 if(!function_exists('dec2roman')){ 
  function dec2roman($valor,$toupper=true){
  //returns a string as a roman numeral
+  $r1=$r2=$r3=$r4='';
   if (($valor >= 5000) || ($valor < 1)) return "?"; //supports 'only' up to 4999
   $aux = (int)($valor/1000);
   if ($aux!==0)

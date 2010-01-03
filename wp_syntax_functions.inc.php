@@ -103,7 +103,7 @@ function wp_syntax_highlight_mpdf($match)
     return $output;
 }
 
-if(!function_exists('wp_syntax_code_trim')) {
+if(!function_exists('wp_syntax_before_filter')) {
 	function wp_syntax_before_filter($content)
 	{
 	    return preg_replace_callback(

@@ -1,4 +1,121 @@
 ===========================
+mPDF v3.2  (25/10/2009)
+===========================
+Bug fixes
+---------
+- Table cell widths in %: if width of table cells set to >=100%, and not all columns are set -> froze, because tries to produce a column of no width
+- Ouput download file changed to allow compatability with IE6 (http://mpdf.bpm1.com/forum/comments.php?DiscussionID=120&page=1#Item_4)
+- Image error if relative path used on domain root (e.g. img src="image.png" and basepath is http://www.yourdomain.com) [attempted fix in 3.1 not working]
+- Table: if font changed in cell, font was not retoring properly afterwards causing errors (restoreInlineProperties())
+- Lists: list items containing <br />, font not restoring after bullet
+- Graceful support for block elements inside list items e.g. <li><p>... (not supported, but tolerated)
+- Index: Created dividing letters separately for Uppercase and lowercase
+- Incorrectly changing input character set when encountering e.g. charset=iso-8859-1 in the text of the document
+	- Changed so only detects it if within <head>...</head> 
+- If Keep-with-table (i.e. H1-6 before table and use_kwt true), if pagebreak forced anyway, borders did not print on previous page
+- Background-image used in HTML footer not appearing (correctly)
+- RTL tables: nested tables will not automatically transpose L->R
+- "Keep heading with table" - changed to allow <h1 style=".."> not just <h1>
+- "Keep heading with table" - backgrounds (bgcolor, image or gradient) incorrectly handled - now removed
+- Rotated table spread over more than 1 page caused enclosing block background colours to be be rotated along with table
+- CSS text-indent % now correctly suported (% of containing block width)
+- CSS width em on a block element e.g. DIV now correctly suported
+- calculating _tableheight, if remainingpage==0, get error (div by zero)
+- Table moved to next page with page-break-inside=avoid, produced an enlarged table (font)
+- RTL text-align override on BODY text was not working consistently
+- Arab characters: Character &#x647; (HEH) appearing in Final presentation form instead of Isolated
+- Vertical position of background-image on whole page incorrect
+- SetProtection can now be used with no permissions set (was not working unless at least one permission set)
+
+
+Developers
+----------
+Some more undefined indexes and variables declared (courtesy of DSmart http://mpdf.bpm1.com/forum/comments.php?DiscussionID=117&page=1#Item_0 )
+Comment lines removed for < v3.0 to tidy up code
+
+
+Enhancements
+------------
+CSS style height now partially supported on block elements DIV, P, H1 etc. --IF--
+	- block is all on one page
+	- will extend the block but not shorten it
+	- will not force a pagebreak (max. at bottom of page)
+	- % is interpreted as % of printable page height (inside margins)
+<TFOOT> now supported (placed at start as in HTML spec) displays at end of table, and repeats as a footer
+Background-image and background-gradient now supported in TD and TH (works in all cases except: background-image is not rotated or 
+	positioned correctly if table is rotated)
+NB Background images and background-gradients do not work if Columns are being used, or if $use_kwt is TRUE (keep-with-table),
+	 or if page-break-inside:avoid is active.
+
+
+Updated files
+-------------
+mpdf.php
+htmltoolkit.php
+
+
+===========================
+mPDF v3.1  (30/08/2009)
+===========================
+
+Bug fixes
+---------
+- Image error if relative path used on domain root (e.g. img src="image.png" and basepath is http://www.yourdomain.com
+was giving http://www.yourdomain.com//image.png) [3.1]
+- Errors in parsing background CSS (background-repeat, background-position etc) [3.1]
+- Textarea did not corectly convert width or height in units relating to font e.g. em [3.0beta_01]
+- If page margin-bottom set to zero, SetHTMLfooter() crashes with "Division by zero" error [3.0beta_01]
+- Table with header row and rowspan in tbody, not calculating maxrowheightcorrectly
+- Prevent Index breaking column just after a dividing letter
+- Select or input form field when text around it is justified had text in the form field justified
+- TocBookMarkText needs to be htmlspecialchar-ed - decoded when entered inside <tocpagebreak>
+- <img src="" /> caused crash
+- DisplayPreferences used as a variable name and a function: function renamed to SetDisplayPreferences()
+- Image with src file not including a "." incorrectly parsed (e.g. http://www.domain.com/imagegenerator?params=23)
+
+New Features
+------------
+- var $debug (true|false) default false; show or hide error reporting at output stage [3.1]
+- var $autoPageBreak (true|false) default true; allows overriding of automatic page breaks [3.0beta_02]
+- <indexinsert /> HTML equivalent of CreateIndex() [was CreateReference()]
+- 2nd attribute/parameter "xref" in IndexEntry() and <indexentry> - works like IndexEntrySee() as cross-reference entry
+- function SetWatermarkText allows null parameters to be passed i.e. SetWatermarkText() - will clear the WatermarkText
+- <watermarktext content="" alpha="" /> - HTML equivalent of SetWatermarkText()
+- <watermarkimage src="" alpha="" position="" size="" /> - HTML equivalent of SetWatermarkImage()
+
+Documentation
+-------------
+See Manual at http://mpdf.bpm1.com/manual/ for more information - especially:
+- User's Guide>>What Else Can I Do?>>Backgrounds & Borders
+- User's Guide>>What Else Can I Do?>>Floating blocks
+
+Files updated:
+-------------
+mpdf.php
+htmltoolkit.php
+graph.php
+
+
+Developers only
+---------------
+mPDF<=3.1 generated a large number of warning "Notices" if run with full eror_reporting on, due to array indexes not being initiated e.g.
+$arr = array();
+...
+if ($arr['index'] == 5 ) {...}
+
+To prevent this, lines were added at the start of the mpdf.php script to turn error notices OFF.
+In a move towards making mPDF able to run with full error_reporting on, a large amount of the script has been altered 
+e.g. the line above would be changed to:
+if (isset($arr['index'] && $arr['index'] == 5 ) {...}
+
+Although I have tested this with a number of examples, it is almost certainly not complete. Therefore the error_reporting for Notices is still turned
+off in mPDF 3.1
+If you care to test it, please uncomment line 43 (//error_reporting(E_ALL);) and report any warning notices that you get.
+NB This has added about 40kB to the script size.
+
+
+
+===========================
 mPDF v3.0beta  (14/06/2009)
 ===========================
 
@@ -56,7 +173,7 @@ Bug fixes
 
 Note
 ----
-In mPDF 2.6 the following sections of code have been significantly rewritten:
+In mPDF 3.0 the following sections of code have been significantly rewritten:
 - painting of borders and background colours for block-elements
 - table of contents
 - Index
@@ -64,12 +181,6 @@ In mPDF 2.6 the following sections of code have been significantly rewritten:
 
 NB changed htmltoolkit AdjustHTML - does not now remove <br> before </div>
 	Warning - may display differently in normal text as well as tables
-
-Documentation
--------------
-See Manual at http://mpdf.bpm1.com/manual/ for more information - especially:
-- User's Guide>>What Else Can I Do?>>Backgrounds & Borders
-- User's Guide>>What Else Can I Do?>>Floating blocks
 
 
 Files updated:
