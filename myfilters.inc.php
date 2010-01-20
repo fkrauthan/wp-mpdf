@@ -9,7 +9,10 @@
 	 */
 
 
-	require_once('./wp-content/plugins/wp-mpdf/get_mark.inc.php');
+	
+	if(!function_exists('get_mark')) {
+		require_once(dirname(__FILE__).'/get_mark.inc.php');
+	}
 	
 	function mpdf_myfilters($content) {
 		$content = mpdf_clearcaption($content);

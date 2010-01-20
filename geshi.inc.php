@@ -9,7 +9,7 @@
 	 */
 
 
-	require_once('wp_syntax_functions.inc.php');
+	require_once(dirname(__FILE__).'/wp_syntax_functions.inc.php');
 		
 	function ParseGeshi($content) {
 		$content = wp_syntax_before_filter($content);

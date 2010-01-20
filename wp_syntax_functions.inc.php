@@ -20,13 +20,16 @@
 #
 
 
-if(!function_exists('wp_syntax_code_trim')) {
+if(!class_exists('GeSHi')) {
 	require_once('./wp-content/plugins/wp-mpdf/geshi/geshi.php');
+}
+
 	
-	if (!defined("WP_CONTENT_URL")) define("WP_CONTENT_URL", get_option("siteurl") . "/wp-content");
-	if (!defined("WP_PLUGIN_URL"))  define("WP_PLUGIN_URL",  WP_CONTENT_URL        . "/plugins");
-	
-	
+if (!defined("WP_CONTENT_URL")) define("WP_CONTENT_URL", get_option("siteurl") . "/wp-content");
+if (!defined("WP_PLUGIN_URL"))  define("WP_PLUGIN_URL",  WP_CONTENT_URL        . "/plugins");
+
+
+if(!function_exists('wp_syntax_code_trim')) {
 	function wp_syntax_code_trim($code)
 	{
 	    // special ltrim b/c leading whitespace matters on 1st line of content
@@ -34,7 +37,8 @@ if(!function_exists('wp_syntax_code_trim')) {
 	    $code = rtrim($code);
 	    return $code;
 	}
-	
+}
+if(!function_exists('wp_syntax_substitute')) {
 	function wp_syntax_substitute(&$match)
 	{
 	    global $wp_syntax_token, $wp_syntax_matches;
