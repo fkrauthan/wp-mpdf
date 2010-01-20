@@ -21,7 +21,7 @@
 
 
 if(!class_exists('GeSHi')) {
-	require_once('./wp-content/plugins/wp-mpdf/geshi/geshi.php');
+	require_once(dirname(__FILE__).'/geshi/geshi.php');
 }
 
 	

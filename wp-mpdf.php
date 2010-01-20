@@ -3,7 +3,7 @@
 Plugin Name: wp-mpdf
 Plugin URI: http://www.fkrauthan.de/wordpress/wp-mpdf
 Description: Print a wordpress page as PDF with optional Geshi Parsing.
-Version: 2.0.1
+Version: 2.1
 Author: Florian 'fkrauthan' Krauthan
 Author URI: http://www.fkrauthan.de
 
@@ -22,6 +22,7 @@ Copyright 2010  Florian Krauthan
  */
 
 define('WP_MPDF_ALLOWED_POSTS_DB', 'wp_mpdf_allowed');
+define('WP_MPDF_WORDPRESS_ROOT', dirname(__FILE__).'/../../../');
 require_once(dirname(__FILE__).'/php4.inc.php');
 
 function mpdf_install() {
@@ -45,6 +46,7 @@ function mpdf_install() {
 		add_option('mpdf_geshi', false);
 		add_option('mpdf_caching', true);
 		add_option('mpdf_allow_all', true);
+		add_option('mpdf_need_login', false);
 	}
 
 	if(is_dir(dirname(__FILE__).'/themes/')) {
@@ -71,7 +73,7 @@ function mpdf_install() {
 	}
 }
 
-function mpdf_output($wp_content = '', $do_pdf = false ) {
+function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true) {
 	global $post;
 	$pdf_filename = $post->post_name . '.pdf';
 	
@@ -83,7 +85,7 @@ function mpdf_output($wp_content = '', $do_pdf = false ) {
 	 * Geshi Support
 	 */
 	if(get_option('mpdf_geshi')==true) {
-		require_once('wp-content/plugins/wp-mpdf/geshi.inc.php');
+		require_once(dirname(__FILE__).'/geshi.inc.php');
 		$wp_content = ParseGeshi($wp_content);
 	}
 	 
@@ -151,25 +153,29 @@ function mpdf_output($wp_content = '', $do_pdf = false ) {
 		$mpdf->setFooter($pdf_footer);
 		
 		
-		if(get_option('mpdf_theme')!=''&&file_exists('wp-content/wp-mpdf-themes/'.get_option('mpdf_theme').'.css')) {
+		if(get_option('mpdf_theme')!=''&&file_exists(dirname(__FILE__).'/../../wp-mpdf-themes/'.get_option('mpdf_theme').'.css')) {
 			//Read the StyleCSS
-			$tmpCSS = file_get_contents('wp-content/wp-mpdf-themes/'.get_option('mpdf_theme').'.css');
+			$tmpCSS = file_get_contents(dirname(__FILE__).'/../../wp-mpdf-themes/'.get_option('mpdf_theme').'.css');
 			$mpdf->WriteHTML($tmpCSS, 1);
 		}
 		
 		//My Filters
-		require_once('wp-content/plugins/wp-mpdf/myfilters.inc.php');
+		require_once(dirname(__FILE__).'/myfilters.inc.php');
 		$wp_content = mpdf_myfilters($wp_content);
 		//die($wp_content);
 		$mpdf->WriteHTML($wp_content);
 		
 		if(get_option('mpdf_caching')==true) {
-			file_put_contents('wp-content/plugins/wp-mpdf/cache/'.get_option('mpdf_theme').'_'.$pdf_filename.'.cache', $post->post_modified_gmt);
-			$mpdf->Output('wp-content/plugins/wp-mpdf/cache/'.get_option('mpdf_theme').'_'.$pdf_filename, 'F');
-			$mpdf->Output($pdf_filename, 'I');
+			file_put_contents(dirname(__FILE__).'/cache/'.get_option('mpdf_theme').'_'.$pdf_filename.'.cache', $post->post_modified_gmt);
+			$mpdf->Output(dirname(__FILE__).'/cache/'.get_option('mpdf_theme').'_'.$pdf_filename, 'F');
+			if($outputToBrowser==true) {			
+				$mpdf->Output($pdf_filename, 'I');
+			}
 		}
 		else {
-			$mpdf->Output($pdf_filename, 'I');
+			if($outputToBrowser==true) {
+				$mpdf->Output($pdf_filename, 'I');
+			}
 		}
 	}
 }
@@ -234,6 +240,25 @@ function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $print_button = tru
 		}
 	}
 	
+	//Check if user must be logged in
+	if(get_option('mpdf_need_login')==1&&is_user_logged_in()!=true) {
+		if(empty($buttontext)) {
+			$buttontext = '<img src="' . get_bloginfo('home') . '/wp-content/plugins/wp-mpdf/pdf_lock.png" alt="Login!" title="You must login first" border="0" />';
+		}
+		else {
+			$buttontext = 'Login!';
+		}
+		
+		$pdf_button = '<a id="pdfbutton" href="'.wp_login_url(get_permalink()).'" title="You must login first">'.$buttontext.'</a>';
+		
+		if($print_button === true) {
+			echo $pdf_button;
+			return;
+		} else {
+			return $pdf_button;
+		}
+	}
+	
 	
 	if(empty($buttontext))
 		$buttontext = '<img src="' . get_bloginfo('home') . '/wp-content/plugins/wp-mpdf/pdf.png" alt="This page as PDF" border="0" />';
@@ -251,18 +276,21 @@ function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $print_button = tru
 }
 
 function mpdf_readcachedfile($name) {
-	$fp = fopen('wp-content/plugins/wp-mpdf/cache/'.get_option('mpdf_theme').'_'.$name, 'rb');
+	$fp = fopen(dirname(__FILE__).'/cache/'.get_option('mpdf_theme').'_'.$name, 'rb');
 	if(!$fp) die('Couldn\'t Read cache file');
 	fclose($fp);
 	
 	Header('Content-Type: application/pdf');
-	Header('Content-Length: '.filesize('wp-content/plugins/wp-mpdf/cache/'.get_option('mpdf_theme').'_'.$name));
+	Header('Content-Length: '.filesize(dirname(__FILE__).'/cache/'.get_option('mpdf_theme').'_'.$name));
 	Header('Content-disposition: inline; filename='.$name);
 	
-	echo file_get_contents('wp-content/plugins/wp-mpdf/cache/'.get_option('mpdf_theme').'_'.$name, FILE_BINARY | FILE_USE_INCLUDE_PATH);
+	echo file_get_contents(dirname(__FILE__).'/cache/'.get_option('mpdf_theme').'_'.$name, FILE_BINARY | FILE_USE_INCLUDE_PATH);
 }
 
-function mpdf_exec() {
+function mpdf_exec($outputToBrowser='') {
+	if($outputToBrowser=='') $outputToBrowser = true;
+	else $outputToBrowser = false;
+	
 	if($_GET['output'] == 'pdf') {
 		//Check if this Page is allwoed to print as PDF
 		if(get_option('mpdf_allow_all')!=1) {
@@ -280,27 +308,40 @@ function mpdf_exec() {
 				}
 			}
 		}
+
 		
-	
+		//Check if user must be logged in
+		if(get_option('mpdf_need_login')==1&&is_user_logged_in()!=true&&$outputToBrowser==true) {
+			wp_redirect(wp_login_url(get_permalink()));
+			return;
+		}
+
+
 		//Check for Caching option
 		if(get_option('mpdf_caching')==true) {
 			global $post;
 			$pdf_filename = $post->post_name . '.pdf';
-			if(file_exists('wp-content/plugins/wp-mpdf/cache/'.get_option('mpdf_theme').'_'.$pdf_filename.'.cache')&&file_exists('wp-content/plugins/wp-mpdf/cache/'.get_option('mpdf_theme').'_'.$pdf_filename)) {
-				$createDate = file_get_contents('wp-content/plugins/wp-mpdf/cache/'.get_option('mpdf_theme').'_'.$pdf_filename.'.cache');
+			if(file_exists(dirname(__FILE__).'/cache/'.get_option('mpdf_theme').'_'.$pdf_filename.'.cache')&&file_exists(dirname(__FILE__).'/cache/'.get_option('mpdf_theme').'_'.$pdf_filename)) {
+				$createDate = file_get_contents(dirname(__FILE__).'/cache/'.get_option('mpdf_theme').'_'.$pdf_filename.'.cache');
 				if($createDate==$post->post_modified_gmt) {
 					//We could Read the Cached file
-					mpdf_readcachedfile($pdf_filename);
-					exit;
+					if($outputToBrowser==true) {
+						mpdf_readcachedfile($pdf_filename);
+						exit;
+					}
+					else {
+						return;
+					}
 				}
 			}
 		} 
 		
-		require_once('wp-content/wp-mpdf-themes/'.get_option('mpdf_theme').'.php');
+		require(dirname(__FILE__).'/../../wp-mpdf-themes/'.get_option('mpdf_theme').'.php');	
+		mpdf_output($pdf_output, true, $outputToBrowser);
 		
-		mpdf_output($pdf_output, true);
-		
-		exit;
+		if($outputToBrowser==true) {
+			exit;
+		}
 	}
 }
 

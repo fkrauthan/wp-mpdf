@@ -29,7 +29,8 @@ function mpdf_admin_options() {
 		update_option('mpdf_theme', $_POST['theme']);
 		update_option('mpdf_caching', isset($_POST['caching']));
 		update_option('mpdf_geshi', isset($_POST['geshi']));
-
+		update_option('mpdf_need_login', isset($_POST['need_login']));
+		
 		if(isset($_POST['allow_all'])) {
 			update_option('mpdf_allow_all', true);
 		}
@@ -69,6 +70,11 @@ function mpdf_admin_options() {
 	echo '<tr><td>Allow to Print all Pages: </td><td><input type="checkbox" name="allow_all" ';
 	if(get_option('mpdf_allow_all')==1) echo 'checked="checked"';
 	echo '/></td></tr>';
+	
+	echo '<tr><td>Need login: </td><td><input type="checkbox" name="need_login" ';
+	if(get_option('mpdf_need_login')==1) echo 'checked="checked"';
+	echo '/></td></tr>';
+	
 	echo '<tr><td>If not use list as: </td><td><select name="use_list_as">';
 	echo '<option value="2" '; if(get_option('mpdf_allow_all')==2) echo 'selected="selected"'; echo '>Whitelist</option>';
 	echo '<option value="3" '; if(get_option('mpdf_allow_all')==3) echo 'selected="selected"'; echo '>Blacklist</option>';
