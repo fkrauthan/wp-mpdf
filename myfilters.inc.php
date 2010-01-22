@@ -32,12 +32,12 @@
 				if(strpos($img, $base_url) === 0 ) {
 					$local_img_path = str_replace($base_url, '', $img);
 					$new_img = ABSPATH . (substr($local_img_path, 0, 1) === '/' ? substr($local_img_path, 1) : $local_img_path);
-					$content = str_replace('src="'.$img.'"', 'src="'.$new_img.'"', $content);
+					$content = str_replace('src="'.$img.'"', 'src="file://'.$new_img.'"', $content);
 				}
 				else {
 					if(substr($img, 0, 1) === '/') {
 						$new_img = ABSPATH . $img;
-						$content = str_replace('src="'.$img.'"', 'src="'.$new_img.'"', $content);
+						$content = str_replace('src="'.$img.'"', 'src="file://'.$new_img.'"', $content);
 					}
 				}
 			}
@@ -47,12 +47,12 @@
 				if(strpos($img, $base_url) === 0 ) {
 					$local_img_path = str_replace($base_url, '', $img);
 					$new_img = ABSPATH . (substr($local_img_path, 0, 1) === '/' ? substr($local_img_path, 1) : $local_img_path);
-					$content = str_replace('src=\''.$img.'\'', 'src=\''.$new_img.'\'', $content);
+					$content = str_replace('src=\''.$img.'\'', 'src=\'file://'.$new_img.'\'', $content);
 				}
 				else {
 					if(substr($img, 0, 1) === '/') {
 						$new_img = ABSPATH . $img;
-						$content = str_replace('src=\''.$img.'\'', 'src=\''.$new_img.'\'', $content);
+						$content = str_replace('src=\''.$img.'\'', 'src=\'file://'.$new_img.'\'', $content);
 					}
 				}
 			}
