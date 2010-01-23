@@ -4,70 +4,78 @@ Donate link: http://www.fkrauthan.de
 Tags: print, printer, wp-mpdf, pdf, mpdf
 Requires at least: 2.8
 Tested up to: 2.9
-Stable tag: 2.1.1
+Stable tag: 2.2
 
-Print Wordpress Posts as PDF. Optional with Geshi highlighting.
+Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
 == Description ==
 
-Print Wordpress Posts as PDF. Optional with Geshi highlighting. It is written for a online games programming magazine
+Print Wordpress posts as PDF. Optional with Geshi highlighting. It is written for an online games programming magazine
 
 
 == Changelog ==  
 
+= 2.2 =
+* Added the option to add a text if you have checked "need login" and a user isn't logged in
+* Added an option to set "need login" per post
+* Added an option to set an own pdf name
+* Added an optional download statistic
+* Now removing cache file and database entry when a post/page is deleted
 = 2.1.1 =
-* Fix a new image print bug
+* Fixed a new image print bug
 = 2.1 =
-* Add the option to allow pdf print only users who are logged in
-* Add a script that you can call by cron to create templates in background (if you have enabled caching)
+* Added the option to allow pdf print only to users who are logged in
+* Added a script that you can call by cron to create templates in the background (if you have caching enabled)
 = 2.0.2 =
-* Add a missing file
+* Added a missing file
 = 2.0.1 =
-* Fix 2 small include bugs
-* Fix a php4 issiue
+* Fixed two small include bugs
+* Fixed a php4 issiue
 = 2.0 =
-* Some small Bugfixes
-* PDF Template support (now you can also use a pdf file as template) If you need this please write me a mail so i can tell you how it works.
+* Some small bugfixes
+* PDF Template support (now you can also use a pdf file as a template): If you need this please write me a mail so I can tell you how it works.
 = 1.9.2 =
-* Add 2 vars to the templates for useing PDF Templates
+* Added two vars to the templates for using PDF Templates
 = 1.9 =
-* Add Option to make a black list instead of a white list
-* Add Button to clear all selecetet Posts at the black/white list
+* Added option to make a black list instead of a white list
+* Added button to clear all selected posts on the black/white list
 = 1.8 =
-* Fix the pdf button function if you use this function on the archive page for example
+* Fixed the pdf button function e.g. when using this function on the archive page
 = 1.7 =
-* Fix a small pre html tag problem
+* Fixed a small pre html tag problem
 = 1.6 =
-* Fix a image print bug
-* Clean some not needed code parts
-* Changing PDF author and creater string
-* Move the theme dir from the plugin dir to wp-content/wp-mpdf-themes
-* Now you can access the Plugin config under Settings and not any longer under Plugins
+* Fixed an image printing bug
+* Cleaned some code parts which aren't needed
+* Changed PDF author and creator string
+* Moved the theme dir from the plugin dir to wp-content/wp-mpdf-themes
+* Now you can access the plugin config under settings and not any longer under plugins
 = 1.5 =
-* Fix a encoding problem again
+* Fixed an encoding problem again
 = 1.4 =
-* Add function parameter for pdfbutton to link to a new page for PDF Print
-* Add function to display only for some Posts and Pages the PDF print
+* Added function parameter for pdfbutton to link to a new page for PDF Print
+* Added function to display only for some Posts and Pages the PDF print
 = 1.3 =
-* Fix a pre problem with newlines
+* Fixed a &lt;pre&gt; problem with newlines
 = 1.2 =
-* Fix a encoding problem
-* convert &lt;pre&gt; to &lt;div class="pre"&gt; to prevent a pdf print bug
+* Fixed an encoding problem
+* Converted &lt;pre&gt; to &lt;div class="pre"&gt; to prevent a pdf print bug
 = 1.1 =
-* Create a admin panel
+* Created an admin panel
 = 1.0 =  
-* Release the Plugin  
+* Released the Plugin  
+
 
 == Installation ==
 
 1. Upload the whole plugin folder to your /wp-content/plugins/ folder.
-2. Give the folders in the Plugin dir write permission (777) => wp-mpdf/cache AND wp-mpdf/mdpf/graph_cache
-3. Go to the Plugins page and activate the plugin.
-4. Add to your template "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton(); ?&gt;" for a small button or "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton('my link'); ?&gt;" for a textlink.
- (if you wish to open the pdf print in a new tab you can add as first parameter true)
-5. You can adjust some options if you go to your admin interface, klick on plugins and then on wp-mpdf. For pdf allow you can use the checkbox when you create or edit a Post or Site.
+2. Set write permission (777) to the plugin dir folders => wp-mpdf/cache AND wp-mpdf/mdpf/graph_cache
+3. Go to the plugins page and activate the plugin.
+4. Add to your template "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton(); ?&gt;" as a small button or "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton('my link', 'my login text'); ?&gt;" as a textlink. The second text specifies the text which should displayed if you have checked "needs login" and a user isn't loggend in.
+ (if you wish to open the pdf print in a new tab you may pass "true" for the first parameter)
+5. You can adjust some options: in your admin interface, click on plugins and then on wp-mpdf. For allowing or disabling pdf export you can use the checkbox when creating/editing a post or a page.
+6. Place your templates into /wp-content/wp-mpdf-themes
 
-6. Your templates can you put to /wp-content/wp-mpdf-themes
+
 
 == License ==
 
@@ -78,4 +86,3 @@ wp-mpdf is free software: you can redistribute it and/or modify it under the ter
 wp-mpdf is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with wp-mpdf. If not, see <http://www.gnu.org/licenses/>.
-
