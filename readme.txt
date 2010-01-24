@@ -4,7 +4,7 @@ Donate link: http://www.fkrauthan.de
 Tags: print, printer, wp-mpdf, pdf, mpdf
 Requires at least: 2.8
 Tested up to: 2.9
-Stable tag: 2.2
+Stable tag: 2.3
 
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
@@ -15,6 +15,8 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It is written fo
 
 == Changelog ==  
 
+= 2.3 =
+* Now to add new Posts to the black-/white-list, you only must select it from a dropdown
 = 2.2 =
 * Added the option to add a text if you have checked "need login" and a user isn't logged in
 * Added an option to set "need login" per post

@@ -107,6 +107,43 @@ function mpdf_admin_options() {
 	echo '</form>';
 }
 
+function mpdf_admin_listposts() {
+	echo '<select name="post">';
+	echo '<optgroup label="Draft">';
+	$posts = get_posts('numberposts=-1&order=ASC&orderby=title&post_type=any&post_status=draft');
+	foreach($posts as $post) {
+		if($post->post_type=='attachment') continue;
+			
+		echo '<option value="'.$post->ID.'">'.$post->post_title.'</option>';
+	}
+	echo '</optgroup>';
+	echo '<optgroup label="Future">';
+	$posts = get_posts('numberposts=-1&order=ASC&orderby=title&post_type=any&post_status=future');
+	foreach($posts as $post) {
+		if($post->post_type=='attachment') continue;
+			
+		echo '<option value="'.$post->ID.'">'.$post->post_title.'</option>';
+	}
+	echo '</optgroup>';
+	echo '<optgroup label="Private">';
+	$posts = get_posts('numberposts=-1&order=ASC&orderby=title&post_type=any&post_status=private');
+	foreach($posts as $post) {
+		if($post->post_type=='attachment') continue;
+		
+		echo '<option value="'.$post->ID.'">'.$post->post_title.'</option>';
+	}
+	echo '</optgroup>';
+	echo '<optgroup label="Publish">';
+	$posts = get_posts('numberposts=-1&order=ASC&orderby=title&post_type=any&post_status=publish');
+	foreach($posts as $post) {
+		if($post->post_type=='attachment') continue;
+		
+		echo '<option value="'.$post->ID.'">'.$post->post_title.'</option>';
+	}
+	echo '</optgroup>';
+	echo '</select>';
+}
+
 function mpdf_admin_allowedprintedpages() {
 	global $wpdb;
 	$table_name = $wpdb->prefix . WP_MPDF_POSTS_DB;
@@ -124,46 +161,30 @@ function mpdf_admin_allowedprintedpages() {
 		echo '<p style="color: green;">All posts are deleted from the black/white list.</p>';
 	}
 	if(isset($_POST['addallowedpage'])) {
-		$page_type = $_POST['allowedpage_type'];
-		if($page_type=='page'||$page_type=='post') {
-			$page_name = $_POST['allowedpage_title'];
-			
-			$page = null;
-			if($page_type=='page') {
-				$page = get_page_by_title($page_name);
+		$page = get_post($_POST['post']);
+		if($page!=null) {
+			$sql = 'SELECT id FROM '.$table_name.' WHERE post_id='.$page->ID.' AND post_type="'.$page->post_type.'" LIMIT 1';
+			$db_id = $wpdb->get_var($sql);
+			if($db_id == null) {
+				$sql = 'INSERT INTO '.$table_name.' (post_type, post_id, general, login, pdfname, downloads) VALUES (%s, %d, 1, 0, "", 0)';
+				$wpdb->query($wpdb->prepare($sql, $page->post_type, $page->ID));
 			}
 			else {
-				$sql = 'SELECT id FROM '.$wpdb->posts.' WHERE post_title="'.$page_name.'" AND post_type="post" LIMIT 1';
-				$post_id = $wpdb->get_var($sql);
-				if($post_id!=null)
-					$page = get_post($post_id);
+				$sql = 'UPDATE '.$table_name.' SET general=1 WHERE id=%d LIMIT 1';
+				$wpdb->query($wpdb->prepare($sql, $db_id));
 			}
-			
-			if($page!=null) {
-				$sql = 'SELECT id FROM '.$table_name.' WHERE post_id='.$page->ID.' AND post_type="'.$page_type.'" LIMIT 1';
-				$db_id = $wpdb->get_var($sql);
-				if($db_id == null) {
-					$sql = 'INSERT INTO '.$table_name.' (post_type, post_id, general, login, pdfname, downloads) VALUES (%s, %d, 1, 0, "", 0)';
-					$wpdb->query($wpdb->prepare($sql, $page_type, $page->ID));
-				}
-				else {
-					$sql = 'UPDATE '.$table_name.' SET general=1 WHERE id=%d LIMIT 1';
-					$wpdb->query($wpdb->prepare($sql, $db_id));
-				}
 				
-				echo '<p style="color: green;">Post has been added to the .</p>';
-			}
-			else {
-				echo '<p style="color: red;">Post not found.</p>';
-			}
+			echo '<p style="color: green;">Post has been added to the .</p>';
 		}
 		else {
-			echo '<p style="color: red;">Selected type is not defined.</p>';
+			echo '<p style="color: red;">Post not found.</p>';
 		}
 	}
 	else if(isset($_GET['addallowedpage'])) {
 		echo '<form action="?page='.$_GET['page'].'" method="post">';
-		echo '<select name="allowedpage_type"><option value="post">Post</option><option value="page">Page</option></select> Title: <input type="text" name="allowedpage_title" value="" /><br />';
+		echo 'Post: ';
+		mpdf_admin_listposts();
+		echo '<br />';
 		echo '<input type="submit" value="Add Entry" name="addallowedpage" />';
 		echo '</form>';
 		echo '<br />';
@@ -209,48 +230,32 @@ function mpdf_admin_pdfname() {
 		echo '<p style="color: green;">All pdf names from posts are deleted.</p>';
 	}
 	if(isset($_POST['addcustomname'])) {
-		$page_type = $_POST['allowedpage_type'];
-		if($page_type=='page'||$page_type=='post') {
-			$page_name = $_POST['allowedpage_title'];
-			
-			$page = null;
-			if($page_type=='page') {
-				$page = get_page_by_title($page_name);
+		$page = get_post($_POST['post']);
+		if($page!=null) {
+			$sql = 'SELECT id FROM '.$table_name.' WHERE post_id='.$page->ID.' AND post_type="'.$page->post_type.'" LIMIT 1';
+			$db_id = $wpdb->get_var($sql);
+				
+			$pdfname = $_POST['pdfname'];
+			if($db_id == null) {
+				$sql = 'INSERT INTO '.$table_name.' (post_type, post_id, general, login, pdfname, downloads) VALUES (%s, %d, 0, 0, %s, 0)';
+				$wpdb->query($wpdb->prepare($sql, $page->post_type, $page->ID, $pdfname));
 			}
 			else {
-				$sql = 'SELECT id FROM '.$wpdb->posts.' WHERE post_title="'.$page_name.'" AND post_type="post" LIMIT 1';
-				$post_id = $wpdb->get_var($sql);
-				if($post_id!=null)
-					$page = get_post($post_id);
+				$sql = 'UPDATE '.$table_name.' SET pdfname=%s WHERE id=%d LIMIT 1';
+				$wpdb->query($wpdb->prepare($sql, $pdfname, $db_id));
 			}
-			
-			if($page!=null) {
-				$sql = 'SELECT id FROM '.$table_name.' WHERE post_id='.$page->ID.' AND post_type="'.$page_type.'" LIMIT 1';
-				$db_id = $wpdb->get_var($sql);
 				
-				$pdfname = $_POST['pdfname'];
-				if($db_id == null) {
-					$sql = 'INSERT INTO '.$table_name.' (post_type, post_id, general, login, pdfname, downloads) VALUES (%s, %d, 0, 0, %s, 0)';
-					$wpdb->query($wpdb->prepare($sql, $page_type, $page->ID, $pdfname));
-				}
-				else {
-					$sql = 'UPDATE '.$table_name.' SET pdfname=%s WHERE id=%d LIMIT 1';
-					$wpdb->query($wpdb->prepare($sql, $pdfname, $db_id));
-				}
-				
-				echo '<p style="color: green;">Post has been added to the .</p>';
-			}
-			else {
-				echo '<p style="color: red;">Post not found.</p>';
-			}
+			echo '<p style="color: green;">Post has been added to the .</p>';
 		}
 		else {
-			echo '<p style="color: red;">Selected type is not defined.</p>';
+			echo '<p style="color: red;">Post not found.</p>';
 		}
 	}
 	else if(isset($_GET['addcustomname'])) {
 		echo '<form action="?page='.$_GET['page'].'" method="post">';
-		echo '<select name="allowedpage_type"><option value="post">Post</option><option value="page">Page</option></select> Title: <input type="text" name="allowedpage_title" value="" /><br />';
+		echo 'Post: ';
+		mpdf_admin_listposts();
+		echo '<br />';
 		echo 'New pdf name: <input type="text" name="pdfname" value="" /><br />';
 		echo '<input type="submit" value="Add Entry" name="addcustomname" />';
 		echo '</form>';
@@ -341,46 +346,29 @@ function mpdf_admin_loginneededpages() {
 		echo '<p style="color: green;">All posts are deleted from the black/white list.</p>';
 	}
 	if(isset($_POST['addneedloginpage'])) {
-		$page_type = $_POST['allowedpage_type'];
-		if($page_type=='page'||$page_type=='post') {
-			$page_name = $_POST['allowedpage_title'];
-			
-			$page = null;
-			if($page_type=='page') {
-				$page = get_page_by_title($page_name);
+		$page = get_post($_POST['post']);
+		if($page!=null) {
+			$sql = 'SELECT id FROM '.$table_name.' WHERE post_id='.$page->ID.' AND post_type="'.$page->post_type.'" LIMIT 1';
+			$db_id = $wpdb->get_var($sql);
+			if($db_id == null) {
+				$sql = 'INSERT INTO '.$table_name.' (post_type, post_id, general, login, pdfname, downloads) VALUES (%s, %d, 0, 1, "", 0)';
+				$wpdb->query($wpdb->prepare($sql, $page->post_type, $page->ID));
 			}
 			else {
-				$sql = 'SELECT id FROM '.$wpdb->posts.' WHERE post_title="'.$page_name.'" AND post_type="post" LIMIT 1';
-				$post_id = $wpdb->get_var($sql);
-				if($post_id!=null)
-					$page = get_post($post_id);
+				$sql = 'UPDATE '.$table_name.' SET login=1 WHERE id=%d LIMIT 1';
+				$wpdb->query($wpdb->prepare($sql, $db_id));
 			}
-			
-			if($page!=null) {
-				$sql = 'SELECT id FROM '.$table_name.' WHERE post_id='.$page->ID.' AND post_type="'.$page_type.'" LIMIT 1';
-				$db_id = $wpdb->get_var($sql);
-				if($db_id == null) {
-					$sql = 'INSERT INTO '.$table_name.' (post_type, post_id, general, login, pdfname, downloads) VALUES (%s, %d, 0, 1, "", 0)';
-					$wpdb->query($wpdb->prepare($sql, $page_type, $page->ID));
-				}
-				else {
-					$sql = 'UPDATE '.$table_name.' SET login=1 WHERE id=%d LIMIT 1';
-					$wpdb->query($wpdb->prepare($sql, $db_id));
-				}
 				
-				echo '<p style="color: green;">Post has been added to the .</p>';
-			}
-			else {
-				echo '<p style="color: red;">Post not found.</p>';
-			}
+			echo '<p style="color: green;">Post has been added to the .</p>';
 		}
 		else {
-			echo '<p style="color: red;">Selected type is not defined.</p>';
+			echo '<p style="color: red;">Post not found.</p>';
 		}
 	}
 	else if(isset($_GET['addneedloginpage'])) {
 		echo '<form action="?page='.$_GET['page'].'" method="post">';
-		echo '<select name="allowedpage_type"><option value="post">Post</option><option value="page">Page</option></select> Title: <input type="text" name="allowedpage_title" value="" /><br />';
+		mpdf_admin_listposts();
+		echo '<br />';
 		echo '<input type="submit" value="Add Entry" name="addneedloginpage" />';
 		echo '</form>';
 		echo '<br />';
