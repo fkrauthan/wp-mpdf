@@ -82,7 +82,7 @@
 		for($i=0;$i<count($tmpPre);$i++) {
 			$tmpPreBlock = get_mark($content, '<pre'.$tmpPre[$i].'>*</pre>');
 			for($i2=0;$i2<count($tmpPreBlock);$i2++) {
-				$content = str_replace('<pre'.$tmpPre[$i].'>'.$tmpPreBlock[$i2].'</pre>', '<div class="pre">'.str_replace("\n", "<br />\n", $tmpPreBlock[$i2]).'</div>', $content);
+				$content = str_replace('<pre'.$tmpPre[$i].'>'.$tmpPreBlock[$i2].'</pre>', '<div class="pre">'.str_replace("\n", "<br />\n", str_replace(array("\t", ' '), array('&nbsp;&nbsp;&nbsp;&nbsp;', '&nbsp;')), $tmpPreBlock[$i2])).'</div>', $content);
 			}
 		}
 
@@ -90,7 +90,7 @@
 		for($i=0;$i<count($tmpPre);$i++) {
 			$tmpPreBlock = get_mark($content, '<PRE'.$tmpPre[$i].'>*</PRE>');
 			for($i2=0;$i2<count($tmpPreBlock);$i2++) {
-				$content = str_replace('<PRE'.$tmpPre[$i].'>'.$tmpPreBlock[$i2].'</PRE>', '<div class="PRE">'.str_replace("\n", "<br />\n", $tmpPreBlock[$i2]).'</div>', $content);
+				$content = str_replace('<PRE'.$tmpPre[$i].'>'.$tmpPreBlock[$i2].'</PRE>', '<div class="PRE">'.str_replace("\n", "<br />\n", str_replace(array("\t", ' '), array('&nbsp;&nbsp;&nbsp;&nbsp;', '&nbsp;'), $tmpPreBlock[$i2])).'</div>', $content);
 			}
 		}
 
