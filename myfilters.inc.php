@@ -85,16 +85,17 @@
 		$array = array();
 		preg_match_all($pattern, $content, $array);
 		foreach($array[0] as $match) {
-			$content = str_replace($match, str_replace(array("\t", ' '), array('&nbsp;&nbsp;&nbsp;&nbsp;', '&nbsp;'), $match), $content);
-		}
+			if(trim($match)==''&&strlen($match)<=2) continue;
 
-		return $content;
+			$content = str_replace($match, str_replace(' ', '&nbsp;', $match), $content);
+		}
+		return str_replace("\t", '&nbsp;&nbsp;&nbsp;&nbsp;', $content);
 	}
 
 	function mpdf_prefix_replace($startpre, $endpre, $content) {
 		$tmpPreBlock = get_mark($content, $startpre.'*'.$endpre);
 		for($i2=0;$i2<count($tmpPreBlock);$i2++) {
-			$content = mpdf_prefix_space(str_replace($startpre.$tmpPreBlock[$i2].$endpre, '<div class="pre">'.str_replace("\n", "<br />\n", $tmpPreBlock[$i2]).'</div>', $content));
+			$content = str_replace($startpre.$tmpPreBlock[$i2].$endpre, '<div class="pre">'.str_replace("\n", "<br />\n", mpdf_prefix_space($tmpPreBlock[$i2])).'</div>', $content);
 		}
 
 		return $content;
@@ -113,7 +114,7 @@
 
 		$content = mpdf_prefix_replace('<pre>', '</pre>', $content);
 		$content = mpdf_prefix_replace('<PRE>', '</PRE>', $content);
-
+die($content);
 		return $content;
 	}
 
