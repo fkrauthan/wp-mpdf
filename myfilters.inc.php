@@ -1,9 +1,11 @@
 <?php
 	/*
 	 * This file is part of wp-mpdf.
-	 * wp-mpdf is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free 		 * Software Foundation, either version 3 of the License, or (at your option) any later version.
+	 * wp-mpdf is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+         * Software Foundation, either version 3 of the License, or (at your option) any later version.
 	 *
-	 * wp-mpdf is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 	 * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+	 * wp-mpdf is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ 	 * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 	 *
 	 * You should have received a copy of the GNU General Public License along with wp-mpdf. If not, see <http://www.gnu.org/licenses/>.
 	 */
@@ -77,22 +79,40 @@
 		return $content;
 	}
 
+	function mpdf_prefix_space($content) {
+		$pattern = '/(?<=>|\A(?!<)).*(?=<|\z)/sU';
+
+		$array = array();
+		preg_match_all($pattern, $content, $array);
+		foreach($array[0] as $match) {
+			$content = str_replace($match, str_replace(array("\t", ' '), array('&nbsp;&nbsp;&nbsp;&nbsp;', '&nbsp;'), $match), $content);
+		}
+
+		return $content;
+	}
+
+	function mpdf_prefix_replace($startpre, $endpre, $content) {
+		$tmpPreBlock = get_mark($content, $startpre.'*'.$endpre);
+		for($i2=0;$i2<count($tmpPreBlock);$i2++) {
+			$content = mpdf_prefix_space(str_replace($startpre.$tmpPreBlock[$i2].$endpre, '<div class="pre">'.str_replace("\n", "<br />\n", $tmpPreBlock[$i2]).'</div>', $content));
+		}
+
+		return $content;
+	}
+
 	function mpdf_prefix($content) {
 		$tmpPre = get_mark($content, '<pre*>');
 		for($i=0;$i<count($tmpPre);$i++) {
-			$tmpPreBlock = get_mark($content, '<pre'.$tmpPre[$i].'>*</pre>');
-			for($i2=0;$i2<count($tmpPreBlock);$i2++) {
-				$content = str_replace('<pre'.$tmpPre[$i].'>'.$tmpPreBlock[$i2].'</pre>', '<div class="pre">'.str_replace("\n", "<br />\n", str_replace(array("\t", ' '), array('&nbsp;&nbsp;&nbsp;&nbsp;', '&nbsp;')), $tmpPreBlock[$i2])).'</div>', $content);
-			}
+			$content = mpdf_prefix_replace('<pre'.$tmpPre[$i].'>', '</pre>', $content);
 		}
 
 		$tmpPre = get_mark($content, '<PRE*>');
 		for($i=0;$i<count($tmpPre);$i++) {
-			$tmpPreBlock = get_mark($content, '<PRE'.$tmpPre[$i].'>*</PRE>');
-			for($i2=0;$i2<count($tmpPreBlock);$i2++) {
-				$content = str_replace('<PRE'.$tmpPre[$i].'>'.$tmpPreBlock[$i2].'</PRE>', '<div class="PRE">'.str_replace("\n", "<br />\n", str_replace(array("\t", ' '), array('&nbsp;&nbsp;&nbsp;&nbsp;', '&nbsp;'), $tmpPreBlock[$i2])).'</div>', $content);
-			}
+			$content = mpdf_prefix_replace('<PRE'.$tmpPre[$i].'>', '</PRE>', $content);
 		}
+
+		$content = mpdf_prefix_replace('<pre>', '</pre>', $content);
+		$content = mpdf_prefix_replace('<PRE>', '</PRE>', $content);
 
 		return $content;
 	}

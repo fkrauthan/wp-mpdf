@@ -21,6 +21,7 @@ body {
 .pre {
 	background-color: grey;
 	font-family: courier;
+	text-align: left;
 }
 
 #header {
