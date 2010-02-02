@@ -80,7 +80,7 @@
 	}
 
 	function mpdf_prefix_space($content) {
-		$pattern = '/(?<=>|\A(?!<)).*(?=<|\z)/sU';
+		$pattern = '/(?<=>|\A(?!<))[^<]*(?=<|\z)/sU';
 
 		$array = array();
 		preg_match_all($pattern, $content, $array);
@@ -114,7 +114,7 @@
 
 		$content = mpdf_prefix_replace('<pre>', '</pre>', $content);
 		$content = mpdf_prefix_replace('<PRE>', '</PRE>', $content);
-die($content);
+
 		return $content;
 	}
 
