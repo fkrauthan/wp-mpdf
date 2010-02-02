@@ -79,16 +79,13 @@
 		return $content;
 	}
 
+	function mpdf_prefix_space_replace($matches) {
+		return str_replace(' ', '&nbsp;', $matches[0]);
+	}
+
 	function mpdf_prefix_space($content) {
 		$pattern = '/(?<=>|\A(?!<))[^<]*(?=<|\z)/sU';
-
-		$array = array();
-		preg_match_all($pattern, $content, $array);
-		foreach($array[0] as $match) {
-			if(trim($match)==''&&strlen($match)<=2) continue;
-
-			$content = str_replace($match, str_replace(' ', '&nbsp;', $match), $content);
-		}
+		$content = preg_replace_callback($pattern, 'mpdf_prefix_space_replace', $content);
 		return str_replace("\t", '&nbsp;&nbsp;&nbsp;&nbsp;', $content);
 	}
 
