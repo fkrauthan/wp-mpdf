@@ -72,7 +72,7 @@ function wp_syntax_highlight_mpdf($match)
     $output = "\n<div class=\"wp_syntax\">";
 
 	//Beim Printen immer Line numbern anmachen
-	$line = true;
+	$line = get_option('mpdf_geshi_linenumbers');
     if ($line)
     {
     	$lineMode = explode("\n", $code);

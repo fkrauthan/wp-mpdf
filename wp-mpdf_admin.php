@@ -35,6 +35,7 @@ function mpdf_admin_options() {
 		update_option('mpdf_theme', $_POST['theme']);
 		update_option('mpdf_caching', isset($_POST['caching']));
 		update_option('mpdf_geshi', isset($_POST['geshi']));
+		update_option('mpdf_geshi_linenumbers', isset($_POST['geshi_linenumbers']));
 		update_option('mpdf_stats', isset($_POST['stats']));
 		
 		if(isset($_POST['allow_all'])) {
@@ -82,6 +83,9 @@ function mpdf_admin_options() {
 	echo '/></td></tr>';
 	echo '<tr><td>Geshi Parsing: </td><td><input type="checkbox" name="geshi" ';
 	if(get_option('mpdf_geshi')==true) echo 'checked="checked"';
+	echo '/></td></tr>';
+	echo '<tr><td>Geshi Line numbers: </td><td><input type="checkbox" name="geshi_linenumbers" ';
+	if(get_option('mpdf_geshi_linenumbers')==true) echo 'checked="checked"';
 	echo '/></td></tr>';
 	echo '<tr><td>Allow to Print all Pages: </td><td><input type="checkbox" name="allow_all" ';
 	if(get_option('mpdf_allow_all')==1) echo 'checked="checked"';
