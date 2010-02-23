@@ -22,7 +22,30 @@
 		$content = mpdf_prefix($content);
 		$content = mpdf_prefix_clear($content);
 		$content = mpdf_speedUpLocaleImages($content);
+		$content = mpdf_fixRelativUrls($content);
 		
+		return $content;
+	}
+
+	function mpdf_speedUpLocaleImages($content) {
+		$base_url = get_option('siteurl');
+
+		if(preg_match_all('#<a.*href="(.*)".*>#iU', $content, $matches)) {
+			foreach($matches[1] as $ikey => $link) {
+				if(substr($link, 0, 1) === '/') {
+					$content = str_replace('href="'.$link.'"', 'href="'.$base_url.'/'.$link.'"', $content);
+				}
+			}
+		}
+
+		if(preg_match_all("#<a.*href='(.*)'.*>#iU", $content, $matches)) {
+			foreach($matches[1] as $ikey => $link) {
+				if(substr($link, 0, 1) === '/') {
+					$content = str_replace("href='".$link."'", "href='".$base_url.'/'.$link."'", $content);
+				}
+			}
+		}
+
 		return $content;
 	}
 
