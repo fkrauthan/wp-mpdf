@@ -17,8 +17,8 @@
 	}
 	
 	function mpdf_myfilters($content) {
-		$content = mpdf_clearcaption($content);
-		$content = mpdf_buildmenu($content);
+		//$content = mpdf_clearcaption($content);
+		//$content = mpdf_buildmenu($content);
 		$content = mpdf_prefix($content);
 		$content = mpdf_prefix_clear($content);
 		$content = mpdf_speedUpLocaleImages($content);
