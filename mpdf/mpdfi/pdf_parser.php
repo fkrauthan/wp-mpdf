@@ -73,7 +73,10 @@ class pdf_parser {
      */
     var $root;
 	
-    
+    // mPDF 4.0 Added flag to show success on loading file
+    var $success;
+    var $errormsg;
+
     /**
      * Constructor
      *
@@ -81,21 +84,35 @@ class pdf_parser {
      */
 	function pdf_parser($filename) {
         $this->filename = $filename;
-        
+	  // mPDF 4.0
+	  $this->success = true;
+
         $this->f = @fopen($this->filename, "rb");
 
-        if (!$this->f)
-            $this->error(sprintf("Cannot open %s !", $filename));
+        if (!$this->f) {
+            $this->success = false;
+            $this->errormsg = sprintf("Cannot open %s !", $filename);
+		return false;
+	  }
 
         $this->c =& new pdf_context($this->f);
         // Read xref-Data
-        $this->pdf_read_xref($this->xref, $this->pdf_find_xref());
+	  $offset = $this->pdf_find_xref();
+        if ($offset===false) {
+            $this->success = false;
+            $this->errormsg = sprintf("Cannot open %s !", $filename);
+		return false;
+	  }
+        $this->pdf_read_xref($this->xref, $offset);
+        if ($this->success == false) { return false; }
 
         // Check for Encryption
         $this->getEncryption();
+        if ($this->success == false) { return false; }
 
         // Read root
         $this->pdf_read_root();
+        if ($this->success == false) { return false; }
     }
     
     /**
@@ -108,7 +125,7 @@ class pdf_parser {
     	}	
     }
     
-    /**
+      /**
      * Print Error and die
      *
      * @param string $msg  Error-Message
@@ -116,13 +133,16 @@ class pdf_parser {
     function error($msg) {
     	die("<b>PDF-Parser Error:</b> ".$msg);	
     }
-    
+  
     /**
      * Check Trailer for Encryption
      */
     function getEncryption() {
         if (isset($this->xref['trailer'][1]['/Encrypt'])) {
-            $this->error("File is encrypted!");
+	 	// mPDF 4.0
+           	$this->success = false;
+            $this->errormsg = sprintf("File is encrypted!");
+		return false;
         }
     }
     
@@ -133,7 +153,10 @@ class pdf_parser {
      */
     function pdf_find_root() {
         if ($this->xref['trailer'][1]['/Root'][0] != PDF_TYPE_OBJREF) {
-            $this->error("Wrong Type of Root-Element! Must be an indirect reference");
+	 	// mPDF 4.0
+           	$this->success = false;
+            $this->errormsg = sprintf("Wrong Type of Root-Element! Must be an indirect reference");
+		return false;
         }
         return $this->xref['trailer'][1]['/Root'];
     }
@@ -143,7 +166,12 @@ class pdf_parser {
      */
     function pdf_read_root() {
         // read root
-        $this->root = $this->pdf_resolve_object($this->c, $this->pdf_find_root());
+	  $root = $this->pdf_find_root();
+        if ($root ===false) {
+            $this->success = false;
+		return false;
+	  }
+        $this->root = $this->pdf_resolve_object($this->c, $root);
     }
     
     /**
@@ -157,7 +185,10 @@ class pdf_parser {
         $data = substr($data, $pos);
         
         if (!preg_match('/\s*(\d+).*$/s', $data, $matches)) {
-            $this->error("Unable to find pointer to xref table");
+	 	// mPDF 4.0
+           	$this->success = false;
+            $this->errormsg = sprintf("Unable to find pointer to xref table");
+		return false;
     	}
 
     	return (int) $matches[1];
@@ -173,12 +204,12 @@ class pdf_parser {
      */
     function pdf_read_xref(&$result, $offset, $start = null, $end = null) {
         if (is_null ($start) || is_null ($end)) {
-		    fseek($this->f, $o_pos = $offset);
+		fseek($this->f, $o_pos = $offset);
             $data = trim(fgets($this->f,1024));
-            	        
+
             if (strlen($data) == 0) 
                 $data = trim(fgets($this->f,1024));
-            		
+
             if ($data !== 'xref') {
             	fseek($this->f, $o_pos);
             	$data = trim(_fgets($this->f, true));
@@ -190,7 +221,10 @@ class pdf_parser {
             	        $this->pdf_read_xref($result, $tmpOffset, $start, $end);
             	        return;
                     } else {
-                        $this->error("Unable to find xref table - Maybe a Problem with 'auto_detect_line_endings'");
+	 			// mPDF 4.0
+           			$this->success = false;
+            		$this->errormsg = sprintf("Unable to find xref table - Maybe a Problem with 'auto_detect_line_endings'");
+				return;
             	    }
             	}
     		}
@@ -206,7 +240,10 @@ class pdf_parser {
             	        $n_pos = $o_pos+strlen($data[0])+strlen($data[1])+2;
             	        fseek($this->f, $n_pos);
             	    } else {
-                        $this->error("Unexpected header in xref table");
+	 			// mPDF 4.0
+           			$this->success = false;
+            		$this->errormsg = sprintf("Unexpected header in xref table");
+				return;
             	    }
             	}
             }
@@ -236,12 +273,12 @@ class pdf_parser {
         $data = fgets($this->f,1024);
 		if (strlen(trim($data)) == 0) 
 		    $data = fgets($this->f, 1024);
-        
+
         if (preg_match("/trailer/",$data)) {
             if (preg_match("/(.*trailer[ \n\r]*)/",$data,$m)) {
             	fseek($this->f, $o_pos+strlen($m[1]));
     		}
-    		
+
 			$c =&  new pdf_context($this->f);
     	    $trailer = $this->pdf_read_value($c);
     	    
@@ -259,7 +296,10 @@ class pdf_parser {
         		$data = explode(' ', trim (_fgets ($this->f, true)));
 
         		if (count($data) != 2) {
-        		    $this->error("Unexpected data in xref table");
+	 			// mPDF 4.0
+           			$this->success = false;
+            		$this->errormsg = sprintf("Unexpected data in xref table");
+				return;
         		}
 		    }
 		    
@@ -498,7 +538,10 @@ class pdf_parser {
     			$header = $this->pdf_read_value($c,null,true);
 
     			if ($header[0] != PDF_TYPE_OBJDEC || $header[1] != $obj_spec[1] || $header[2] != $obj_spec[2]) {
-    				$this->error("Unable to find object ({$obj_spec[1]}, {$obj_spec[2]}) at expected location");
+	 			// mPDF 4.0
+           			$this->success = false;
+            		$this->errormsg = sprintf("Unable to find object ({$obj_spec[1]}, {$obj_spec[2]}) at expected location");
+				return false;
     			}
 
     			// If we're being asked to store all the information

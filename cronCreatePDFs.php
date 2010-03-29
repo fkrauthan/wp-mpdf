@@ -27,12 +27,31 @@ if(get_option('mpdf_caching')!=true) {
 }
 
 
+//Do login if is whished
+if(get_option('mpdf_cron_user') != '') {
+    $userId = get_option('mpdf_cron_user');
+    if(get_option('mpdf_cron_user') == 'auto') {
+        $aUsersID = $wpdb->get_col($wpdb->prepare('SELECT ID FROM '.$wpdb->users.' LIMIT 1'));
+        foreach($aUsersID as $iUserID) {
+            $userId = $iUserID;
+        }
+    }
+
+    wp_set_current_user($userId);
+}
+
+
 //Cache the posts
 $_GET['output'] = 'pdf';
 echo "Start cache creating\n";
 
 $posts = get_posts('numberposts=-1&order=ASC&orderby=title');
 foreach($posts as $post) {
+    if($post->post_title == '') {
+        echo "Skip post creating: No Title (".$post->ID.")\n";
+        continue;
+    }
+ 
 	echo "Create cache for post (".$post->ID.")\n";
 	
 

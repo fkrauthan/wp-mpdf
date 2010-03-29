@@ -33,6 +33,7 @@ function mpdf_admin_options() {
 	
 	if(isset($_POST['save_options'])) {
 		update_option('mpdf_theme', $_POST['theme']);
+        update_option('mpdf_cron_user', $_POST['cron_user']);
 		update_option('mpdf_caching', isset($_POST['caching']));
 		update_option('mpdf_geshi', isset($_POST['geshi']));
 		update_option('mpdf_geshi_linenumbers', isset($_POST['geshi_linenumbers']));
@@ -104,7 +105,23 @@ function mpdf_admin_options() {
 	echo '<option value="2" '; if(get_option('mpdf_need_login')==2) echo 'selected="selected"'; echo '>Whitelist</option>';
 	echo '<option value="3" '; if(get_option('mpdf_need_login')==3) echo 'selected="selected"'; echo '>Blacklist</option>';
 	echo '</select></td></tr>';
-	
+
+    //Cron generating User
+    global $wpdb;
+    echo '<tr><td>User for generating per Cron: </td><td><select name="cron_user">';
+    echo '<option value="" '; if(get_option('mpdf_cron_user')=='') echo 'selected="selected"'; echo '>None</option>';
+	echo '<option value="auto" '; if(get_option('mpdf_cron_user')=='auto') echo 'selected="selected"'; echo '>Auto</option>';
+	$aUsersID = $wpdb->get_col($wpdb->prepare('SELECT ID FROM '.$wpdb->users.' ORDER BY user_nicename ASC')); 
+    foreach($aUsersID as $iUserID) {
+        $user = get_userdata($iUserID);
+
+        echo '<option value="'.$iUserID.'" ';
+        if($iUserID == get_option('mpdf_cron_user')) {
+            echo 'selected="selected"';
+        }
+        echo '>'.$user->user_nicename.'</option>';
+    }
+    echo '</select></td></tr>';
 	
 	echo '</table>';
 	echo '<input type="submit" value="Save" name="save_options" /> <input type="reset" />';

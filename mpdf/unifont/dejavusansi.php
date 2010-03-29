@@ -295,5 +295,5 @@ $enc='';
 $diff='';
 $file='dejavusansi.z';
 $ctg='dejavusansi.ctg.z';
-$originalsize=523436;
+$originalsize=523804;
 ?>

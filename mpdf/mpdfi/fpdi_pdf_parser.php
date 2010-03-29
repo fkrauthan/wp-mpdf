@@ -62,28 +62,23 @@ class fpdi_pdf_parser extends pdf_parser {
      */
     function fpdi_pdf_parser($filename,&$fpdi) {
         $this->fpdi =& $fpdi;
-		$this->filename = $filename;
-		
+	  $this->filename = $filename;
+
         parent::pdf_parser($filename);
+        if ($this->success == false) { return false; }
 
         // resolve Pages-Dictonary
         $pages = $this->pdf_resolve_object($this->c, $this->root[1][1]['/Pages']);
+        if ($this->success == false) { return false; }
 
         // Read pages
         $this->read_pages($this->c, $pages, $this->pages);
-        
+        if ($this->success == false) { return false; }
+
         // count pages;
         $this->page_count = count($this->pages);
     }
     
-    /**
-     * Overwrite parent::error()
-     *
-     * @param string $msg  Error-Message
-     */
-    function error($msg) {
-    	$this->fpdi->error($msg);	
-    }
     
     /**
      * Get pagecount from sourcefile
@@ -220,30 +215,31 @@ class fpdi_pdf_parser extends pdf_parser {
         foreach ($filters AS $_filter) {
             switch ($_filter[1]) {
                 case "/FlateDecode":
-                    if (function_exists('gzuncompress')) {
+			if (function_exists('gzuncompress')) {
                         $stream = (strlen($stream) > 0) ? @gzuncompress($stream) : '';                        
-                    } else {
+			} else {
                         $this->fpdi->error(sprintf("To handle %s filter, please compile php with zlib support.",$_filter[1]));
-                    }
-                    if ($stream === false) {
+			}
+			if ($stream === false) { 
                         $this->fpdi->error("Error while decompressing stream.");
-                    }
+			}
                 break;
+			// mPDF 4.2.003
+                case '/LZWDecode': 
+			include_once(_MPDF_PATH.'mpdfi/filters/FilterLZW.php');
+			$decoder =& new FilterLZW();
+			$stream = $decoder->decode($stream);
+			break;
+                case '/ASCII85Decode':
+			include_once(_MPDF_PATH.'mpdfi/filters/FilterASCII85.php');
+			$decoder =& new FilterASCII85();
+			$stream = $decoder->decode($stream);
+			break;
                 case null:
-                    $stream = $stream;
-                break;
+			$stream = $stream;
+			break;
                 default:
-                    if (preg_match("/^\/[a-z85]*$/i", $_filter[1], $filterName) && @include_once('decoders'.$_filter[1].'.php')) {
-                        $filterName = substr($_filter[1],1);
-                        if (class_exists($filterName)) {
-    	                	$decoder =& new $filterName($this->fpdi);
-    	                    $stream = $decoder->decode(trim($stream));
-                        } else {
-                        	$this->fpdi->error(sprintf("Unsupported Filter: %s",$_filter[1]));
-                        }
-                    } else {
-                        $this->fpdi->error(sprintf("Unsupported Filter: %s",$_filter[1]));
-                    }
+			$this->fpdi->error(sprintf("Unsupported Filter: %s",$_filter[1]));
             }
         }
         
@@ -339,8 +335,12 @@ class fpdi_pdf_parser extends pdf_parser {
         // Get the kids dictionary
     	$kids = $this->pdf_resolve_object ($c, $pages[1][1]['/Kids']);
 
-        if (!is_array($kids))
-            $this->fpdi->Error("Cannot find /Kids in current /Page-Dictionary");
+        if (!is_array($kids)) {
+	 		// mPDF 4.0
+           		$this->success = false;
+            	$this->errormsg = sprintf("Cannot find /Kids in current /Page-Dictionary");
+			return false;
+	  }
         foreach ($kids[1] as $v) {
     		$pg = $this->pdf_resolve_object ($c, $v);
             if ($pg[1][1]['/Type'][1] === '/Pages') {

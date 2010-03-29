@@ -53,6 +53,7 @@ function mpdf_install() {
 		add_option('mpdf_allow_all', true);
 		add_option('mpdf_need_login', false);
 		add_option('mpdf_stats', false);
+        add_option('mpdf_cron_user', '');
 	}
 	
 	
@@ -130,7 +131,6 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 	else {
 		define('_MPDF_PATH',dirname(__FILE__).'/mpdf/');
 		require_once(_MPDF_PATH.'mpdf.php');
-		require_once(_MPDF_PATH.'mpdfi/mpdfi.php');
 		
 		global $pdf_margin_left;
 		global $pdf_margin_right;
@@ -149,7 +149,7 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 		global $pdf_orientation;
 		if($pdf_orientation=='') $pdf_orientation = 'P';
 		
-		$mpdf=new mPDFI('UTF-8', 'A4', '', '', $pdf_margin_left, $pdf_margin_right, $pdf_margin_top, $pdf_margin_bottom, $pdf_margin_header, $pdf_margin_footer, $pdf_orientation); 
+		$mpdf=new mPDF('UTF-8', 'A4', '', '', $pdf_margin_left, $pdf_margin_right, $pdf_margin_top, $pdf_margin_bottom, $pdf_margin_header, $pdf_margin_footer, $pdf_orientation); 
 
 		$mpdf->SetUserRights();
 		$mpdf->title2annots = true;
@@ -162,10 +162,12 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 		global $pdf_template_pdfpage_page;
 		global $pdf_template_pdfdoc;
 		if(isset($pdf_template_pdfdoc)&&$pdf_template_pdfdoc!='') {
+            $mpdf->SetImportUse();
 			$mpdf->SetDocTemplate(dirname(__FILE__).'/../../wp-mpdf-themes/'.$pdf_template_pdfdoc, true);
 		}
 		else if(isset($pdf_template_pdfpage)&&$pdf_template_pdfpage!=''&&isset($pdf_template_pdfpage_page)&&is_numeric($pdf_template_pdfpage_page)) {
-			$pagecount = $mpdf->SetSourceFile(dirname(__FILE__).'/../../wp-mpdf-themes/'.$pdf_template_pdfpage);
+            $mpdf->SetImportUse();			
+            $pagecount = $mpdf->SetSourceFile(dirname(__FILE__).'/../../wp-mpdf-themes/'.$pdf_template_pdfpage);
 			if($pdf_template_pdfpage_page<1) $pdf_template_pdfpage_page = 1;
 			else if($pdf_template_pdfpage_page>$pagecount) $pdf_template_pdfpage_page = $pagecount;
 			$tplId = $mpdf->ImportPage($pdf_template_pdfpage_page);

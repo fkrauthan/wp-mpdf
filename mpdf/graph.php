@@ -99,8 +99,9 @@ function print_graph($g,$pgwidth) {
 	if ($splines) { $xaxis = 'lin'; }
 	$axes = $xaxis.$yaxis;	// e.g.textlin, textlog, loglog, loglin, linlog (XY)
 
-	if (isset($g['attr']['WIDTH']) && $g['attr']['WIDTH']) { $w=(ConvertSize($g['attr']['WIDTH'],$pgwidth) / 0.2645); }	// pixels
-	if (isset($g['attr']['HEIGHT']) && $g['attr']['HEIGHT']) { $h=(ConvertSize($g['attr']['HEIGHT'],$pgwidth) / 0.2645); }
+	// mPDF 4.0
+	if (isset($g['attr']['cWIDTH']) && $g['attr']['cWIDTH']) { $w=($g['attr']['cWIDTH'] / 0.2645); }	// pixels
+	if (isset($g['attr']['cHEIGHT']) && $g['attr']['cHEIGHT']) { $h=($g['attr']['cHEIGHT'] / 0.2645); }
 
 
 	if (isset($g['attr']['SERIES']) && strtolower($g['attr']['SERIES']) == 'rows') { $dataseries = 'rows'; }

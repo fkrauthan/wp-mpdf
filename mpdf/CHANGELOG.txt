@@ -1,4 +1,248 @@
 ===========================
+mPDF v4.3   (28/02/2010)
+===========================
+
+NEW FEATURES
+------------
+- Page (sheet) size can be reset within document (http://mpdf1.com/manual/index.php?tid=436) [4.2.024, 4.2.025]
+- PDF/A1-b compliant files (http://mpdf1.com/manual/index.php?tid=420)
+- Improve performance using simpleTables (http://mpdf1.com/manual/index.php?tid=430)
+- mPDFI incorporated into main mPDF class (http://mpdf1.com/manual/index.php?tid=432)
+- <dottab> added as custom HTML tag: inserts dots to the following text, which is right-aligned [4.2.031]
+
+See Example files 38 and 39 for PDFA compliant file and <dottab>
+
+BACKWARD COMPATIBILITY
+----------------------
+All changes are backwards compatible except the use of mPDFI. You will need to make minor changes to your scripts.
+See the manual http://mpdf1.com/manual/index.php?tid=432 for details.
+
+BUG FIXES
+---------
+- When using Table of Contents and not resetting page numbers: HTML headers/footers showed incorrect page number [4.2.020]
+- Table of Contents: last page not printing page background-color [4.2.023]
+- Image file with space " " in the file name failing [4.2.016]
+- Image file path unnecessarily resolved to full URI - changed to use relative path if possible [4.2.029]
+- Table - not calculating height of cell correctly [4.2.015, 4.2.012, 4.2.011, 4.2.009]
+- Table row breaking after/during cell when image in cell taller than font-height [4.2.008]
+- When Table row(cell) greater height than the page-height but requiring resizing greater than allowed by autosize - not resizing [4.2.005]
+- Table cell border not resized correctly [4.2.002]
+- Table row <TR> with a background-color, paints the whole row, including the spaces between cells [4.2.028]
+- Background-image in HTMLFooter not correctly setting 0,0 origin [4.2.014]
+- Background-image set as an in-line style not working [4.2.013]
+- Background-image set in CSS @page or <body> was being constrained to less than page size [4.2.032]
+- Imported Templates overwriting Headers (with images or gradients) [4.2.004]
+- When using imports/templates, HTML header with background-image causing page to disappear [4.2.001]
+- block-style element breaking over more than 2 pages incorrectly adjusting L/R margins [4.2.022]
+- CSS @page property "size" set on :left :right or :first pseudo-selectors - disabled [4.2.022]
+- Annotations default colour incorrectly set in PDF as [100 100 0] corrected to [1 1 0] (seemed to work ok?) [4.2.026]
+- Overwrite() now parses input file more tolerantly recognising more source files [4.2.030]
+
+
+Changed files 
+-------------
+mpdf.php
+compress.php
+config.php
+classes/t1asm.php
+includes/functions.php
+mpdfi/fpdi_pdf_parser.php
+Added files/folder: /mpdfi/filters/*.*
+Added file/folder: /iccprofiles/sRGB_IEC61966-2-1.icc
+mpdfi/mpdfi.php (no longer required)
+
+New Configuration variables
+---------------------------
+[config.php]
+$this->enableImports
+$this->simpleTables
+$this->PDFA
+$this->ICCProfile
+$this->PDFAauto
+
+
+Minor changes
+-------------
+Increased PDF file compatibility with spec 1.4
+- PDF version changed to 1.4
+- A binary file marker (a comment line with 4 characters > 127 ASCII) is added just after the first line
+- %%EOF no longer has line break after it [4.2.010]
+- /ID object is added to trailer object when not encrypted [4.2.010]
+
+When using progress bars, one of the JS scripts is now referenced as an external file
+ to allow it to be cached by user's browser and improve performance for end-user [4.2.007]
+
+Importing external PDF files: LZW encoded PDF files are now supported
+
+When adding an annotation, the popup window can be set be either open or closed when the document is opened [4.2.027]
+- size and position of the popup can also be specified
+
+
+
+===========================
+mPDF v4.2   (27/01/2010)
+===========================
+
+NEW FEATURES
+------------
+- image handling improved
+- table layout - additional control over resizing
+- vertical-alignment of images - better support for all CSS types
+- top and bottom margins collapse between block elements
+- improved support for CSS line-height
+- display progress bar whilst generating file
+- CSS @page selector can be specified when adding a pagebreak
+- CSS @page selector allows different margins, backgrounds, headers/footers on :first :left and :right pages
+- PNG images with alpha channel fully supported
+- ability to generate italic and bold font variants from base font file
+- CJK fonts to embed as subsets
+- "double" border on block elements
+- character substitution for missing characters in UTF-8 fonts
+- direct passing of dynamically produced image data
+- background-gradient and background-image can now co-exist
+
+
+
+Bug fixes
+---------
+- empty variable (undefined var, false, null, array() etc.) sent to WriteHTML produced error message "Invalid UTF-8"
+- CJK in tables when not using CJK (utf-8-s) autosized very small as characters did not word-wrap
+- parsing stylesheets: background image not recognised if containbed uppercase characters in file name
+- "double" border on table used white between the lines instead of current background colour
+- $this->shrink_tables_to_fit = 0 or false caused fatal errors
+- background color or images not printing correctly when breaking across pages
+- background not printed for List inside a block element
+- columns starting near end of page with no room for a line triggering column change (resulting in text misplaced) not page break
+- table cell not calculating cell height correctly when "orphan" characters (;:,.?! etc.) at end of line
+- table breaking page in column 2 when col 1 is rowspan'ned
+- margin-collapse at top of page not working if bookmark/annotation/indexentry/toc
+- column break triggered by HR triggering a second column break
+- an empty 'position:fixed' element with no/auto width or height caused fatal error
+- mPDFI: template documents were overwriting HTML headers
+- mPDFI: function Overwrite (to change text in existing PDF) - fatal error if using with encrypted file
+
+Bug - not fixed
+- WriteHTML('',2) with '2' parameter not recognising 'margin-collapse:collapse' for DIVs or 'line-height' set in default CSS 'BODY'
+
+
+
+New or Updated Files
+--------------------
+mpdf.php
+compress.php
+config.php
+config_cp.php
+config_fonts.php
+mpdf.css
+classes/gif.php
+classes/indic.php
+includes/subs_core.php
+mpdfi/mpdfi.php
+unifont/ar_k_001.uni2gn.php
+All files in new folder: /progress/*.*
+
+NEW FOLDER /tmp/ required with read/write permissions - used for temporary image files or progress bars
+
+
+
+
+===========================
+mPDF v4.1.1  (21/12/2009)
+===========================
+Error corrected in /makefont/makefonts.php file (moved completed Unicode files to font folder instead of unifont)
+
+===========================
+mPDF v4.1  (20/12/2009)
+===========================
+MySQL support for embedded font subsets abandoned, and replaced with file-based.
+
+
+Files no longer required
+------------------------
+config_db.php
+/unifont/RUNME.php
+/unifont/*.ufm and /unifont/*.t1a font files
+
+MySQL Database no longer required
+
+Files Updated
+-------------
+mpdf.php
+/classes/t1asm.php
+/makefont/makefonts.php
+
+New files
+---------
+/unifont/*.dat and /unifont/*.dat.php font files
+
+
+Bug-fixes
+---------
+- Image - If automatically resizing to fit maximum page size incorrectly subtracted margin-header
+- Annotation and textarea in same HTML chunk causes mPDF to crash (preg_replace textarea with /u modifier in AdjustHTML)
+- set_magic_quotes_runtime error ($mgr not $mqr)
+- Table align did not reverse when using RTL document
+
+Alteration: Image - if writing Image in fixedpos div position:absolute - to allow Image to be resized to full page size
+
+
+===========================
+mPDF v4.0  (17/12/2009)
+===========================
+
+Major additions
+---------------
+- Ability to embed font subsets (creating much smaller files)
+- Much improved support for Arabic languages
+- Support for Indic languages including consonant conjuncts
+- Support for Fixed position block elements
+- New utility to help create your own fonts
+- PNG alpha channel transparency supported
+- New utility to create smaller mpdf script with reduced functionality (less memory)
+- Multiple Barcode types supported
+
+**********************************************************************************************
+*  For more details see the documentation manual: http://mpdf1.com/manual/index.php?tid=410  *
+**********************************************************************************************
+
+Bug fixes (parsing CSS)
+-----------------------
+- <link  href="" ... was not recognised if > 1 space between words
+- #Content p em { font-style:italic; } was applied to "#Content p"
+- @import url() embedded in a stylesheet file requires path fixed relative to stylesheet file
+- background-image url() embedded in a stylesheet file requires path fixed relative to stylesheet file
+- comment tags inside CSS <style> embedded in the HTML were removed
+    Now fixed so <style><!-- ... --></style> works; <!-- <style>...</style> --> is removed
+
+Bug fixes (other)
+-----------------
+- clear (CSS property for floating elements) caused properties for that element to reset to defaults
+- width: auto caused collapse of border and padding on L & R of ordinary block elements
+- text-indent not inherited correctly (including em and % values)
+- named colour "steelblue" corrected RRGGBB hex code
+- table cell widths in %: if width of table cells set to >=100%, and not all columns are set
+	This was fixed in 3.2 but led to problem where 2 cols: 1) 80% and 2) not set (see Table sizing test)
+	Now fixed again to work for both(?)
+- parse PNG error fixed
+- bachground-image not correctly positioned in HTMLFooter and HTMLHeader (Not fixed properly in 3.2!)
+- fonts not supported with 0-9 in the name
+- font list in GetCodepage() in htmltoolkit.php (now config_cp.php) containing space " " not recognised
+- list number positioning
+- list font size set in CSS for UL/OL not working for first level list
+- table width (real value, not %) not working in nested table
+- GIF file failed if PDF file not compressed
+- list-style-type incorrectly inherited
+- line-height inheritance in lists
+- SetColumns added a new line - not required if at start of document/page
+- footer_line_spacing did not work
+- table cellPadding="" overwrote cell padding set on cell CSS
+- could not turn off Default non-HTML foter LINE
+- border specified as "em"
+- default values set in mpdf.css overriden by inherited properties e.g. <div><h1>Here</h1></div> lost font-size for H1
+
+
+
+===========================
 mPDF v3.2  (25/10/2009)
 ===========================
 Bug fixes
@@ -52,6 +296,8 @@ Updated files
 -------------
 mpdf.php
 htmltoolkit.php
+
+
 
 
 ===========================

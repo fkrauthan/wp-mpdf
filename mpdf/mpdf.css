@@ -4,43 +4,17 @@
    Remove the comment marks below and edit as required
 */
 
+
+
+/* 
+   These values used to be the default prior to mPDF 4.2
+   Altered to make appearance closer to that of browsers
+   Uncomment these lines to return to behaviour prior to v4.2  
+*/
+
+
 /*
-body {
-	font-family: sans-serif;
-}
-a {
-	color: #000066;
-	text-decoration: none;
-}
-table {
-	border-collapse: collapse;
-}
-thead {
-	vertical-align: bottom;
-	text-align: center;
-	font-weight: bold;
-}
-tfoot {
-	text-align: center;
-	font-weight: bold;
-}
-th {
-	text-align: left;
-	padding-left: 0.35em;
-	padding-right: 0.35em;
-	padding-top: 0.35em;
-	padding-bottom: 0.35em;
-	vertical-align: top;
-}
-td {
-	padding-left: 0.35em;
-	padding-right: 0.35em;
-	padding-top: 0.35em;
-	padding-bottom: 0.35em;
-	vertical-align: top;
-}
-img {
-	margin: 0.2em;
-	vertical-align: middle;
-}
+img { margin: 0.83em 0; vertical-align: bottom; }
+table { margin: 0.5em; }
+textarea { vertical-align: top; }
 */
