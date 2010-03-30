@@ -1,4 +1,166 @@
 ===========================
+mPDF v4.4   (24/03/2010)
+===========================
+
+New Features
+------------
+- Support SVG image files (partial)
+- Rotate images or graphs (by multiples of 90 degrees)
+- Set opacity (transparency) for background images
+- Control resizing of background images
+- Set whether to print watermark images behind or in front of page contents
+- Reduced memory usage when printing tables (partly configurable)
+- Option to set path to folder for temporary files
+- Improved compliance for CSS text-align justify
+- Increased support for CSS "media"
+- Improved performance when accessing local image files
+
+
+Minor Enhancements
+------------------
+- Allows space in output file name e.g. $mpdf->Output('t est.pdf','D'); [4.3.007B]
+- Header changed in Output to improve compatability with IE6 (affects 'D' and 'I') [4.3.012B]
+- background-images do not show noimage.jpg if missing [4.3.012D]
+- simpleTables (which improves performance) now also allows: background-color, -gradient and -image, padding 
+	and rotated text to be set for each cell. Only borders are not supported cell-by-cell. [4.3.006]
+
+
+Bug fixes
+---------
+- Page width not correctly reset when defining default page margins (L/R) by @page [4.3.007C]
+- Table row <TR> with a background-color, paints the whole row, including the spaces between cells [4.3.005]
+	NB This should have been fixed in [4.2.028] but got left out!
+- UseSubstitutionsMB causes errors inside <textarea> and <select> so now disabled in these 2 situations [4.3.004]
+- CSS background: 'none' did not cancel background-image/background-color if it comes later [4.3.002, 4.3.011]
+- Warning message 'depracated' (as of PHP 5.3) when using Templates [4.3.007]
+- AutoFont incorrectly altering multibyte characters ending in \xa0 [4.3.012C]
+- "Initial" default value for border-width changed from 1px to 'medium' e.g. border-top: solid #000000; [4.3.010]
+- WMF image sometimes inverted [4.3.016]
+
+Updated Files
+-------------
+mpdf.php
+config.php
+changelog.txt
+
+
+New files
+---------
+classes/svg.php
+
+
+New config variables
+--------------------
+$this->justifyB4br=false;
+$this->CSSselectMedia='print';
+$this->watermarkImgBehind = false;
+
+BACKWARD COMPATIBILITY
+----------------------
+All changes are backwards compatible except the handling of some background-images - please see notes below.
+
+
+Watermark Image z-order
+-----------------------
+By default mPDF prints watermarks on top of the page contents to ensure that they are not hidden by backgrounds
+(especially table cells).
+You can specify watermark images to be printed behind page contents by setting a configurable variable:
+$this->watermarkImgBehind = true;  // default=false
+[4.3.018]
+
+
+Rotating Images and Graphs
+--------------------------
+Images or graphs can be rotated (by multiples of 90 degrees) using a custom HTML attribute e.g.
+<img rotate="90|-90|180" ... />
+<jpgraph rotate="90" ... />
+Valid options are: 90|-90|180. 
+Positive values are clockwise.
+If width is specified e.g. width="3cm" this is applied to the rotated image i.e. will be width 3cm after rotating
+[4.3.016]
+
+
+Background Image Opacity
+------------------------
+A custom CSS property "background-image-opacity": is now supported on BODY, DIV+ (block elements) and TD
+Takes values between 0 and 1.0 
+
+
+Resizing Background Images
+--------------------------
+A custom CSS property "background-image-resize": is now supported on BODY, DIV+ (block elements) and TD
+0 - No resizing (default)
+1 - Shrink-to-fit w (keep aspect ratio)
+2 - Shrink-to-fit h (keep aspect ratio)
+3 - Shrink-to-fit w and/or h (keep aspect ratio)
+4 - Resize-to-fit w (keep aspect ratio)
+5 - Resize-to-fit h (keep aspect ratio)
+6 - Resize-to-fit w and h
+
+N.B. Prior to v4.4 background-images were incorrectly constrained to maximum width of the containing block.
+The default is now to do NO resizing on background-images. Setting "background-image-resize:3" should be used
+for backwards compatibility.
+[4.3.015, 4.3.012D]
+
+
+SVG Image files
+---------------
+SVG image files are now partially supported (but as for WMF - not as background-images).
+viewBox (preserveAspectRatio is not supported)  viewBox="0 0 400 200"  width="400" height="200"
+Takes viewBox in preference to width/height if present on <svg>
+If neither present, will size to width of page (square) as the containing box.
+Units are interpreted as pixels if undefined.
+Doesn't recognise internal CSS <style> elements
+Gradients only take 2 colours which are taken as stop-offset 0% and 100%
+[4.3.013 & 4.3.017]
+
+
+Reduced Memory Usage printing Tables
+------------------------------------
+mPDF uses a lot of memory when processing large tables. Parts of the script have been rewritten to 
+reduce memory consumption when writing tables which use collapsed borders (10-25% saving).
+
+Memory usage can be reduced further by setting a configurable variable:
+$this->packTableData = true;  // default=false
+but note that this causes a significant increase in processing time.
+[4.3.008, 4.3.019, 4.3.014]
+
+
+
+User-defined path to Temporary folder
+-------------------------------------
+mPDF uses a folder to write and store temporary files when processing images. By default this is the
+[your_path_to_mpdf]/tmp/
+This is now user-definable by defining the constant _MPDF_TEMP_PATH before including mpdf.php script.
+
+
+Text Justification
+------------------
+In a justified text block, an inline image, textarea, input, or select causing a new line will now force 
+the previous line to be justified. HR and BR do NOT force justification (as in browsers).
+For optional compliance of MS Word behaviour, there is a new configurable variable:
+$this->justifyB4br = false;	// Change to true to force justification before a <BR> (as in MS Word)
+[4.3.003]
+
+
+CSS support for @media
+----------------------
+Now supports media-dependent CSS styles e.g.
+@media print { 
+	p { color: red; } 
+}
+as well as 
+<style media="...">...</style> and
+<link rel="stylesheet" media="print" href="..." />
+Proper matching of CSS media to select using configurable variable:
+$this->CSSselectMedia='print';	//  default="print" set in config.php : screen, print, or any other CSS @media type (not "all")
+N.B. $this->disablePrintCSS in now depracated
+[4.3.001]
+
+
+
+
+===========================
 mPDF v4.3   (28/02/2010)
 ===========================
 
@@ -22,12 +184,12 @@ BUG FIXES
 - When using Table of Contents and not resetting page numbers: HTML headers/footers showed incorrect page number [4.2.020]
 - Table of Contents: last page not printing page background-color [4.2.023]
 - Image file with space " " in the file name failing [4.2.016]
-- Image file path unnecessarily resolved to full URI - changed to use relative path if possible [4.2.029]
+- Image file path unnecessarily resolved to full URI - changed to use relative path if possible [4.2.029] ***
 - Table - not calculating height of cell correctly [4.2.015, 4.2.012, 4.2.011, 4.2.009]
 - Table row breaking after/during cell when image in cell taller than font-height [4.2.008]
 - When Table row(cell) greater height than the page-height but requiring resizing greater than allowed by autosize - not resizing [4.2.005]
 - Table cell border not resized correctly [4.2.002]
-- Table row <TR> with a background-color, paints the whole row, including the spaces between cells [4.2.028]
+- Table row <TR> with a background-color, paints the whole row, including the spaces between cells [4.2.028] ****
 - Background-image in HTMLFooter not correctly setting 0,0 origin [4.2.014]
 - Background-image set as an in-line style not working [4.2.013]
 - Background-image set in CSS @page or <body> was being constrained to less than page size [4.2.032]
@@ -38,6 +200,8 @@ BUG FIXES
 - Annotations default colour incorrectly set in PDF as [100 100 0] corrected to [1 1 0] (seemed to work ok?) [4.2.026]
 - Overwrite() now parses input file more tolerantly recognising more source files [4.2.030]
 
+**** Bug fix 4.2.028 never got into the release of v4.3  Included in next release [4.3.005]
+**** Bug fix 4.2.029 never not fully implmented in v4.3  Included in next release [4.3.012]
 
 Changed files 
 -------------

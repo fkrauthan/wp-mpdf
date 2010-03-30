@@ -82,7 +82,8 @@ $this->annotOpacity = 0.5;	// default opacity for Annotations
 $this->anchor2Bookmark = 0;	// makes <a name=""> into a bookmark as well as internal link target; 1 = just name; 2 = name (p.34)
 
 // CSS & STYLES
-$this->disablePrintCSS;	// prevents CSS stylesheets marked as media="print" to be ignored
+$this->CSSselectMedia='print';		// mPDF 4.3.001  screen, print, or any other CSS @media type (not "all")
+// $this->disablePrintCSS depracated	// mPDF 4.3.001  
 $this->rtlCSS = 2; 	// RTL: 0 overrides defaultCSS; 1 overrides stylesheets; 2 overrides inline styles - TEXT-ALIGN left => right etc.
 				// when directionality is set to rtl
 
@@ -108,7 +109,7 @@ $this->autoMarginPadding = 2;		// distance in mm used as padding if 'stretch' mo
 
 // TABLES
 $this->simpleTables = false; // mPDF 4.2.017 Forces all cells to have same border, background etc. Improves performance
-
+$this->packTableData = false; // mPDF 4.3.009 Reduce memory usage processing tables (but with increased processing time)
 $this->ignore_table_percents = false;
 $this->ignore_table_widths = false;
 $this->keep_table_proportions = false;	// If table width set > page width, force resizing but keep relative sizes
@@ -122,13 +123,17 @@ $this->img_dpi = 96;	// Default dpi to output images if size not defined
 
 
 // TEXT SPACING & JUSTIFICATION
+$this->justifyB4br = false;	// mPDF 4.3.003  In justified text, <BR> does not cause the preceding text to be justified in browsers
+					// Change to true to force justification (as in MS Word)
+
 $this->tabSpaces = 8;	// Number of spaces to replace for a TAB in <pre> sections
 				// Notepad uses 6, HTML specification recommends 8
 $this->jSWord = 0.4;	// Proportion (/1) of space (when justifying margins) to allocate to Word vs. Character
 $this->jSmaxChar = 2;	// Maximum spacing to allocate to character spacing. (0 = no maximum)
+
 $this->jSmaxCharLast = 1;	// Maximum character spacing allowed (carried over) when finishing a last line
 $this->jSmaxWordLast = 2;	// Maximum word spacing allowed (carried over) when finishing a last line
-$this->orphansAllowed = 5;	// No of SUP or SUB characters to include on line to avoid leaving e.g. end of line//<sup>32</sup>
+$this->orphansAllowed = 5;		// No of SUP or SUB characters to include on line to avoid leaving e.g. end of line//<sup>32</sup>
 $this->normalLineheight = 1.33;	// mPDF 4.2 - Value used for line-height when CSS specified as 'normal' (default)
 
 
@@ -154,6 +159,7 @@ $this->list_number_suffix = '.';	// Content to follow a numbered list marker e.g
 
 
 // WATERMARKS
+$this->watermarkImgBehind = true;	// mPDF 4.3.018
 $this->showWatermarkText = 0;	// alias = $TopicIsUnvalidated
 $this->showWatermarkImage = 0;
 $this->watermarkText = '';	// alias = $UnvalidatedText
