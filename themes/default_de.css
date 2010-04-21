@@ -1,0 +1,331 @@
+/*
+Theme Name: Kubrick for ContuttoPDF
+Theme URI: http://www.contutto.com/
+Description: Default theme for PDF output with the ContuttoPDF plugin, based on the Kubrick theme
+Version: 0.2.1
+Author: Alex G&uuml;nsche
+Author URI: http://www.contutto.com/
+Edit Author: Florian Krauthan for wp-mpdf
+*/
+
+body {
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	width: 100%;
+	
+	color: black;
+}
+
+.pre {
+	background-color: grey;
+	font-family: courier;
+	text-align: left;
+}
+
+#header {
+	margin: 0;
+	padding: 0;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#content {
+	margin-left: auto;
+	margin-right: auto;
+	border: none;
+}
+
+#headerimg {
+	height: 100pt;
+}
+
+#headerimg .description {
+	font-size: 1.2em;
+	text-align: center;
+}
+
+.widecolumn {
+	padding: 10pt 0 20pt 0;
+}
+
+.widecolumn .entry p {
+	font-size: 1.05em;
+	}
+
+.widecolumn .entry {
+	line-height: 1.4em;
+	}
+
+.post {
+	padding: 0 25pt 20pt 25pt;
+	text-align: justify;
+}
+
+.widecolumn .post {
+	margin: 0;
+	}
+
+.widecolumn .postmetadata {
+	margin: 10pt 0;
+	padding: 4pt;
+	text-align: justify;
+}
+
+.widecolumn .smallattachment {
+	text-align: center;
+	float: left;
+	width: 128pt;
+	margin: 5pt 5pt 5pt 0pt;
+}
+
+.widecolumn .attachment {
+	text-align: center;
+	margin: 5pt 0pt;
+}
+
+#footer {
+	background-color: #e7e7e7;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0;
+	border: 0;
+}
+
+#footer p {
+	margin: 0;
+	border: 0;
+	padding: 3pt 0;
+	text-align: center;
+}
+/* End Structure */
+
+h1, h2, h3 {
+	font-family: 'Trebuchet MS', 'Lucida Grande', Verdana, Arial, Sans-Serif;
+	font-weight: bold;
+}
+
+h1 {
+	font-size: 2.7em;
+	text-align: center;
+}
+
+h2 {
+	font-size: 1.4em;
+}
+
+h3 {
+	font-size: 1.2em;
+}
+
+h1 {
+	text-decoration: none;
+	color: white;
+}
+
+#headerimg .description {
+	color: grey;
+}
+
+#content h1 {
+	color: #333;
+	font-size: 1.6em;
+}
+
+h2, h2 a, h3, h3 a {
+	color: #333;
+}
+
+h2, h2 a, h3, h3 a, cite {
+	text-decoration: none;
+	}
+
+
+code {
+	font: 1.1em 'Courier New', Courier, Monospace;
+}
+
+acronym, abbr, span.caps {
+	letter-spacing: .07em;
+}
+
+/* End Typography & Colors */
+
+
+/*	Begin Headers */
+h1 {
+	padding-top: 16pt;
+	margin: 0;
+	}
+
+h2 {
+	margin: 8pt 0 0 0;
+	padding: 0;
+	}
+
+h2.pagetitle {
+	text-align: center;
+}
+
+h3 {
+	padding: 0;
+	margin: 7pt 0 0;
+	}
+
+h3#comments {
+	padding: 0 25pt 20pt 25pt;
+	text-align: left;
+}
+
+/* End Headers */
+
+
+
+/* Begin Images */
+p img {
+	padding: 0;
+	max-width: 300pt;
+	}
+
+/*	Using 'class="alignright"' on an image will (who would've
+	thought?!) align the image to the right. And using 'class="centered',
+	will of course center the image. This is much better than using
+	align="center", being much more futureproof (and valid) */
+
+img.centered {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	}
+
+img.alignright {
+	padding: 2pt;
+	margin: 0 0 2pt 7pt;
+	display: inline;
+	}
+
+img.alignleft {
+	padding: 2pt;
+	margin: 0 7pt 2pt 0;
+	display: inline;
+	}
+
+.alignright {
+	float: right;
+	}
+
+.alignleft {
+	float: left
+	}
+/* End Images */
+
+/* Begin Comments*/
+
+.commentlist {
+	padding: 0 25pt 20pt 25pt;
+	text-align: justify;
+}
+
+.commentlist cite, .commentlist cite a {
+	font-weight: bold;
+	font-style: normal;
+	}
+
+.commentlist p {
+	font-weight: normal;
+	text-transform: none;
+}
+
+.commentmetadata {
+	font-weight: normal;
+}
+
+
+p.subtitle {
+	margin: 0;
+	padding: 1pt 0 6pt 0;
+}
+
+.postmetadata ul, .postmetadata li {
+	display: inline;
+	list-style-type: none;
+	list-style-image: none;
+}
+
+.alt {
+	background-color: #f8f8f8;
+	border-top: 0.1pt solid #ddd;
+	border-bottom: 0.1pt solid #ddd;
+
+}
+
+.commentlist .single_comment {
+	margin: 9pt 0 3pt;
+	padding: 4pt 5pt 3pt;
+	padding: 6pt;
+}
+
+.commentlist p {
+	margin: 5pt 4pt 6pt 0;
+	}
+
+.nocomments {
+	text-align: center;
+	margin: 0;
+	padding: 0;
+	}
+
+.commentmetadata {
+	margin: 0;
+	}
+
+#nocommentform {
+	font-weight: bold;
+	border-top: 0.1pt solid #444;
+	padding: 5pt;
+	text-align: center;
+}
+
+/* End Comments */
+
+
+/* Begin Various Tags & Classes */
+
+acronym, abbr {
+	border-bottom: 0.1pt dashed #999;
+	}
+
+blockquote {
+	margin: 15pt 30pt 0 10pt;
+	padding-left: 20pt;
+	border-left: 5pt solid #ddd;
+	}
+
+blockquote cite {
+	margin: 5pt 0 0;
+	display: block;
+	}
+
+.center {
+	text-align: center;
+	}
+
+hr {
+	display: none;
+	}
+
+a img {
+	border: none;
+	}
+
+a:link {
+	text-decoration: none;
+}
+
+a {
+	color: #000066;
+	text-decoration: none;
+}
+/* End Various Tags & Classes*/
+
