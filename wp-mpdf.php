@@ -272,7 +272,7 @@ function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $logintext = 'Login
 		}
 		else if((get_option('mpdf_need_login')==2&&$dsatz->login==false || get_option('mpdf_need_login')==3&&$dsatz->login==true)&&is_user_logged_in()!=true) {
 			if(empty($buttontext)) {
-				$buttontext = '<img src="' . get_bloginfo('home') . '/wp-content/plugins/wp-mpdf/pdf_lock.png" alt="'.$logintext.'" title="You must login first" border="0" />';
+				$buttontext = '<img src="' . get_bloginfo('wpurl') . '/wp-content/plugins/wp-mpdf/pdf_lock.png" alt="'.$logintext.'" title="You must login first" border="0" />';
 			}
 			else {
 				$buttontext = $logintext;
@@ -292,7 +292,7 @@ function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $logintext = 'Login
 	
 	//Print the button
 	if(empty($buttontext))
-		$buttontext = '<img src="' . get_bloginfo('home') . '/wp-content/plugins/wp-mpdf/pdf.png" alt="This page as PDF" border="0" />';
+		$buttontext = '<img src="' . get_bloginfo('wpurl') . '/wp-content/plugins/wp-mpdf/pdf.png" alt="This page as PDF" border="0" />';
 	
 	$x = !strpos(apply_filters('the_permalink', get_permalink()), '?') ? '?' : '&amp;';
 	$pdf_button = '<a ';
