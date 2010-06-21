@@ -60,7 +60,7 @@
 	    			),
 	    		'L' => 
 	    			array (
-	      				'content' => get_bloginfo('name'),
+	      				'content' => 'Copyright © '.'{DATE Y} '.get_bloginfo('name'),
 	      				'font-size' => 8,
 	      				'font-style' => 'BI',
 	      				'font-family' => 'DejaVuSansCondensed',
@@ -85,7 +85,7 @@
 	    			),
 	    		'L' => 
 	    			array (
-	      				'content' => get_bloginfo('name'),
+	      				'content' => 'Copyright © '.'{DATE Y} '.get_bloginfo('name'),
 	      				'font-size' => 8,
 	      				'font-style' => 'BI',
 	      				'font-family' => 'DejaVuSansCondensed',
@@ -110,7 +110,6 @@
 			</div>
 			</div>
 			<div id="content" class="widecolumn">';
-			
 			if(have_posts()) :
 				if(is_search()) $pdf_output .=  '<div class="post"><h2 class="pagetitle">Suchergebnisse</h2></div>';
 			if(is_archive()) {
@@ -119,11 +118,11 @@
 				if(is_category()) {
 					$pdf_output .= '<div class="post"><h2 class="pagetitle">Archiv für die Kategorie "' . single_cat_title('', false) . '"</h2></div>';
 				} elseif(is_year()) {
-					$pdf_output .= '<div class="post"><h2 class="pagetitle">Archiv für ' . get_the_time('Y') . '</h2></div>';
+					$pdf_output .= '<div class="post"><h2 class="pagetitle">Archiv für ' . date_i18n('Y', get_the_time('U')) . '</h2></div>';
 				} elseif(is_month()) {
-					$pdf_output .= '<div class="post"><h2 class="pagetitle">Archiv für ' . get_the_time('F, Y') . '</h2></div>';
+					$pdf_output .= '<div class="post"><h2 class="pagetitle">Archiv für ' . date_i18n('Y', get_the_time('F, Y')) . '</h2></div>';
 				} elseif(is_day()) {
-					$pdf_output .= '<div class="post"><h2 class="pagetitle">Archiv für ' . get_the_time('F jS, Y') . '</h2></div>';
+					$pdf_output .= '<div class="post"><h2 class="pagetitle">Archiv für ' . date_i18n('Y', get_the_time('F jS, Y')) . '</h2></div>';
 				} elseif(is_search()) {
 					$pdf_output .= '<div class="post"><h2 class="pagetitle">Suchergebnisse</h2></div>';
 				} elseif (is_author()) {
@@ -154,7 +153,7 @@
 
 
 				// no authors and dates on static pages
-				if(!is_page()) $pdf_output .=  '<p class="small subtitle">' . get_author_name($post->post_author) . ' &middot; ' . date('l, F jS, Y', mpdf_mysql2unix($post->post_date)) . '</p>';
+				if(!is_page()) $pdf_output .=  '<p class="small subtitle">' . get_author_name($post->post_author) . ' &middot; ' . date_i18n('l', mpdf_mysql2unix($post->post_date)) . ' den ' .  date_i18n('j. F Y', mpdf_mysql2unix($post->post_date)) . '</p>';
 
 				$pdf_output .= '<div class="entry">' .	wpautop($post->post_content, true) . '</div>';
 				
@@ -164,22 +163,26 @@
 				if(is_single()) {
 					$pdf_output .= '<p class="postmetadata alt">
 						<span>
-							Dieser eintrag wurde gepostet 
-							am ' . date('l, F jS, Y', mpdf_mysql2unix($post->post_date)) . ' um ' . date('g:i a', mpdf_mysql2unix($post->post_date)) . ' und ist gepostet in ' . $cat_links . '
-							Du kannst allen Kommentaren über den <a href="' . get_bloginfo('comments_rss2_url') . '">Kommentar (RSS) </a> feed folgen.';
+							Dieser Beitrag wurde publiziert am ' . date_i18n('l', mpdf_mysql2unix($post->post_date)) . ' den ' .  date_i18n('j. F Y', mpdf_mysql2unix($post->post_date)) . ' um ' . date_i18n('H:i', mpdf_mysql2unix($post->post_date)) . '
+							in der Kategorie: ' . $cat_links . '.
+							Kommentare können über den <a href="' . get_bloginfo('comments_rss2_url') . '">Kommentar (RSS)</a> Feed verfolgt werden.';
 	
 							if (('open' == $post-> comment_status) && ('open' == $post->ping_status)) {
 								// Both Comments and Pings are open
-								$pdf_output .= ' Du kannst ein Kommentar abgeben, oder <a href="' . trackback_url(false) . '" rel="trackback">trackback </a> diese Seite von deiner Seite.';
+								$pdf_output .= '
+								Du kannst ein Kommentar abgeben oder erstelle einen <a href="' . trackback_url(false) . '" rel="trackback">Trackback</a> dieses Beitrages auf deine Webseite.';
 							} elseif (!('open' == $post-> comment_status) && ('open' == $post->ping_status)) {
 								// Only Pings are Open
-								$pdf_output .= ' Responses are currently closed, but you can <a href="' . trackback_url(false) . '" rel="trackback">trackback </a> from your own site.';
+								$pdf_output .= '
+								Kommentare sind geschlossen aber Du kannst einen <a href="' . trackback_url(false) . '" rel="trackback">Trackback</a> zu diesem Beitrag auf deiner Webseite erstellen.';
 							} elseif (('open' == $post-> comment_status) && !('open' == $post->ping_status)) {
 								// Comments are open, Pings are not
-								$pdf_output .= ' Du kannst zum ende springen und ein Kommentar abgeben. Pingen ist momentan nicht erlaubt.';
+								$pdf_output .= '
+								Du kannst zum Ende springen und ein Kommentar abgeben. Pingen ist momentan nicht erlaubt.';
 							} elseif (!('open' == $post-> comment_status) && !('open' == $post->ping_status)) {
 								// Neither Comments, nor Pings are open
-								$pdf_output .= ' Kommentare und Pings sind momentan geschlossen.';
+								$pdf_output .= '
+								Kommentare und Pings sind momentan geschlossen.';
 							}
 	
 						$pdf_output .= '</span>

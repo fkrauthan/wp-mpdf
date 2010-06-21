@@ -1,4 +1,168 @@
 ===========================
+mPDF v4.6   (07/06/2010)
+===========================
+
+Improvements
+------------
+Added Windows BMP image support [4.5.011]
+
+Improved support and bug fixes for SVG images [4.5.010]
+- improved recognition of lineargradients/radialgradients referenced by xlink:href
+- does not die if empty text string
+- support for many text properties as style="" as well as currently as attributes (bold, fill etc)
+- if using MB font, was respecting "Times" and "Courier" from the SVG file but using as ANSI not utf-8
+
+JPG image files with "Exif" header now recognised and supported [4.5.001]
+
+
+Configuration variable added (config.php):
+----------------------------
+$this->tableMinSizePriority [4.5.006]
+Default value false
+Use: When page-break-inside:avoid set on table but cannot fit on full page without 
+exceeding autosize; setting this value to true will force respsect for the autosize, 
+and disable the page-break-inside:avoid
+
+
+Bug fixes
+---------
+- Apache crashing when writing complex heading with multiple ToC entries + index entry [4.5.015]
+- Error message appeared after printing in Adobe Reader [4.5.014]
+- Error in Text wrapping in table cells [4.5.012]
+- Incorrect error message(!) using embedded font subsets if .dat fontfile not found (".char.dat") [4.5.008]
+- Errors when using page-break-inside:avoid, with text elements and images incorrectly moved [4.5.007]
+- Triggering unnecessary page break, or entering endless loop when using table with page-break-inside:avoid [4.5.004, 4.5.005]
+- Utility "makefonts" moving newly created files to wrong directory [4.5.003]
+- Error using embedded font subsets when magic_quotes_runtime set On [4.5.002]
+
+
+Files changed
+-------------
+mpdf.php
+config.php
+makefonts/makefonts.php
+class/t1asm.php
+class/svg.php
+
+
+===========================
+mPDF v4.5   (21/04/2010)
+===========================
+
+New Features
+------------
+The main change in 4.5 is the improved class for importing SVG images. (See details below)
+
+Font files
+----------
+Some bugs in the "makefonts" utility caused some errors in the files produced for embedding font subsets.
+Surprisingly these are not easily detectable (I have yet to find one!).
+All the font files used for embedding font subsets (the .dat and .dat.php files in /unifont/ folder)
+have been re-generated. Download them if you are having problems with any fonts - otherwise, you probably 
+don't need to bother.
+
+Minor Enhancements
+------------------
+If keepColumns = true (i.e. disable readjustment of column length), mPDF will now reproduce 
+table header/footer rows in each column [4.4.015]
+
+A number of changes to improve processing time [4.4.012]
+[Thanks to carlholmberg http://mpdf.bpm1.com/forum/comments.php?DiscussionID=274&page=1#Item_3]
+
+JPG files with header marked as "progressive DCT-based JPEG" are now supported [4.4.004]
+
+Configurable variable (config.php) $dpi can be set to vary size interpreted from "px" values in HTML/CSS
+NB Recommended that $dpi should always be set the same as $img_dpi
+
+Support added for "ex" as a size value (approximates "ex" as half of font height)
+
+Configurable variable (config.php) $watermarkImgAlphaBlend will determine how watermark images
+will blend with underlying objects. 
+
+
+Bug fixes
+---------
+- Make-fonts utility : makefonts/makefonts.php [4.4.016]
+	(All font files have been updated)
+- Table header of only one column width - not printing right border [4.4.014]
+- WMF and SVG images not rotating correctly to 90 or -90 degrees [4.4.013]
+- Using templates, error if imported doc contains templates itself [4.4.001]
+
+
+Updated Files
+-------------
+mpdf.php
+config.php
+classes/svg.php
+makefonts/makefonts.php
+ALL subset font files (/unifont/ .dat and .dat.php files), and all garuda and norasi files
+
+New files
+---------
+None
+
+New config variables
+--------------------
+$this->watermarkImgAlphaBlend
+$this->dpi
+
+BACKWARD COMPATIBILITY
+----------------------
+All but one changes in mPDF 4.5 are fully backwards compatible.
+The configurable variable $this->watermarkImgBehind was introduced in v4.4 and was unintentionally set to TRUE
+In v4.5 this is set to FALSE in the config.php file.
+
+
+SVG Images
+----------
+[svg.php CHANGED]
+- Text stroke-width default changed to 1 [4.4.011]
+- Text stroke - line-join type changed [4.4.010]
+- Default value for fill changed to "black" [4.4.008]
+- Bug fixes:
+  * to correct calculation of text-length (and therefore alignment R and C) [4.4.009]
+  * Corrected errors in path implementation esp. quadratic Bezier curves
+  * rounded corners to rectangles - error corrected
+  * Recognition of font-family improved
+  * remove \n (and other non-printable chars) from text
+  * zero length shapes are not output e.g. zero-width rectangle, zero-length line, zero-radius circle
+- Support added for:
+  * gradient stop offsets and gradientUnits="userSpaceOnUse" [4.4.007]
+	In mpdf.php enabled define inner radius for radial gradients - only used internally by SVG at present
+  * user defined <ENTITY /> cf. 'render-elems-03-t.svg' in SVG Test Suite [4.4.006]
+  * "color" attribute and "currentColor" value for fill and stroke [4.4.005]
+  * fill:url(#...) in a style as well as attribute
+  * xlink:href for gradients
+  * 1.3002e-005 in svg path
+  * text-style changes (e.g. text-anchor) set on <g> element - not just on <text>
+  * fill-rule=evenodd|nozero
+  * dashed lines / stroke-dasharray & stroke-dashoffset
+  * gradientUnits=userSpaceOnUse;
+  * units e.g. 3mm or 14pt in Rectangle, Circle, Ellipse, Line and Text position 
+  * transform on <text> element
+  * stroke as well as fill on text
+
+NB The following are still NOT supported for SVG
+- filters
+- <marker>
+- images
+- DOM
+- <pattern>
+- textlength; lengthadjust; tspan, tref, toap, textPath; 
+- <use ../>
+- gradient on stroke/text;
+- <clipPath>
+- text-underline and strikethrough
+- text opacity
+- colors as rgb(87%, 56%, 25%)
+- rect using units for dimensions
+- Only uses default spreadMethod = "pad" for gradients
+
+
+
+
+
+===========================
 mPDF v4.4   (24/03/2010)
 ===========================
 

@@ -164,16 +164,15 @@
 				if(is_single()) {
 					$pdf_output .= '<p class="postmetadata alt">
 						<span>
-							This entry was posted
-							on ' . date('l, F jS, Y', mpdf_mysql2unix($post->post_date)) . ' at ' . date('g:i a', mpdf_mysql2unix($post->post_date)) . ' and is filed under ' . $cat_links . '
-							You can follow any responses to this entry through the <a href="' . get_bloginfo('comments_rss2_url') . '">Comments (RSS) </a> feed.';
+							This entry was posted on ' . date('l, F jS, Y', mpdf_mysql2unix($post->post_date)) . ' at ' . date('g:i a', mpdf_mysql2unix($post->post_date)) . ' and is filed under ' . $cat_links . '
+							You can follow any responses to this entry through the <a href="' . get_bloginfo('comments_rss2_url') . '">Comments (RSS)</a> feed.';
 	
 							if (('open' == $post-> comment_status) && ('open' == $post->ping_status)) {
 								// Both Comments and Pings are open
-								$pdf_output .= ' You can leave a response, or <a href="' . trackback_url(false) . '" rel="trackback">trackback </a> from your own site.';
+								$pdf_output .= ' You can leave a response, or <a href="' . trackback_url(false) . '" rel="trackback">trackback</a> from your own site.';
 							} elseif (!('open' == $post-> comment_status) && ('open' == $post->ping_status)) {
 								// Only Pings are Open
-								$pdf_output .= ' Responses are currently closed, but you can <a href="' . trackback_url(false) . '" rel="trackback">trackback </a> from your own site.';
+								$pdf_output .= ' Responses are currently closed, but you can <a href="' . trackback_url(false) . '" rel="trackback">trackback</a> from your own site.';
 							} elseif (('open' == $post-> comment_status) && !('open' == $post->ping_status)) {
 								// Comments are open, Pings are not
 								$pdf_output .= ' You can skip to the end and leave a response. Pinging is currently not allowed.';

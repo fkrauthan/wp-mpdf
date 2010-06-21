@@ -39,6 +39,8 @@ $this->enableImports = false;			// mPDF 4.2.006 Adding mPDFI
 $this->collapseBlockMargins = true; 	// mPDF 4.2 Allows top and bottom margins to collapse between block elements
 $this->progressBar = 0;				// mPDF 4.2 Shows progress-bars whilst generating file 0 off, 1 simple, 2 advanced
 
+$this->dpi = 96;					// mPDF 4.4.003 To interpret "px" pixel values in HTML/CSS (see img_dpi below)
+
 // Automatically correct for tags where HTML specifies optional end tags e.g. P,LI,DD,TD
 // If you are confident input html is valid XHTML, turning this off may make it more reliable(?)
 $this->allow_html_optional_endtags = true;
@@ -116,10 +118,16 @@ $this->keep_table_proportions = false;	// If table width set > page width, force
 							// Also forces respect of cell widths set by %
 $this->shrink_tables_to_fit = 1.4;	// automatically reduce fontsize in table if words would have to split ( not in CJK)
 						// 0 or false to disable; value (if set) gives maximum factor to reduce fontsize
+
+$this->tableMinSizePriority = false;	// mPDF 4.5.006 If page-break-inside:avoid but cannot fit on full page without 
+							// exceeding autosize; setting this value to true will force respsect for
+							// autosize, and disable the page-break-inside:avoid
+
 $this->use_kwt = false;
 
 // IMAGES
 $this->img_dpi = 96;	// Default dpi to output images if size not defined
+				// See also above "dpi"
 
 
 // TEXT SPACING & JUSTIFICATION
@@ -159,7 +167,7 @@ $this->list_number_suffix = '.';	// Content to follow a numbered list marker e.g
 
 
 // WATERMARKS
-$this->watermarkImgBehind = true;	// mPDF 4.3.018
+$this->watermarkImgBehind = false;	// mPDF 4.3.018
 $this->showWatermarkText = 0;	// alias = $TopicIsUnvalidated
 $this->showWatermarkImage = 0;
 $this->watermarkText = '';	// alias = $UnvalidatedText
@@ -167,7 +175,10 @@ $this->watermarkImage = '';
 $this->watermark_font = '';
 $this->watermarkTextAlpha = 0.2;
 $this->watermarkImageAlpha = 0.2;
-
+$this->watermarkImgAlphaBlend = 'Normal';	// mPDF 4.4.002
+	// Accepts any PDF spec. value: Normal, Multiply, Screen, Overlay, Darken, Lighten, ColorDodge, ColorBurn, 
+	// HardLight, SoftLight, Difference, Exclusion
+	// "Multiply" works well for watermark image on top
 
 // BORDERS
 $this->autoPadding = false; // Automatically increases padding in block elements with border-radius set - if required
@@ -420,7 +431,7 @@ $this->pregRTLchars = "\x{0590}-\x{06FF}\x{0750}-\x{077F}\x{FB00}-\x{FDFD}\x{FE7
 	$this->pregVIETchars = "\x{01A0}\x{01A1}\x{01AF}\x{01B0}\x{1EA0}-\x{1EF1}";	
 	// Vietnamese -  Chars which shouldn't break string 
 	$this->pregVIETPluschars = "\x{0000}-\x{003B}\x{003F}-\x{00FF}\x{0300}-\x{036F}\x{0102}\x{0103}\x{0110}\x{0111}\x{0128}\x{0129}\x{0168}\x{0169}\x{1EF1}-\x{1EF9}";	// omits < >
-	$this->pregHEBchars = "\x{0590}-\x{05FF}\x{FB00}-\x{FB49}";	// Hebrew
+
 	// Arabic
 	$this->pregARABICchars = "\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{FB50}-\x{FDFD}\x{FE70}-\x{FEFF}";
 	// Characters of Urdu, Pashto, Sindhi (but NOT arabic or persian/farsi) [not covered by DejavuSans font]
