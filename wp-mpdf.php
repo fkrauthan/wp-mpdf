@@ -3,7 +3,7 @@
 Plugin Name: wp-mpdf
 Plugin URI: http://www.fkrauthan.de/wordpress/wp-mpdf
 Description: Print a wordpress page as PDF with optional Geshi Parsing.
-Version: 2.4.2
+Version: 2.4.3
 Author: Florian 'fkrauthan' Krauthan
 Author URI: http://www.fkrauthan.de
 
@@ -54,6 +54,7 @@ function mpdf_install() {
 		add_option('mpdf_need_login', false);
 		add_option('mpdf_stats', false);
         add_option('mpdf_cron_user', '');
+        add_option('mpdf_code_page', 'utf-8');
 	}
 	
 	
@@ -130,6 +131,7 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 	}
 	else {
 		define('_MPDF_PATH',dirname(__FILE__).'/mpdf/');
+        define('_MPDF_TEMP_PATH', _MPDF_PATH.'graph_cache/');
 		require_once(_MPDF_PATH.'mpdf.php');
 		
 		global $pdf_margin_left;
@@ -149,7 +151,12 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 		global $pdf_orientation;
 		if($pdf_orientation=='') $pdf_orientation = 'P';
 		
-		$mpdf=new mPDF('UTF-8', 'A4', '', '', $pdf_margin_left, $pdf_margin_right, $pdf_margin_top, $pdf_margin_bottom, $pdf_margin_header, $pdf_margin_footer, $pdf_orientation); 
+        $cp = 'utf-8';
+        if(get_option('mpdf_code_page')!='') {
+             $cp = get_option('mpdf_code_page');
+        }
+
+		$mpdf=new mPDF($cp, 'A4', '', '', $pdf_margin_left, $pdf_margin_right, $pdf_margin_top, $pdf_margin_bottom, $pdf_margin_header, $pdf_margin_footer, $pdf_orientation); 
 
 		$mpdf->SetUserRights();
 		$mpdf->title2annots = true;

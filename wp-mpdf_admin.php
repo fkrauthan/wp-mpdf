@@ -33,6 +33,7 @@ function mpdf_admin_options() {
 	
 	if(isset($_POST['save_options'])) {
 		update_option('mpdf_theme', $_POST['theme']);
+        update_option('mpdf_code_page', $_POST['codepage']);
         update_option('mpdf_cron_user', $_POST['cron_user']);
 		update_option('mpdf_caching', isset($_POST['caching']));
 		update_option('mpdf_geshi', isset($_POST['geshi']));
@@ -76,6 +77,22 @@ function mpdf_admin_options() {
 	}
 	echo '</select>';
 	echo '</td></tr>';
+
+    $CODEPAGES_ARRAY = array('utf-8', 'win-1251', 'win-1252', 'iso-8859-2', 'iso-8859-4', 'iso-8859-7', 'iso-8859-9', 'big5', 'gbk', 'uhc', 'shift_jis');
+    echo '<tr><td>Codepage: </td><td>';
+	echo '<select name="codepage">';
+    $cur_cp = get_option('mpdf_code_page');
+    if($cur_cp == '') $cur_cp = 'utf-8';
+    foreach($CODEPAGES_ARRAY as $cp) {
+        echo '<option value="'.$cp.'" ';
+	    if($cur_cp==$cp) {
+			echo 'selected="selected"';
+		}
+		echo '>'.$cp.'</option>';
+    }
+    echo '</select>';
+	echo '</td></tr>';
+
 	echo '<tr><td>Caching: </td><td><input type="checkbox" name="caching" ';
 	if(get_option('mpdf_caching')==true) echo 'checked="checked"';
 	echo '/></td></tr>';
