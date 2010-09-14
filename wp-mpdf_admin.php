@@ -39,6 +39,7 @@ function mpdf_admin_options() {
 		update_option('mpdf_geshi', isset($_POST['geshi']));
 		update_option('mpdf_geshi_linenumbers', isset($_POST['geshi_linenumbers']));
 		update_option('mpdf_stats', isset($_POST['stats']));
+		update_option('mpdf_debug', isset($_POST['debug']));
 		
 		if(isset($_POST['allow_all'])) {
 			update_option('mpdf_allow_all', true);
@@ -122,6 +123,10 @@ function mpdf_admin_options() {
 	echo '<option value="2" '; if(get_option('mpdf_need_login')==2) echo 'selected="selected"'; echo '>Whitelist</option>';
 	echo '<option value="3" '; if(get_option('mpdf_need_login')==3) echo 'selected="selected"'; echo '>Blacklist</option>';
 	echo '</select></td></tr>';
+
+	echo '<tr><td>Enable Debuging: </td><td><input type="checkbox" name="debug" ';
+	if(get_option('mpdf_debug')==true) echo 'checked="checked"';
+	echo '/></td></tr>';
 
     //Cron generating User
     global $wpdb;

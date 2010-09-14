@@ -53,6 +53,7 @@ function mpdf_install() {
 		add_option('mpdf_allow_all', true);
 		add_option('mpdf_need_login', false);
 		add_option('mpdf_stats', false);
+		add_option('mpdf_debug', false);
         add_option('mpdf_cron_user', '');
         add_option('mpdf_code_page', 'utf-8');
 	}
@@ -205,6 +206,11 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 		//My Filters
 		require_once(dirname(__FILE__).'/myfilters.inc.php');
 		$wp_content = mpdf_myfilters($wp_content);
+
+		if(get_option('mpdf_debug') == true) {
+			$mpdf->Output(dirname(__FILE__).'/debug/'.get_option('mpdf_theme').'_'.$pdf_ofilename, 'F');
+		}
+
 		//die($wp_content);
 		$mpdf->WriteHTML($wp_content);
 		
