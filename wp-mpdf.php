@@ -208,7 +208,7 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 		$wp_content = mpdf_myfilters($wp_content);
 
 		if(get_option('mpdf_debug') == true) {
-			$mpdf->Output(dirname(__FILE__).'/debug/'.get_option('mpdf_theme').'_'.$pdf_ofilename, 'F');
+			file_put_contents(dirname(__FILE__).'/debug/'.get_option('mpdf_theme').'_'.$pdf_ofilename.'.html', $wp_content);
 		}
 
 		//die($wp_content);
