@@ -50,18 +50,19 @@
 	}
 
 	function mpdf_speedUpLocaleImages($content) {
-		$base_url = get_option('siteurl');
+		$base_url = get_option('siteurl').'/wp-uploads';
+		$upload_path = get_option('upload_path').'/';
 
 		if(preg_match_all('#<img.*src="(.*)".*>#iU', $content, $matches)) {
 			foreach($matches[1] as $ikey => $img) {
 				if(strpos($img, $base_url) === 0 ) {
 					$local_img_path = str_replace($base_url, '', $img);
-					$new_img = ABSPATH . (substr($local_img_path, 0, 1) === '/' ? substr($local_img_path, 1) : $local_img_path);
+					$new_img = $upload_path.(substr($local_img_path, 0, 1) === '/' ? substr($local_img_path, 1): $local_img_path);
 					$content = str_replace('src="'.$img.'"', 'src="file://'.$new_img.'"', $content);
 				}
 				else {
 					if(substr($img, 0, 1) === '/') {
-						$new_img = ABSPATH . $img;
+						$new_img = $upload_path.$img;
 						$content = str_replace('src="'.$img.'"', 'src="file://'.$new_img.'"', $content);
 					}
 				}
