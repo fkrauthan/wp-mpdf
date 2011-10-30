@@ -3,8 +3,8 @@ Contributors: fkrauthan
 Donate link: http://www.fkrauthan.de
 Tags: print, printer, wp-mpdf, pdf, mpdf
 Requires at least: 2.8
-Tested up to: 3.0.2
-Stable tag: 2.5
+Tested up to: 3.2.1
+Stable tag: 2.6
 
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
@@ -15,6 +15,9 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It is written fo
 
 == Changelog ==  
 
+= 2.6 =
+* Updateing mpdf lib to version 5.3
+* Add a small fix for image paths. Thanks to Mário Kašuba.
 = 2.5 =
 * Disable wrong anotations in PDFs (thanks to misenko)
 * Fix image printing for multi instance wordpress setups (thanks to stephen7cohen)
@@ -107,7 +110,7 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It is written fo
 == Installation ==
 
 1. Upload the whole plugin folder to your /wp-content/plugins/ folder.
-2. Set write permission (777) to the plugin dir folders => wp-mpdf/cache AND wp-mpdf/mdpf/graph_cache
+2. Set write permission (777) to the plugin dir folders => wp-mpdf/cache AND wp-mpdf/mdpf/graph_cache AND wp-mpdf/mdpf/ttfontdata
 3. Go to the plugins page and activate the plugin.
 4. Add to your template "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton(); ?&gt;" as a small button or "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton('my link', 'my login text'); ?&gt;" as a textlink. The second text specifies the text which should displayed if you have checked "needs login" and a user isn't loggend in.
  (if you wish to open the pdf print in a new tab you may pass "true" for the first parameter)
