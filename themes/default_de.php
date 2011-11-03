@@ -9,12 +9,18 @@
 	global $pdf_template_pdfpage;
 	global $pdf_template_pdfpage_page;
 	global $pdf_template_pdfdoc;
+	
+	global $pdf_html_header;
+	global $pdf_html_footer;
 
 	//Hier kann man eine PDF als template setzen. Wenn man beide arten setzt wird pdfdoc verwendet (Man braucht kein PDF Template.)
 	$pdf_template_pdfpage 		= ''; //Der dateiname zu einem pdf file (Für ein seiten template wird dies gebraucht)
 	$pdf_template_pdfpage_page 	= 1;  //Die Seite aus diesem PDF (Für ein seiten template wird dies gebraucht)
 
 	$pdf_template_pdfdoc  		= ''; //Der dateiname zu einem pdf file welches komplet immer wieder weiderholt werden soll (Man braucht dies nur für ein Dokumenten Template)
+	
+	$pdf_html_header 			= false; //Wenn hier true steht kann man stat dem array in $pdf_header einen html string eintragen
+	$pdf_html_footer 			= false; //Wenn hier true steht kann man stat dem array in $pdf_footer einen html string eintragen
 
 	//Set the Footer and the Header
 	$pdf_header = array (

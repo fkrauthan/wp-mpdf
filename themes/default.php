@@ -15,6 +15,9 @@
 	$pdf_template_pdfpage_page 	= 1;  //The page off this page (you need this for a page template)
 
 	$pdf_template_pdfdoc  		= ''; //The filename off the complete pdf document (you need only this for a document template)
+	
+	$pdf_html_header 			= false; //If this is ture you can write instead of the array a html string on the var $pdf_header
+	$pdf_html_footer 			= false; //If this is ture you can write instead of the array a html string on the var $pdf_footer
 
 	//Set the Footer and the Header
 	$pdf_header = array (

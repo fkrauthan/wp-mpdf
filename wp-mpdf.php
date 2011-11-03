@@ -3,7 +3,7 @@
 Plugin Name: wp-mpdf
 Plugin URI: http://www.fkrauthan.de/wordpress/wp-mpdf
 Description: Print a wordpress page as PDF with optional Geshi Parsing.
-Version: 2.6
+Version: 2.7
 Author: Florian 'fkrauthan' Krauthan
 Author URI: http://www.fkrauthan.de
 
@@ -141,6 +141,9 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 		global $pdf_margin_bottom;
 		global $pdf_margin_header;
 		global $pdf_margin_footer;
+		
+		global $pdf_html_header;
+		global $pdf_html_footer;
 
 		if($pdf_margin_left=='') $pdf_margin_left = 15;
 		if($pdf_margin_right=='') $pdf_margin_right = 15;
@@ -148,6 +151,8 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 		if($pdf_margin_bottom=='') $pdf_margin_bottom = 16;
 		if($pdf_margin_header=='') $pdf_margin_header = 9;
 		if($pdf_margin_footer=='') $pdf_margin_footer = 9;
+		if(empty($pdf_html_header)) $pdf_html_header = false;
+		if(empty($pdf_html_footer)) $pdf_html_footer = false;
 
 		global $pdf_orientation;
 		if($pdf_orientation=='') $pdf_orientation = 'P';
@@ -193,8 +198,18 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 		global $pdf_header;
 		
 		$mpdf->startPageNums();	// Required for TOC use after AddPage(), and to use Headers and Footers
-		$mpdf->setHeader($pdf_header);
-		$mpdf->setFooter($pdf_footer);
+		if($pdf_html_header) {
+			$mpdf->SetHTMLHeader($pdf_header);
+		}
+		else {
+			$mpdf->setHeader($pdf_header);
+		}
+		if($pdf_html_footer) {
+			$mpdf->SetHTMLFooter($pdf_footer);
+		}
+		else {
+			$mpdf->setFooter($pdf_footer);
+		}
 		
 		
 		if(get_option('mpdf_theme')!=''&&file_exists(dirname(__FILE__).'/../../wp-mpdf-themes/'.get_option('mpdf_theme').'.css')) {
