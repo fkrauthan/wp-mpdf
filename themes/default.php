@@ -10,6 +10,9 @@
 	global $pdf_template_pdfpage_page;
 	global $pdf_template_pdfdoc;
 
+	global $pdf_html_header;
+	global $pdf_html_footer;
+
 	//Set a pdf template. if both are set the pdfdoc is used. (You didn't need a pdf template)
 	$pdf_template_pdfpage 		= ''; //The filename off the pdf file (you need this for a page template)
 	$pdf_template_pdfpage_page 	= 1;  //The page off this page (you need this for a page template)
