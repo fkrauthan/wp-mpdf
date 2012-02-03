@@ -3,8 +3,8 @@ Contributors: fkrauthan
 Donate link: http://www.fkrauthan.de
 Tags: print, printer, wp-mpdf, pdf, mpdf
 Requires at least: 2.8
-Tested up to: 3.2.1
-Stable tag: 2.7
+Tested up to: 3.3.1
+Stable tag: 2.8
 
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
@@ -15,6 +15,8 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It is written fo
 
 == Changelog ==  
 
+= 2.8 =
+* Add french language templates (thanks to Patrick)
 = 2.7 =
 * Add template option to enable HTML in Header and Footer
 = 2.6 =
