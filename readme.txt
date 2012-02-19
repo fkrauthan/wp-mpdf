@@ -2,9 +2,9 @@
 Contributors: fkrauthan
 Donate link: http://www.fkrauthan.de
 Tags: print, printer, wp-mpdf, pdf, mpdf
-Requires at least: 2.8
+Requires at least: 2.9
 Tested up to: 3.3.1
-Stable tag: 2.8
+Stable tag: 2.9
 
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
@@ -15,6 +15,8 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It is written fo
 
 == Changelog ==  
 
+= 2.9 =
+* Disable printing of password protected posts without entering passwort first
 = 2.8 =
 * Add french language templates (thanks to Patrick)
 = 2.7 =
