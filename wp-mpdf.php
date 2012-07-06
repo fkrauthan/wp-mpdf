@@ -3,7 +3,7 @@
 Plugin Name: wp-mpdf
 Plugin URI: http://fkrauthan.de/eng/projects/php/7-wp-mpdf
 Description: Print a wordpress page as PDF with optional Geshi Parsing.
-Version: 2.9.1
+Version: 2.9.3
 Author: Florian 'fkrauthan' Krauthan
 Author URI: http://fkrauthan.de
 
@@ -306,7 +306,7 @@ function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $logintext = 'Login
 				$buttontext = $logintext;
 			}
 			
-			$pdf_button = '<a id="pdfbutton" href="'.wp_login_url(get_permalink()).'" title="You must login first">'.$buttontext.'</a>';
+			$pdf_button = '<a class="pdfbutton loginfirst" href="'.wp_login_url(get_permalink()).'" title="You must login first">'.$buttontext.'</a>';
 			
 			if($print_button === true) {
 				echo $pdf_button;
@@ -325,7 +325,7 @@ function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $logintext = 'Login
 	$x = !strpos(apply_filters('the_permalink', get_permalink()), '?') ? '?' : '&amp;';
 	$pdf_button = '<a ';
 	if($opennewtab==true) $pdf_button .= 'target="_blank" ';
-	$pdf_button .= 'id="pdfbutton" href="' . apply_filters('the_permalink', get_permalink()) . $x . 'output=pdf">' . $buttontext . '</a>';
+	$pdf_button .= 'class="pdfbutton" href="' . apply_filters('the_permalink', get_permalink()) . $x . 'output=pdf">' . $buttontext . '</a>';
 	
 	if($print_button === true) {
 		echo $pdf_button;
