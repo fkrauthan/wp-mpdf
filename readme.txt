@@ -10,7 +10,7 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
 == Description ==
 
-Print Wordpress posts as PDF. Optional with Geshi highlighting. It is written for an online games programming magazine
+Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has support for password protected posts and only logged in users can print post as pdf support.
 
 
 == Changelog ==  
