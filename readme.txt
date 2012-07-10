@@ -12,6 +12,8 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
 Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has support for password protected posts and only logged in users can print post as pdf support.
 
+Note: The development repository has move to Github: <https://github.com/fkrauthan/wp-mpdf>
+
 
 == Changelog ==  
 
