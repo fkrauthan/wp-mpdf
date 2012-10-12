@@ -140,7 +140,7 @@
 			
 				$cat_links = "";
 				foreach((get_the_category()) as $cat) {
-					$cat_links .= '<a href="' . get_bloginfo('home') . '/' . $cat->category_nicename . '" title="' . $cat->category_description . '">' . $cat->cat_name . '</a>, ';
+					$cat_links .= '<a href="' . get_category_link($cat->term_id) . '" title="' . $cat->category_description . '">' . $cat->cat_name . '</a>, ';
 				}
 				$cat_links = substr($cat_links, 0, -2);
 
