@@ -4,8 +4,8 @@
 **Wordpress plugin page:** [wordpress.org/extend/plugins/wp-mpdf/](http://wordpress.org/extend/plugins/wp-mpdf/)  
 **Tags:** print, printer, wp-mpdf, pdf, mpdf  
 **Requires at least:** 2.9  
-**Tested up to:** 3.3.1  
-**Stable tag:** 2.9.4
+**Tested up to:** 3.5.1  
+**Stable tag:** 2.10.0
  
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
@@ -15,6 +15,9 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 
 
 ## Changelog ##
+
+### 2.10.0 ###
+* Updating mpdf lib to version 5.6.1
 
 ### 2.9.4 ###
 * Fixed category link in the templates
@@ -183,3 +186,21 @@ This file is part of wp-mpdf.
 wp-mpdf is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with wp-mpdf. If not, see [www.gnu.org/licenses/](http://www.gnu.org/licenses/).
+
+
+## Publish to wordpress ##
+
+### Commit changes to wordpress svn ###
+
+	git svn rebase
+	git svn dcommit
+	
+	
+### Tagging new version ###
+
+	git svn tag "VERSION"
+	git tag -a VERSION -m "Tagging VERSION"
+	
+	git pull --rebase origin master  
+    git push origin master  
+    git push origin --tags 
