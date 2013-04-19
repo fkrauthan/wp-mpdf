@@ -3,7 +3,7 @@
 Plugin Name: wp-mpdf
 Plugin URI: http://fkrauthan.de/eng/projects/php/7-wp-mpdf
 Description: Print a wordpress page as PDF with optional Geshi Parsing.
-Version: 2.10.0
+Version: 2.11.0
 Author: Florian 'fkrauthan' Krauthan
 Author URI: http://fkrauthan.de
 
@@ -107,6 +107,11 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 	else {
 		$pdf_filename = $pdf_ofilename;
 	}
+	
+	/**
+	 * Allow to override the pdf file name
+	 */
+	$pdf_filename = apply_filters('mpdf_output_pdf_filename', $pdf_filename);
 	
 	/**
 	 * Geshi Support
@@ -229,6 +234,11 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 		//die($wp_content);
 		$mpdf->WriteHTML($wp_content);
 		
+		/**
+		 * Allow to process the pdf by an 3th party plugin
+		 */
+		do_action('mpdf_output', $mpdf, $pdf_filename);
+		
 		if(get_option('mpdf_caching')==true) {
 			file_put_contents(dirname(__FILE__).'/cache/'.get_option('mpdf_theme').'_'.$pdf_ofilename.'.cache', $post->post_modified_gmt);
 			$mpdf->Output(dirname(__FILE__).'/cache/'.get_option('mpdf_theme').'_'.$pdf_ofilename, 'F');
@@ -349,6 +359,11 @@ function mpdf_readcachedfile($name, $pdfname) {
 function mpdf_exec($outputToBrowser='') {
 	if($outputToBrowser=='') $outputToBrowser = true;
 	else $outputToBrowser = false;
+	
+	/**
+	 * Allow to override the outputToBrowser variable
+	 */
+	$outputToBrowser = apply_filters('mpdf_exec_outputToBrowser', $outputToBrowser);
 	
 	if($_GET['output'] == 'pdf') {
 		//Check if this Page is allwoed to print as PDF
