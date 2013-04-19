@@ -7,6 +7,7 @@
 **Requires at least:** 2.9  
 **Tested up to:** 3.5.1  
 **Stable tag:** 2.10.0
+
  
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
