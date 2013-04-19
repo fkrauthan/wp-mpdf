@@ -14,8 +14,6 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 
 Note: The development repository has move to Github: <https://github.com/fkrauthan/wp-mpdf>
 
-Note: The development repository has move to Github: <https://github.com/fkrauthan/wp-mpdf>
-
 
 == Changelog ==  
 
