@@ -21,6 +21,7 @@ Note: The development repository has move to Github: <https://github.com/fkrauth
 * Removed some deprecated calls (thanks to Permarad)
 * Fixed some php warnings (thanks to Jason Judge)
 * Fixed the readme
+* Added the possibility to translate the ui (at the moment frontend only)
 = 2.11.0 =
 * Added some hooks and actions to the plugin (thanks to Danny)
 = 2.10.0 =

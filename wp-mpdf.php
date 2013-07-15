@@ -313,13 +313,13 @@ function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $logintext = 'Login
 		}
 		else if((get_option('mpdf_need_login')==2&&$dsatz->login==false || get_option('mpdf_need_login')==3&&$dsatz->login==true)&&is_user_logged_in()!=true) {
 			if(empty($buttontext)) {
-				$buttontext = '<img src="' . get_bloginfo('wpurl') . '/wp-content/plugins/wp-mpdf/pdf_lock.png" alt="'.$logintext.'" title="You must login first" border="0" />';
+				$buttontext = '<img src="' . get_bloginfo('wpurl') . '/wp-content/plugins/wp-mpdf/pdf_lock.png" alt="'.__($logintext, 'wp-mpdf').'" title="'.__('You must login first', 'wp-mpdf').'" border="0" />';
 			}
 			else {
-				$buttontext = $logintext;
+				$buttontext = __($logintext, 'wp-mpdf');
 			}
 			
-			$pdf_button = '<a class="pdfbutton loginfirst" href="'.wp_login_url(get_permalink()).'" title="You must login first">'.$buttontext.'</a>';
+			$pdf_button = '<a class="pdfbutton loginfirst" href="'.wp_login_url(get_permalink()).'" title="'.__('You must login first', 'wp-mpdf').'">'.$buttontext.'</a>';
 			
 			if($print_button === true) {
 				echo $pdf_button;
@@ -333,12 +333,12 @@ function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $logintext = 'Login
 	
 	//Print the button
 	if(empty($buttontext))
-		$buttontext = '<img src="' . get_bloginfo('wpurl') . '/wp-content/plugins/wp-mpdf/pdf.png" alt="This page as PDF" border="0" />';
+		$buttontext = '<img src="' . get_bloginfo('wpurl') . '/wp-content/plugins/wp-mpdf/pdf.png" alt="'.__('This page as PDF', 'wp-mpdf').'" border="0" />';
 	
 	$x = !strpos(apply_filters('the_permalink', get_permalink()), '?') ? '?' : '&amp;';
 	$pdf_button = '<a ';
 	if($opennewtab==true) $pdf_button .= 'target="_blank" ';
-	$pdf_button .= 'class="pdfbutton" href="' . apply_filters('the_permalink', get_permalink()) . $x . 'output=pdf">' . $buttontext . '</a>';
+	$pdf_button .= 'class="pdfbutton" href="' . apply_filters('the_permalink', get_permalink()) . $x . 'output=pdf">' . __($buttontext, 'wp-mpdf') . '</a>';
 	
 	if($print_button === true) {
 		echo $pdf_button;
@@ -468,15 +468,15 @@ function mpdf_admin_printeditbox() {
 	}
 	echo 'type="checkbox" name="wp_mpdf_candownload" /></td></tr>';
 	
-	echo '<tr><td>Put on whitelist/blacklist for need Login</td><td><input ';
+	echo '<tr><td>'.__('Put on whitelist/blacklist for need Login', 'wp-mpdf').'</td><td><input ';
 	if($datas->login == true) {
 		echo 'checked="checked" ';
 	}
 	echo 'type="checkbox" name="wp_mpdf_needlogin" /></td></tr>';
 	
-	echo '<tr><td>Set a special PDF output name:</td><td><input type="text" name="wp_mpdf_pdfname" value="';
+	echo '<tr><td>'.__('Set a special PDF output name', 'wp-mpdf').':</td><td><input type="text" name="wp_mpdf_pdfname" value="';
 	echo $datas->pdfname;
-	echo '" /> (without .pdf at the end)</td></tr>';
+	echo '" /> ('.__('without .pdf at the end', 'wp-mpdf').')</td></tr>';
 	echo '</table>';
 }
 
