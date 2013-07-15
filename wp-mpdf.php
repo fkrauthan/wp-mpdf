@@ -3,7 +3,7 @@
 Plugin Name: wp-mpdf
 Plugin URI: http://fkrauthan.de/eng/projects/php/7-wp-mpdf
 Description: Print a wordpress page as PDF with optional Geshi Parsing.
-Version: 2.11.0
+Version: 2.12.0
 Author: Florian 'fkrauthan' Krauthan
 Author URI: http://fkrauthan.de
 
@@ -228,6 +228,9 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 		$wp_content = mpdf_myfilters($wp_content);
 
 		if(get_option('mpdf_debug') == true) {
+			if(!is_dir(dirname(__FILE__).'/debug/')) {
+				mkdir(dirname(__FILE__).'/debug/');
+			}
 			file_put_contents(dirname(__FILE__).'/debug/'.get_option('mpdf_theme').'_'.$pdf_ofilename.'.html', $wp_content);
 		}
 
@@ -365,8 +368,8 @@ function mpdf_exec($outputToBrowser='') {
 	 */
 	$outputToBrowser = apply_filters('mpdf_exec_outputToBrowser', $outputToBrowser);
 	
-	if($_GET['output'] == 'pdf') {
-		//Check if this Page is allwoed to print as PDF
+	if(isset($_GET['output']) && $_GET['output'] == 'pdf') {
+		//Check if this Page is allowed to print as PDF
 		global $wpdb;
 		global $post;
 		$table_name = $wpdb->prefix . WP_MPDF_POSTS_DB;
@@ -417,8 +420,9 @@ function mpdf_exec($outputToBrowser='') {
 					}
 				}
 			}
-		} 
-		
+		}
+
+		$pdf_output = '';
 		require(dirname(__FILE__).'/../../wp-mpdf-themes/'.get_option('mpdf_theme').'.php');	
 		mpdf_output($pdf_output, true, $outputToBrowser, $dsatz->pdfname);
 		
@@ -434,7 +438,7 @@ function mpdf_admin() {
 }
 
 function mpdf_create_admin_menu() {
-	add_submenu_page('options-general.php', 'wp-mpdf - config', 'wp-mpdf', 8, dirname(__FILE__), 'mpdf_admin');
+	add_submenu_page('options-general.php', 'wp-mpdf - config', 'wp-mpdf', 'edit_pages', dirname(__FILE__), 'mpdf_admin');
 	
 	if(function_exists('add_meta_box')) {
 		add_meta_box('mpdf_admin', 'wp-mpdf', 'mpdf_admin_printeditbox', 'post', 'normal', 'high');

@@ -105,7 +105,7 @@
 		<body xml:lang="fr">
 			<bookmark content="'.htmlspecialchars(get_bloginfo('name'), ENT_QUOTES).'" level="0" /><tocentry content="'.htmlspecialchars(get_bloginfo('name'), ENT_QUOTES).'" level="0" />
 			<div id="header"><div id="headerimg">
-				<h1><a href="' . get_settings('home') . '/">' .  get_bloginfo('name') . '</a></h1>
+				<h1><a href="' . get_option('home') . '/">' .  get_bloginfo('name') . '</a></h1>
 				<div class="description">' .  get_bloginfo('description') . '</div>
 			</div>
 			</div>
@@ -154,7 +154,7 @@
 
 
 				// no authors and dates on static pages
-				if(!is_page()) $pdf_output .=  '<p class="small subtitle">' . get_author_name($post->post_author) . ' , le ' . date_i18n('l', mpdf_mysql2unix($post->post_date)) . ' ' .date_i18n('j F Y', mpdf_mysql2unix($post->post_date)) . '</p>';
+				if(!is_page()) $pdf_output .=  '<p class="small subtitle">' . get_the_author_meta('display_name') . ' , le ' . date_i18n('l', mpdf_mysql2unix($post->post_date)) . ' ' .date_i18n('j F Y', mpdf_mysql2unix($post->post_date)) . '</p>';
 
 				$pdf_output .= '<div class="entry">' .	wpautop($post->post_content, true) . '</div>';
 				
@@ -167,10 +167,10 @@
 							
 							if (('open' == $post-> comment_status) && ('open' == $post->ping_status)) {
 								// Both Comments and Pings are open
-								$pdf_output .= ' Vous pouvez laisser une r&eacute;, ou <a href="' . trackback_url(false) . '" rel="trackback">un trackback</a> depuis votre site.';
+								$pdf_output .= ' Vous pouvez laisser une r&eacute;, ou <a href="' . get_trackback_url() . '" rel="trackback">un trackback</a> depuis votre site.';
 							} elseif (!('open' == $post-> comment_status) && ('open' == $post->ping_status)) {
 								// Only Pings are Open
-								$pdf_output .= ' Les r&eacute;ponses sont closes en ce moment, mais vous pouvez faire un <a href="' . trackback_url(false) . '" rel="trackback">trackback</a> depuis votre propre site.';
+								$pdf_output .= ' Les r&eacute;ponses sont closes en ce moment, mais vous pouvez faire un <a href="' . get_trackback_url() . '" rel="trackback">trackback</a> depuis votre propre site.';
 							} elseif (('open' == $post-> comment_status) && !('open' == $post->ping_status)) {
 								// Comments are open, Pings are not
 								$pdf_output .= ' Vous pouvez aller jusqu&apos; &agrave; la fin et laisser une r&eacute;ponse. Le ping n&apos;est pas permis.';

@@ -111,7 +111,7 @@
 		<body xml:lang="en">
 			<bookmark content="'.htmlspecialchars(get_bloginfo('name'), ENT_QUOTES).'" level="0" /><tocentry content="'.htmlspecialchars(get_bloginfo('name'), ENT_QUOTES).'" level="0" />
 			<div id="header"><div id="headerimg">
-				<h1><a href="' . get_settings('home') . '/">' .  get_bloginfo('name') . '</a></h1>
+				<h1><a href="' . get_option('home') . '/">' .  get_bloginfo('name') . '</a></h1>
 				<div class="description">' .  get_bloginfo('description') . '</div>
 			</div>
 			</div>
@@ -160,7 +160,7 @@
 
 
 				// no authors and dates on static pages
-				if(!is_page()) $pdf_output .=  '<p class="small subtitle">' . get_author_name($post->post_author) . ' &middot; ' . date('l, F jS, Y', mpdf_mysql2unix($post->post_date)) . '</p>';
+				if(!is_page()) $pdf_output .=  '<p class="small subtitle">' . get_the_author_meta('display_name') . ' &middot; ' . date('l, F jS, Y', mpdf_mysql2unix($post->post_date)) . '</p>';
 
 				$pdf_output .= '<div class="entry">' .	wpautop($post->post_content, true) . '</div>';
 				
@@ -175,10 +175,10 @@
 	
 							if (('open' == $post-> comment_status) && ('open' == $post->ping_status)) {
 								// Both Comments and Pings are open
-								$pdf_output .= ' You can leave a response, or <a href="' . trackback_url(false) . '" rel="trackback">trackback</a> from your own site.';
+								$pdf_output .= ' You can leave a response, or <a href="' . get_trackback_url() . '" rel="trackback">trackback</a> from your own site.';
 							} elseif (!('open' == $post-> comment_status) && ('open' == $post->ping_status)) {
 								// Only Pings are Open
-								$pdf_output .= ' Responses are currently closed, but you can <a href="' . trackback_url(false) . '" rel="trackback">trackback</a> from your own site.';
+								$pdf_output .= ' Responses are currently closed, but you can <a href="' . get_trackback_url() . '" rel="trackback">trackback</a> from your own site.';
 							} elseif (('open' == $post-> comment_status) && !('open' == $post->ping_status)) {
 								// Comments are open, Pings are not
 								$pdf_output .= ' You can skip to the end and leave a response. Pinging is currently not allowed.';

@@ -4,7 +4,7 @@ Donate link: http://fkrauthan.de
 Tags: print, printer, wp-mpdf, pdf, mpdf
 Requires at least: 2.9
 Tested up to: 3.5.1
-Stable tag: 2.11.0
+Stable tag: 2.12.0
 
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
@@ -17,6 +17,10 @@ Note: The development repository has move to Github: <https://github.com/fkrauth
 
 == Changelog ==  
 
+= 2.12.0 =
+* Removed some deprecated calls (thanks to Permarad)
+* Fixed some php warnings (thanks to Jason Judge)
+* Fixed the readme
 = 2.11.0 =
 * Added some hooks and actions to the plugin (thanks to Danny)
 = 2.10.0 =
@@ -132,7 +136,7 @@ Note: The development repository has move to Github: <https://github.com/fkrauth
 1. Upload the whole plugin folder to your /wp-content/plugins/ folder.
 2. Set write permission (777) to the plugin dir folders => wp-mpdf/cache AND wp-mpdf/mdpf/graph_cache AND wp-mpdf/mdpf/ttfontdata
 3. Go to the plugins page and activate the plugin.
-4. Add to your template "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton(); ?&gt;" as a small button or "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton('my link', 'my login text'); ?&gt;" as a textlink. The second text specifies the text which should displayed if you have checked "needs login" and a user isn't loggend in.
+4. Add to your template "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton(); ?&gt;" as a small button or "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton(false, 'my link', 'my login text'); ?&gt;" as a textlink. The second text specifies the text which should displayed if you have checked "needs login" and a user isn't logged in.
  (if you wish to open the pdf print in a new tab you may pass "true" for the first parameter)
 5. You can adjust some options: in your admin interface, click on plugins and then on wp-mpdf. For allowing or disabling pdf export you can use the checkbox when creating/editing a post or a page.
 6. Place your templates into /wp-content/wp-mpdf-themes
