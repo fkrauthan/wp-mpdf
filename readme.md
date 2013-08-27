@@ -5,7 +5,7 @@
 **Wordpress plugin page:** [wordpress.org/extend/plugins/wp-mpdf/](http://wordpress.org/extend/plugins/wp-mpdf/)  
 **Tags:** print, printer, wp-mpdf, pdf, mpdf  
 **Requires at least:** 2.9  
-**Tested up to:** 3.5.1  
+**Tested up to:** 3.6
 **Stable tag:** 2.12.0
  
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
@@ -16,6 +16,13 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 
 
 ## Changelog ##
+
+### 3.0 ###
+* Fixed some issues with wordpress 3.7
+* Changed template loading (templates loaded from the custom template folder. If it can't find a template there it tries to load it from the plugin template folder.)
+* Updated mpdf lib to version 5.7
+* Moved all tmp directories to one folder (plugin_direcotry/tmp. Don't forget to give write permission for this folder)
+* Removed not needed files and directories for the mpdf lib
 
 ### 2.12.0 ###
 * Removed some deprecated calls (thanks to Permarad)
