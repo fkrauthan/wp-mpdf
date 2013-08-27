@@ -135,7 +135,7 @@ Note: The development repository has move to Github: <https://github.com/fkrauth
 == Installation ==
 
 1. Upload the whole plugin folder to your /wp-content/plugins/ folder.
-2. Set write permission (777) to the plugin dir folders => wp-mpdf/cache AND wp-mpdf/mdpf/graph_cache AND wp-mpdf/mdpf/ttfontdata
+2. Set write permission (777) to the plugin dir folders => wp-mpdf/cache AND wp-mpdf/tmp
 3. Go to the plugins page and activate the plugin.
 4. Add to your template "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton(); ?&gt;" as a small button or "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton(false, 'my link', 'my login text'); ?&gt;" as a textlink. The second text specifies the text which should displayed if you have checked "needs login" and a user isn't logged in.
  (if you wish to open the pdf print in a new tab you may pass "true" for the first parameter)
