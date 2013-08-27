@@ -80,7 +80,7 @@ function mpdf_install() {
 	}
 }
 
-function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, $pdfName = '') {
+function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, $pdfName = '', $templatePath = '') {
 	global $post;
 	$pdf_ofilename = $post->post_name . '.pdf';
 	if(!empty($pdfName)) {
@@ -119,7 +119,8 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 	}
 	else {
 		define('_MPDF_PATH',dirname(__FILE__).'/mpdf/');
-        define('_MPDF_TEMP_PATH', _MPDF_PATH.'graph_cache/');
+        define('_MPDF_TEMP_PATH', dirname(__FILE__).'/tmp');
+		define('_MPDF_TTFONTDATAPATH', _MPDF_TEMP_PATH);
 		require_once(_MPDF_PATH.'mpdf.php');
 		
 		global $pdf_margin_left;
@@ -149,18 +150,7 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
              $cp = get_option('mpdf_code_page');
         }
 
-		$mpdf=new mPDF($cp, 'A4', '', '', $pdf_margin_left, $pdf_margin_right, $pdf_margin_top, $pdf_margin_bottom, $pdf_margin_header, $pdf_margin_footer, $pdf_orientation);
-
-		global $pdf_template_pdfpage;
-		global $pdf_template_pdfpage_page;
-		global $pdf_template_pdfdoc;
-
-		$templatePath = dirname(__FILE__).'/../../wp-mpdf-themes/';
-		$templateFile = $templatePath . $pdf_template_pdfdoc;
-		if(!file_exists($templateFile)) {
-			$templatePath = dirname(__FILE__).'/themes/';
-			$templateFile = $templatePath . $pdf_template_pdfdoc;
-		}
+		$mpdf=new mPDF($cp, 'A4', '', '', $pdf_margin_left, $pdf_margin_right, $pdf_margin_top, $pdf_margin_bottom, $pdf_margin_header, $pdf_margin_footer, $pdf_orientation); 
 
 		$mpdf->SetUserRights();
 		$mpdf->title2annots = false;
@@ -169,13 +159,16 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 		$mpdf->SetBasePath($templatePath);
 
 		//Set PDF Template if it's set
+		global $pdf_template_pdfpage;
+		global $pdf_template_pdfpage_page;
+		global $pdf_template_pdfdoc;
 		if(isset($pdf_template_pdfdoc)&&$pdf_template_pdfdoc!='') {
             $mpdf->SetImportUse();
-			$mpdf->SetDocTemplate($templateFile, true);
+			$mpdf->SetDocTemplate($templatePath.$pdf_template_pdfdoc, true);
 		}
 		else if(isset($pdf_template_pdfpage)&&$pdf_template_pdfpage!=''&&isset($pdf_template_pdfpage_page)&&is_numeric($pdf_template_pdfpage_page)) {
             $mpdf->SetImportUse();			
-            $pagecount = $mpdf->SetSourceFile($templateFile);
+            $pagecount = $mpdf->SetSourceFile($templatePath.$pdf_template_pdfpage);
 			if($pdf_template_pdfpage_page<1) $pdf_template_pdfpage_page = 1;
 			else if($pdf_template_pdfpage_page>$pagecount) $pdf_template_pdfpage_page = $pagecount;
 			$tplId = $mpdf->ImportPage($pdf_template_pdfpage_page);
@@ -412,9 +405,16 @@ function mpdf_exec($outputToBrowser='') {
 			}
 		}
 
+		$templatePath = dirname(__FILE__).'/../../wp-mpdf-themes/';
+		$templateFile = $templatePath . get_option('mpdf_theme').'.php';
+		if(!file_exists($templateFile)) {
+			$templatePath = dirname(__FILE__).'/themes/';
+			$templateFile = $templatePath . get_option('mpdf_theme').'.php';
+		}
+
 		$pdf_output = '';
-		require(dirname(__FILE__).'/../../wp-mpdf-themes/'.get_option('mpdf_theme').'.php');	
-		mpdf_output($pdf_output, true, $outputToBrowser, $dsatz->pdfname);
+		require($templateFile);
+		mpdf_output($pdf_output, true, $outputToBrowser, $dsatz->pdfname, $templatePath);
 		
 		if($outputToBrowser==true) {
 			exit;
