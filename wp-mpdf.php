@@ -73,27 +73,9 @@ function mpdf_install() {
 		$wpdb->query('DROP TABLE '.$table_name_old);
 	}
 	
-
-	if(is_dir(dirname(__FILE__).'/themes/')) {
-		//Move the Theme dir
-		if(!is_dir(dirname(__FILE__).'/../../wp-mpdf-themes')) {
-			if(!@mkdir(dirname(__FILE__).'/../../wp-mpdf-themes')) {
-				echo '<p>Can\'t create mpdf themes dir. Please create the dir "wp-content/wp-mpdf-themes" and give your webserver write permission to it.</p>';
-			}
-		}
-
-		$dh = opendir(dirname(__FILE__).'/themes/');
-		while(($file = readdir($dh)) !== false) {
-    			if($file != "." && $file != "..") {
-				if(!@rename(dirname(__FILE__).'/themes/'.$file, dirname(__FILE__).'/../../wp-mpdf-themes/'.$file)) {
-					echo '<p>Can\'t move the file "'.'wp-content/plugins/wp-mpdf/themes/'.$file.'" to "'.'wp-content/wp-mpdf-themes/'.$file.'". Please do this by your self.</p>';
-				}
-			}
-		}
-		closedir($dh);
-
-		if(!@rmdir(dirname(__FILE__).'/themes/')) {
-			echo '<p>Can\'t delete the folder "wp-content/plugins/wp-mpdf/themes/". Please to this by your self.</p>';
+	if(!is_dir(dirname(__FILE__).'/../../wp-mpdf-themes')) {
+		if(!@mkdir(dirname(__FILE__).'/../../wp-mpdf-themes')) {
+			echo '<p>Can\'t create mpdf themes dir. Please create the dir "wp-content/wp-mpdf-themes" and give your webserver write permission to it.</p>';
 		}
 	}
 }
