@@ -63,19 +63,41 @@ function mpdf_admin_options() {
 	echo '<tr><td>Thema: </td><td>';
 	echo '<select name="theme">';
 	//Search for Themes
-	if($dir = opendir(dirname(__FILE__).'/../../wp-mpdf-themes/')) {
-		while($file = readdir($dir)) {
-			if(!is_dir($path.$file) && $file != "." && $file != "..")  {
-				if(strtolower(substr($file, count($file)-4))=='php') {
-					echo '<option value="'.substr($file, 0, count($file)-5).'" ';
-					if(get_option('mpdf_theme')==substr($file, 0, count($file)-5)) {
-						echo 'selected="selected"';
+	$existingFiles = array();
+	$path = dirname(__FILE__).'/../../wp-mpdf-themes/';
+	if(is_dir($path)) {
+		if($dir = opendir($path)) {
+			while($file = readdir($dir)) {
+				if(!is_dir($path.$file) && $file != "." && $file != "..")  {
+					if(strtolower(substr($file, count($file)-4))=='php') {
+						$existingFiles[] = $file;
+						echo '<option value="'.substr($file, 0, count($file)-5).'" ';
+						if(get_option('mpdf_theme')==substr($file, 0, count($file)-5)) {
+							echo 'selected="selected"';
+						}
+						echo '>'.str_replace('_', ' ', substr($file, 0, count($file)-5)).'</option>';
 					}
-					echo '>'.str_replace('_', ' ', substr($file, 0, count($file)-5)).'</option>';
 				}
 			}
 		}
 	}
+	$path = dirname(__FILE__).'/themes/';
+	if(is_dir($path)) {
+		if($dir = opendir($path)) {
+			while($file = readdir($dir)) {
+				if(!is_dir($path.$file) && $file != "." && $file != "..")  {
+					if(strtolower(substr($file, count($file)-4))=='php' && !in_array($file, $existingFiles)) {
+						echo '<option value="'.substr($file, 0, count($file)-5).'" ';
+						if(get_option('mpdf_theme')==substr($file, 0, count($file)-5)) {
+							echo 'selected="selected"';
+						}
+						echo '>'.str_replace('_', ' ', substr($file, 0, count($file)-5)).'</option>';
+					}
+				}
+			}
+		}
+	}
+
 	echo '</select>';
 	echo '</td></tr>';
 
@@ -133,11 +155,11 @@ function mpdf_admin_options() {
     echo '<tr><td>User for generating per Cron: </td><td><select name="cron_user">';
     echo '<option value="" '; if(get_option('mpdf_cron_user')=='') echo 'selected="selected"'; echo '>None</option>';
 	echo '<option value="auto" '; if(get_option('mpdf_cron_user')=='auto') echo 'selected="selected"'; echo '>Auto</option>';
-	$aUsersID = $wpdb->get_col($wpdb->prepare('SELECT ID FROM '.$wpdb->users.' ORDER BY user_nicename ASC')); 
-    foreach($aUsersID as $iUserID) {
-        $user = get_userdata($iUserID);
+	$aUsersID = $wpdb->get_results('SELECT ID FROM '.$wpdb->users.' ORDER BY user_nicename ASC');
+	foreach($aUsersID as $iUserID) {
+        $user = get_userdata($iUserID->ID);
 
-        echo '<option value="'.$iUserID.'" ';
+        echo '<option value="'.$iUserID->ID.'" ';
         if($iUserID == get_option('mpdf_cron_user')) {
             echo 'selected="selected"';
         }
