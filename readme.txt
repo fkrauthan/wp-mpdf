@@ -4,7 +4,7 @@ Donate link: http://fkrauthan.de
 Tags: print, printer, wp-mpdf, pdf, mpdf
 Requires at least: 2.9
 Tested up to: 3.6
-Stable tag: 3.0
+Stable tag: 3.0.1
 
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
@@ -17,6 +17,9 @@ Note: The development repository has move to Github: <https://github.com/fkrauth
 
 == Changelog ==  
 
+= 3.0.1 =
+* Added missing font folder
+* Updated mpdf lib to version 3.7.1
 = 3.0 =
 * Fixed some issues with wordpress 3.7
 * Changed template loading (templates loaded from the custom template folder. If it can't find a template there it tries to load it from the plugin template folder.)
