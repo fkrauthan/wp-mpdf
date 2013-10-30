@@ -6,7 +6,7 @@
 **Tags:** print, printer, wp-mpdf, pdf, mpdf  
 **Requires at least:** 2.9  
 **Tested up to:** 3.6
-**Stable tag:** 3.0.1
+**Stable tag:** 3.1
  
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
@@ -16,6 +16,10 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 
 
 ## Changelog ##
+
+## 3.1 ##
+* Added nofollow option to the pdf download buttons (default: not enabled)
+* If cache folder within the plugin folder is not writable check for cache folder within the mpdf template folder
 
 ### 3.0.1 ###
 * Added missing font folder
@@ -189,11 +193,13 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 ## Installation ##
 
 1. Upload the whole plugin folder to your `/wp-content/plugins/` folder.
-1. Set write permission (777) to the plugin dir folders => `wp-mpdf/cache` AND `wp-mpdf/tmp`
+1. Set write permission (777) to the plugin dir folder => `wp-mpdf/cache` OR `/wp-content/wp-mpdf-themes/cache`
 1. Go to the plugins page and activate the plugin.
 1. Add to your template "`<?php if(function_exists('mpdf_pdfbutton')) mpdf_pdfbutton(); ?>`" as a small button or "`<?php if(function_exists('mpdf_pdfbutton')) mpdf_pdfbutton(false, 'my link', 'my login text'); ?>`" as a textlink. The second text specifies the text which should displayed if you have checked "needs login" and a user isn't loggend in. (if you wish to open the pdf print in a new tab you may pass "true" for the first parameter)
 1. You can adjust some options: in your admin interface, click on plugins and then on wp-mpdf. For allowing or disabling pdf export you can use the checkbox when creating/editing a post or a page.
 1. Place your templates into `/wp-content/wp-mpdf-themes`
+
+The mpdf_pdfbutton function signature: `function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $logintext = 'Login!', $print_button = true, $nofollow = false)`
 
 
 ## License ##
