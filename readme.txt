@@ -4,7 +4,7 @@ Donate link: http://fkrauthan.de
 Tags: print, printer, wp-mpdf, pdf, mpdf
 Requires at least: 2.9
 Tested up to: 3.6
-Stable tag: 3.1.1
+Stable tag: 3.1.2
 
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
@@ -12,11 +12,15 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
 Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has support for password protected posts and only logged in users can print post as pdf support.
 
-Note: The development repository has move to Github: <https://github.com/fkrauthan/wp-mpdf>
+Note: You can find the development repository at Github: <https://github.com/fkrauthan/wp-mpdf>
 
 
 == Changelog ==  
 
+= 3.1.2 =
+* Added missing files
+* Fixed a php warning (thanks to Menelao)
+* Fixed a temp folder issue (thanks to shortster)
 = 3.1.1 =
 * Fixed cache dir guessing
 = 3.1 =
