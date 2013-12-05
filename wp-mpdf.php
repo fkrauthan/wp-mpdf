@@ -120,7 +120,7 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 	else {
 		$cacheDirectory = mpdf_getcachedir();
 		if(!is_dir($cacheDirectory . 'tmp')) {
-			@mkdir($cacheDirectory . ' tmp');
+			@mkdir($cacheDirectory . 'tmp');
 		}
 
 		define('_MPDF_PATH',dirname(__FILE__).'/mpdf/');
