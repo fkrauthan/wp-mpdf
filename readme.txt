@@ -3,8 +3,8 @@ Contributors: fkrauthan
 Donate link: http://fkrauthan.de
 Tags: print, printer, wp-mpdf, pdf, mpdf
 Requires at least: 2.9
-Tested up to: 3.6
-Stable tag: 3.1.3
+Tested up to: 3.8.1
+Stable tag: 3.2
 
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
@@ -17,7 +17,10 @@ Note: You can find the development repository at Github: <https://github.com/fkr
 
 == Changelog ==  
 
-=3.1.3 =
+= 3.2 =
+* Added option to replace the pdf button images
+* Fixed a bug where 0 for pdf margin was interpreted as no value set
+= 3.1.3 =
 * Added removed font folder (again...)
 = 3.1.2 =
 * Added missing files
@@ -162,7 +165,9 @@ Note: You can find the development repository at Github: <https://github.com/fkr
 5. You can adjust some options: in your admin interface, click on plugins and then on wp-mpdf. For allowing or disabling pdf export you can use the checkbox when creating/editing a post or a page.
 6. Place your templates into /wp-content/wp-mpdf-themes
 
-The mpdf_pdfbutton function signature: `function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $logintext = 'Login!', $print_button = true, $nofollow = false)`
+The mpdf_pdfbutton function signature: `function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $logintext = 'Login!', $print_button = true, $nofollow = false, $options = array())`
+
+The options array supports 'pdf_lock_image' => '/my/image/path/relative/to/wordpress/route' and 'pdf_image' => '/my/image/path/relative/to/wordpress/route' to overwrite which icon should be used.
 
 
 == License ==
