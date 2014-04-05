@@ -3,7 +3,7 @@
 Plugin Name: wp-mpdf
 Plugin URI: http://fkrauthan.de/eng/projects/php/7-wp-mpdf
 Description: Print a wordpress page as PDF with optional Geshi Parsing.
-Version: 3.1.3
+Version: 3.2
 Author: Florian 'fkrauthan' Krauthan
 Author URI: http://fkrauthan.de
 
@@ -138,12 +138,12 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 		global $pdf_html_header;
 		global $pdf_html_footer;
 
-		if($pdf_margin_left=='') $pdf_margin_left = 15;
-		if($pdf_margin_right=='') $pdf_margin_right = 15;
-		if($pdf_margin_top=='') $pdf_margin_top = 16;
-		if($pdf_margin_bottom=='') $pdf_margin_bottom = 16;
-		if($pdf_margin_header=='') $pdf_margin_header = 9;
-		if($pdf_margin_footer=='') $pdf_margin_footer = 9;
+		if($pdf_margin_left !== 0 && $pdf_margin_left=='') $pdf_margin_left = 15;
+		if($pdf_margin_right !== 0 && $pdf_margin_right=='') $pdf_margin_right = 15;
+		if($pdf_margin_top !== 0 && $pdf_margin_top=='') $pdf_margin_top = 16;
+		if($pdf_margin_bottom !== 0 && $pdf_margin_bottom=='') $pdf_margin_bottom = 16;
+		if($pdf_margin_header !== 0 && $pdf_margin_header=='') $pdf_margin_header = 9;
+		if($pdf_margin_footer !== 0 && $pdf_margin_footer=='') $pdf_margin_footer = 9;
 		if(empty($pdf_html_header)) $pdf_html_header = false;
 		if(empty($pdf_html_footer)) $pdf_html_footer = false;
 
@@ -287,7 +287,7 @@ function mpdf_mysql2unix($timestamp) {
 	return mktime($hour,$minute,$second,$month,$day,$year);
 }
 
-function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $logintext = 'Login!', $print_button = true, $nofollow = false) {
+function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $logintext = 'Login!', $print_button = true, $nofollow = false, $options = array()) {
 	$nofollowHtml = '';
 	if($nofollow) {
 		$nofollowHtml = 'rel="nofollow" ';
@@ -306,7 +306,12 @@ function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $logintext = 'Login
 		}
 		else if((get_option('mpdf_need_login')==2&&$dsatz->login==false || get_option('mpdf_need_login')==3&&$dsatz->login==true)&&is_user_logged_in()!=true) {
 			if(empty($buttontext)) {
-				$buttontext = '<img src="' . get_bloginfo('wpurl') . '/wp-content/plugins/wp-mpdf/pdf_lock.png" alt="'.__($logintext, 'wp-mpdf').'" title="'.__('You must login first', 'wp-mpdf').'" border="0" />';
+				$image = '/wp-content/plugins/wp-mpdf/pdf_lock.png';
+				if(isset($options['pdf_lock_image'])) {
+					$image = $options['pdf_lock_image'];
+				}
+
+				$buttontext = '<img src="' . get_bloginfo('wpurl') . $image . '" alt="'.__($logintext, 'wp-mpdf').'" title="'.__('You must login first', 'wp-mpdf').'" border="0" />';
 			}
 			else {
 				$buttontext = __($logintext, 'wp-mpdf');
@@ -325,8 +330,14 @@ function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $logintext = 'Login
 	
 	
 	//Print the button
-	if(empty($buttontext))
-		$buttontext = '<img src="' . get_bloginfo('wpurl') . '/wp-content/plugins/wp-mpdf/pdf.png" alt="'.__('This page as PDF', 'wp-mpdf').'" border="0" />';
+	if(empty($buttontext)) {
+		$image = '/wp-content/plugins/wp-mpdf/pdf.png';
+		if(isset($options['pdf_image'])) {
+			$image = $options['pdf_image'];
+		}
+
+		$buttontext = '<img src="' . get_bloginfo('wpurl') . $image . '" alt="'.__('This page as PDF', 'wp-mpdf').'" border="0" />';
+	}
 	
 	$x = !strpos(apply_filters('the_permalink', get_permalink()), '?') ? '?' : '&amp;';
 	$pdf_button = '<a ' . $nofollowHtml;
