@@ -460,9 +460,11 @@ function mpdf_admin() {
 	mpdf_admin_display();
 }
 
-function mpdf_create_admin_menu() {
-	add_submenu_page('options-general.php', 'wp-mpdf - config', 'wp-mpdf', 'edit_pages', dirname(__FILE__), 'mpdf_admin');
-	
+add_action( 'admin_menu', 'wp_mpdf_menu' );
+
+function wp_mpdf_menu() {
+	add_options_page( 'WP-MPDF Options', 'WP-MPDF', 'manage_options', 'wp-mpdf', 'mpdf_admin' );
+
 	if(function_exists('add_meta_box')) {
 		add_meta_box('mpdf_admin', 'wp-mpdf', 'mpdf_admin_printeditbox', 'post', 'normal', 'high');
 		add_meta_box('mpdf_admin', 'wp-mpdf', 'mpdf_admin_printeditbox', 'page', 'normal', 'high');
