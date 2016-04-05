@@ -19,6 +19,7 @@ Note: You can find the development repository at Github: <https://github.com/fkr
 
 = 3.2.1 =
 * Fixed options menu with recent Wordpress versions (thanks to NickGreen)
+* Removed a call to a deprecated method
 = 3.2 =
 * Added option to replace the pdf button images
 * Fixed a bug where 0 for pdf margin was interpreted as no value set
