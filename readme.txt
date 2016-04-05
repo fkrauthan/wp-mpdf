@@ -3,8 +3,8 @@ Contributors: fkrauthan
 Donate link: http://fkrauthan.de
 Tags: print, printer, wp-mpdf, pdf, mpdf
 Requires at least: 2.9
-Tested up to: 3.8.1
-Stable tag: 3.2
+Tested up to: 4.4.2
+Stable tag: 3.2.1
 
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
@@ -15,8 +15,10 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 Note: You can find the development repository at Github: <https://github.com/fkrauthan/wp-mpdf>
 
 
-== Changelog ==  
+== Changelog ==
 
+= 3.2.1 =
+* Fixed options menu with recent Wordpress versions (thanks to NickGreen)
 = 3.2 =
 * Added option to replace the pdf button images
 * Fixed a bug where 0 for pdf margin was interpreted as no value set
@@ -151,8 +153,8 @@ Note: You can find the development repository at Github: <https://github.com/fkr
 * Converted &lt;pre&gt; to &lt;div class="pre"&gt; to prevent a pdf print bug
 = 1.1 =
 * Created an admin panel
-= 1.0 =  
-* Released the Plugin  
+= 1.0 =
+* Released the Plugin
 
 
 == Installation ==
