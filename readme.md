@@ -19,6 +19,7 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 
 ### 3.2.1 ###
 * Fixed options menu with recent Wordpress versions (thanks to NickGreen)
+* Removed a call to a deprecated method
 
 ### 3.2 ###
 * Added option to replace the pdf button images
