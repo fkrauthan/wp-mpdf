@@ -5,9 +5,9 @@
 **Wordpress plugin page:** [wordpress.org/extend/plugins/wp-mpdf/](http://wordpress.org/extend/plugins/wp-mpdf/)  
 **Tags:** print, printer, wp-mpdf, pdf, mpdf  
 **Requires at least:** 2.9  
-**Tested up to:** 3.8.1
-**Stable tag:** 3.2
- 
+**Tested up to:** 4.4.2
+**Stable tag:** 3.2.1
+
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
 ## Description ##
@@ -16,6 +16,9 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 
 
 ## Changelog ##
+
+### 3.2.1 ###
+* Fixed options menu with recent Wordpress versions (thanks to NickGreen)
 
 ### 3.2 ###
 * Added option to replace the pdf button images
@@ -163,7 +166,7 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 ### 2.0 ###
 * Some small bugfixes
 * PDF Template support (now you can also use a pdf file as a template): If you need this please write me a mail so I can tell you how it works.
-  
+
 ### 1.9.2 ###
 * Added two vars to the templates for using PDF Templates
 
@@ -224,7 +227,7 @@ The options array supports 'pdf_lock_image' => '/my/image/path/relative/to/wordp
 This file is part of wp-mpdf.
 
 **wp-mpdf is free software:** you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-  
+
 
 wp-mpdf is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
@@ -237,13 +240,13 @@ You should have received a copy of the GNU General Public License along with wp-
 
 	git svn rebase
 	git svn dcommit
-	
-	
+
+
 ### Tagging new version ###
 
 	git svn tag "VERSION"
 	git tag -a VERSION -m "Tagging VERSION"
-	
+
 	git pull --rebase origin master  
     git push origin master  
-    git push origin --tags 
+    git push origin --tags

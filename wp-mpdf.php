@@ -3,7 +3,7 @@
 Plugin Name: wp-mpdf
 Plugin URI: http://fkrauthan.de/eng/projects/php/7-wp-mpdf
 Description: Print a wordpress page as PDF with optional Geshi Parsing.
-Version: 3.2
+Version: 3.2.1
 Author: Florian 'fkrauthan' Krauthan
 Author URI: http://fkrauthan.de
 
@@ -12,10 +12,10 @@ Copyright 2013  Florian Krauthan
 
 /*
  * This file is part of wp-mpdf.
- * wp-mpdf is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free  
+ * wp-mpdf is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
- * wp-mpdf is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or  
+ * wp-mpdf is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License along with wp-mpdf. If not, see <http://www.gnu.org/licenses/>.
@@ -44,8 +44,8 @@ function mpdf_install() {
 
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 		dbDelta($sql);
-		
-		
+
+
 		add_option('mpdf_theme', 'default');
 		add_option('mpdf_geshi', false);
 		add_option('mpdf_geshi_linenumbers', true);
@@ -57,8 +57,8 @@ function mpdf_install() {
         add_option('mpdf_cron_user', '');
         add_option('mpdf_code_page', 'utf-8');
 	}
-	
-	
+
+
    	$table_name_old = $wpdb->prefix . WP_MPDF_ALLOWED_POSTS_DB;
 	if($wpdb->get_var('SHOW TABLES LIKE "'.$table_name_old.'"') == $table_name_old) {
 		//Copie old datas
@@ -68,11 +68,11 @@ function mpdf_install() {
 			$sql = 'INSERT INTO '.$table_name.' (post_type, post_id, general, login, pdfname, downloads) VALUES (%s, %d, %d, %d, %s, 0)';
 			$wpdb->query($wpdb->prepare($sql, $dsatz->post_type, $dsatz->post_id, $dsatz->enabled, false, ''));
 		}
-		
+
 		//Remove table
 		$wpdb->query('DROP TABLE '.$table_name_old);
 	}
-	
+
 	if(!is_dir(dirname(__FILE__).'/../../wp-mpdf-themes')) {
 		if(!@mkdir(dirname(__FILE__).'/../../wp-mpdf-themes')) {
 			echo '<p>Can\'t create mpdf themes dir. Please create the dir "wp-content/wp-mpdf-themes" and give your webserver write permission to it.</p>';
@@ -89,12 +89,12 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 	else {
 		$pdf_filename = $pdf_ofilename;
 	}
-	
+
 	/**
 	 * Allow to override the pdf file name
 	 */
 	$pdf_filename = apply_filters('mpdf_output_pdf_filename', $pdf_filename);
-	
+
 	/**
 	 * Geshi Support
 	 */
@@ -112,8 +112,8 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 	 * Run the mpdf filter
 	 */
 	$wp_content = mpdf_filter($wp_content, $do_pdf);
-	 
-	
+
+
 	if($do_pdf === false) {
 		echo $wp_content;
 	}
@@ -127,14 +127,14 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
         define('_MPDF_TEMP_PATH', $cacheDirectory . 'tmp/');
 		define('_MPDF_TTFONTDATAPATH', _MPDF_TEMP_PATH);
 		require_once(_MPDF_PATH.'mpdf.php');
-		
+
 		global $pdf_margin_left;
 		global $pdf_margin_right;
 		global $pdf_margin_top;
 		global $pdf_margin_bottom;
 		global $pdf_margin_header;
 		global $pdf_margin_footer;
-		
+
 		global $pdf_html_header;
 		global $pdf_html_footer;
 
@@ -149,13 +149,13 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 
 		global $pdf_orientation;
 		if($pdf_orientation=='') $pdf_orientation = 'P';
-		
+
         $cp = 'utf-8';
         if(get_option('mpdf_code_page')!='') {
              $cp = get_option('mpdf_code_page');
         }
 
-		$mpdf=new mPDF($cp, 'A4', '', '', $pdf_margin_left, $pdf_margin_right, $pdf_margin_top, $pdf_margin_bottom, $pdf_margin_header, $pdf_margin_footer, $pdf_orientation); 
+		$mpdf=new mPDF($cp, 'A4', '', '', $pdf_margin_left, $pdf_margin_right, $pdf_margin_top, $pdf_margin_bottom, $pdf_margin_header, $pdf_margin_footer, $pdf_orientation);
 
 		$mpdf->SetUserRights();
 		$mpdf->title2annots = false;
@@ -172,7 +172,7 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 			$mpdf->SetDocTemplate($templatePath.$pdf_template_pdfdoc, true);
 		}
 		else if(isset($pdf_template_pdfpage)&&$pdf_template_pdfpage!=''&&isset($pdf_template_pdfpage_page)&&is_numeric($pdf_template_pdfpage_page)) {
-            $mpdf->SetImportUse();			
+            $mpdf->SetImportUse();
             $pagecount = $mpdf->SetSourceFile($templatePath.$pdf_template_pdfpage);
 			if($pdf_template_pdfpage_page<1) $pdf_template_pdfpage_page = 1;
 			else if($pdf_template_pdfpage_page>$pagecount) $pdf_template_pdfpage_page = $pagecount;
@@ -184,12 +184,12 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 		$user_info = get_userdata($post->post_author);
 		$mpdf->SetAuthor($user_info->first_name.' '.$user_info->last_name.' ('.$user_info->user_login.')');
 		$mpdf->SetCreator('wp-mpdf');
-		
-		
+
+
 		//The Header and Footer
 		global $pdf_footer;
 		global $pdf_header;
-		
+
 		$mpdf->startPageNums();	// Required for TOC use after AddPage(), and to use Headers and Footers
 		if($pdf_html_header) {
 			$mpdf->SetHTMLHeader($pdf_header);
@@ -203,14 +203,14 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 		else {
 			$mpdf->setFooter($pdf_footer);
 		}
-		
-		
+
+
 		if(get_option('mpdf_theme')!=''&&file_exists($templatePath.get_option('mpdf_theme').'.css')) {
 			//Read the StyleCSS
 			$tmpCSS = file_get_contents($templatePath.get_option('mpdf_theme').'.css');
 			$mpdf->WriteHTML($tmpCSS, 1);
 		}
-		
+
 		//My Filters
 		require_once(dirname(__FILE__).'/myfilters.inc.php');
 		$wp_content = mpdf_myfilters($wp_content);
@@ -224,16 +224,16 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 
 		//die($wp_content);
 		$mpdf->WriteHTML($wp_content);
-		
+
 		/**
 		 * Allow to process the pdf by an 3th party plugin
 		 */
 		do_action('mpdf_output', $mpdf, $pdf_filename);
-		
+
 		if(get_option('mpdf_caching')==true) {
 			file_put_contents(mpdf_getcachedir().get_option('mpdf_theme').'_'.$pdf_ofilename.'.cache', $post->post_modified_gmt);
 			$mpdf->Output(mpdf_getcachedir().get_option('mpdf_theme').'_'.$pdf_ofilename, 'F');
-			if($outputToBrowser==true) {			
+			if($outputToBrowser==true) {
 				$mpdf->Output($pdf_filename, 'I');
 			}
 		}
@@ -300,7 +300,7 @@ function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $logintext = 'Login
 		$table_name = $wpdb->prefix . WP_MPDF_POSTS_DB;
 		$sql = 'SELECT general,login FROM '.$table_name.' WHERE post_id='.$post->ID.' AND post_type="'.$post->post_type.'" LIMIT 1';
 		$dsatz = $wpdb->get_row($sql);
-		
+
 		if(get_option('mpdf_allow_all')==2&&$dsatz->general==false || get_option('mpdf_allow_all')==3&&$dsatz->general==true) {
 			return;
 		}
@@ -316,9 +316,9 @@ function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $logintext = 'Login
 			else {
 				$buttontext = __($logintext, 'wp-mpdf');
 			}
-			
+
 			$pdf_button = '<a ' . $nofollowHtml . 'class="pdfbutton loginfirst" href="'.wp_login_url(get_permalink()).'" title="'.__('You must login first', 'wp-mpdf').'">'.$buttontext.'</a>';
-			
+
 			if($print_button === true) {
 				echo $pdf_button;
 				return;
@@ -327,8 +327,8 @@ function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $logintext = 'Login
 			}
 		}
 	}
-	
-	
+
+
 	//Print the button
 	if(empty($buttontext)) {
 		$image = '/wp-content/plugins/wp-mpdf/pdf.png';
@@ -338,12 +338,12 @@ function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $logintext = 'Login
 
 		$buttontext = '<img src="' . get_bloginfo('wpurl') . $image . '" alt="'.__('This page as PDF', 'wp-mpdf').'" border="0" />';
 	}
-	
+
 	$x = !strpos(apply_filters('the_permalink', get_permalink()), '?') ? '?' : '&amp;';
 	$pdf_button = '<a ' . $nofollowHtml;
 	if($opennewtab==true) $pdf_button .= 'target="_blank" ';
 	$pdf_button .= 'class="pdfbutton" href="' . apply_filters('the_permalink', get_permalink()) . $x . 'output=pdf">' . __($buttontext, 'wp-mpdf') . '</a>';
-	
+
 	if($print_button === true) {
 		echo $pdf_button;
 	} else {
@@ -367,23 +367,23 @@ function mpdf_readcachedfile($name, $pdfname) {
 	$fp = fopen(mpdf_getcachedir().get_option('mpdf_theme').'_'.$name, 'rb');
 	if(!$fp) die('Couldn\'t Read cache file');
 	fclose($fp);
-	
+
 	Header('Content-Type: application/pdf');
 	Header('Content-Length: '.filesize(mpdf_getcachedir().get_option('mpdf_theme').'_'.$name));
 	Header('Content-disposition: inline; filename='.$pdfname);
-	
+
 	echo file_get_contents(mpdf_getcachedir().get_option('mpdf_theme').'_'.$name, FILE_BINARY | FILE_USE_INCLUDE_PATH);
 }
 
 function mpdf_exec($outputToBrowser='') {
 	if($outputToBrowser=='') $outputToBrowser = true;
 	else $outputToBrowser = false;
-	
+
 	/**
 	 * Allow to override the outputToBrowser variable
 	 */
 	$outputToBrowser = apply_filters('mpdf_exec_outputToBrowser', $outputToBrowser);
-	
+
 	if(isset($_GET['output']) && $_GET['output'] == 'pdf') {
 		//Check if this Page is allowed to print as PDF
 		global $wpdb;
@@ -391,7 +391,7 @@ function mpdf_exec($outputToBrowser='') {
 		$table_name = $wpdb->prefix . WP_MPDF_POSTS_DB;
 		$sql = 'SELECT id,general,login,pdfname FROM '.$table_name.' WHERE post_id='.$post->ID.' AND post_type="'.$post->post_type.'" LIMIT 1';
 		$dsatz = $wpdb->get_row($sql);
-		
+
 		if(post_password_required($post)) {
 			return;
 		}
@@ -414,7 +414,7 @@ function mpdf_exec($outputToBrowser='') {
 				$wpdb->query($wpdb->prepare($sql, $dsatz->id));
 			}
 		}
-		
+
 		//Check for Caching option
 		if(get_option('mpdf_caching')==true) {
 			$pdf_filename = $post->post_name . '.pdf';
@@ -448,7 +448,7 @@ function mpdf_exec($outputToBrowser='') {
 		$pdf_output = '';
 		require($templateFile);
 		mpdf_output($pdf_output, true, $outputToBrowser, $dsatz->pdfname, $templatePath);
-		
+
 		if($outputToBrowser==true) {
 			exit;
 		}
@@ -478,27 +478,27 @@ function wp_mpdf_menu() {
 function mpdf_admin_printeditbox() {
 	global $wpdb;
 	global $post;
-	
+
 	$table_name = $wpdb->prefix . WP_MPDF_POSTS_DB;
 	$sql = 'SELECT * FROM '.$table_name.' WHERE post_id='.$post->ID.' AND post_type="'.$post->post_type.'" LIMIT 1';
-	$datas = $wpdb->get_row($sql);	
+	$datas = $wpdb->get_row($sql);
 
 	echo '<input type="hidden" name="wp_mpdf_noncename" id="wp_mpdf_noncename" value="' . wp_create_nonce(plugin_basename(__FILE__)) . '" />';
-	
-	
+
+
 	echo '<table border="0">';
 	echo '<tr><td>Put on whitelist/blacklist:</td><td><input ';
 	if($datas->general == true) {
 		echo 'checked="checked" ';
 	}
 	echo 'type="checkbox" name="wp_mpdf_candownload" /></td></tr>';
-	
+
 	echo '<tr><td>'.__('Put on whitelist/blacklist for need Login', 'wp-mpdf').'</td><td><input ';
 	if($datas->login == true) {
 		echo 'checked="checked" ';
 	}
 	echo 'type="checkbox" name="wp_mpdf_needlogin" /></td></tr>';
-	
+
 	echo '<tr><td>'.__('Set a special PDF output name', 'wp-mpdf').':</td><td><input type="text" name="wp_mpdf_pdfname" value="';
 	echo $datas->pdfname;
 	echo '" /> ('.__('without .pdf at the end', 'wp-mpdf').')</td></tr>';
@@ -510,8 +510,8 @@ function mpdf_admin_printeditbox_old() {
 
 	echo '<div class="dbx-b-ox-wrapper">' . "\n";
   	echo '<fieldset id="mpdf_admin" class="dbx-box">' . "\n";
-  	echo '<div class="dbx-h-andle-wrapper"><h3 class="dbx-handle">wp-mpdf</h3></div>';   
-   
+  	echo '<div class="dbx-h-andle-wrapper"><h3 class="dbx-handle">wp-mpdf</h3></div>';
+
   	echo '<div class="dbx-c-ontent-wrapper"><div class="dbx-content">';
 
   	// output editing form
@@ -528,7 +528,7 @@ function mpdf_admin_savepost($post_id) {
 	if(isset($_POST['wp_mpdf_noncename']) && !wp_verify_nonce($_POST['wp_mpdf_noncename'], plugin_basename(__FILE__))) {
     	return $post_id;
   	}
-	
+
 	if(isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
     	if(!current_user_can('edit_page', $post_id))
      		return $post_id;
@@ -542,18 +542,18 @@ function mpdf_admin_savepost($post_id) {
 
 	$post_id = wp_is_post_revision($post_id);
 	if($post_id==0) return $post_id;
-	
-	
+
+
 	global $wpdb;
    	$table_name = $wpdb->prefix . WP_MPDF_POSTS_DB;
-	
+
 	$canPrintAsPDF = isset($_POST['wp_mpdf_candownload']);
 	$needLogin = isset($_POST['wp_mpdf_needlogin']);
 	$pdfOutputName = $_POST['wp_mpdf_pdfname'];
-	
+
 	$sql = 'SELECT id FROM '.$table_name.' WHERE post_id='.$post_id.' AND post_type="'.$_POST['post_type'].'" LIMIT 1';
 	$db_id = $wpdb->get_var($sql);
-	
+
 	if($db_id == null) {
 		$sql = 'INSERT INTO '.$table_name.' (post_type, post_id, general, login, pdfname, downloads) VALUES (%s, %d, %d, %d, %s, 0)';
 		$wpdb->query($wpdb->prepare($sql, $_POST['post_type'], $post_id, $canPrintAsPDF, $needLogin, $pdfOutputName));
@@ -567,7 +567,7 @@ function mpdf_admin_savepost($post_id) {
 
 function mpdf_admin_deletepost($post_id) {
 	$post = get_post($post_id);
-	
+
 	if('page' == $post->post_type) {
     	if(!current_user_can('edit_page', $post_id))
      		return $post_id;
@@ -577,16 +577,16 @@ function mpdf_admin_deletepost($post_id) {
   	}
 	else
 		return $post_id;
-	
-	
+
+
 	//Clear the db entry if it exist
 	global $wpdb;
    	$table_name = $wpdb->prefix . WP_MPDF_POSTS_DB;
-   	
+
    	$sql = 'DELETE FROM '.$table_name.' WHERE post_id=%d AND post_type=%s LIMIT 1';
    	$wpdb->query($wpdb->prepare($sql, $post_id, $post->post_type));
-   	
-   	
+
+
 	//Clear the cache from a post
 	$pdf_filename = $post->post_name . '.pdf';
 	if(file_exists(mpdf_getcachedir().get_option('mpdf_theme').'_'.$pdf_filename.'.cache')) {
