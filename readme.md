@@ -239,13 +239,13 @@ You should have received a copy of the GNU General Public License along with wp-
 
 ### Setup git svn ###
 
-  git svn init -s https://plugins.svn.wordpress.org/wp-mpdf
-  git svn fetch
+	git svn init -s https://plugins.svn.wordpress.org/wp-mpdf
+	git svn fetch
 
-  git show-ref trunk
-  # Find last git commit for svn
-  echo "GIT_REV TRUNK_REV" >> .git/info/grafts
-  git svn rebase
+	git show-ref trunk
+	# Find last git commit for svn
+	echo "GIT_REV TRUNK_REV" >> .git/info/grafts
+	git svn rebase
 
 
 ### Commit changes to wordpress svn ###
@@ -260,5 +260,5 @@ You should have received a copy of the GNU General Public License along with wp-
 	git tag -a VERSION -m "Tagging VERSION"
 
 	git pull --rebase origin master  
-    git push origin master  
-    git push origin --tags
+	git push origin master  
+	git push origin --tags
