@@ -5,7 +5,7 @@
 **Wordpress plugin page:** [wordpress.org/extend/plugins/wp-mpdf/](http://wordpress.org/extend/plugins/wp-mpdf/)  
 **Tags:** print, printer, wp-mpdf, pdf, mpdf  
 **Requires at least:** 2.9  
-**Tested up to:** 4.4.2
+**Tested up to:** 4.8.2
 **Stable tag:** 3.2.2
 
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
@@ -16,6 +16,11 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 
 
 ## Changelog ##
+
+### 3.3 ###
+* Fixed some small bugs
+* Upgrade mpdf to version 6
+* Made plugin compatible with PHP 7
 
 ### 3.2.2 ###
 * Fixed admin menu call
@@ -215,7 +220,7 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 ## Installation ##
 
 1. Upload the whole plugin folder to your `/wp-content/plugins/` folder.
-1. Set write permission (777) to the plugin dir folder => `wp-mpdf/cache` OR `/wp-content/wp-mpdf-themes/cache`
+1. Set write permission (777) to the plugin dir folder => `/wp-content/plugins/wp-mpdf/cache`
 1. Go to the plugins page and activate the plugin.
 1. Add to your template "`<?php if(function_exists('mpdf_pdfbutton')) mpdf_pdfbutton(); ?>`" as a small button or "`<?php if(function_exists('mpdf_pdfbutton')) mpdf_pdfbutton(false, 'my link', 'my login text'); ?>`" as a textlink. The second text specifies the text which should displayed if you have checked "needs login" and a user isn't loggend in. (if you wish to open the pdf print in a new tab you may pass "true" for the first parameter)
 1. You can adjust some options: in your admin interface, click on plugins and then on wp-mpdf. For allowing or disabling pdf export you can use the checkbox when creating/editing a post or a page.

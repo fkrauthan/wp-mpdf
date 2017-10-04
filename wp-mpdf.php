@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name: wp-mpdf
-Plugin URI: http://fkrauthan.de/eng/projects/php/7-wp-mpdf
+Plugin URI: http://www.fkrauthan.de/projects/php/wp-mpdf.html
 Description: Print a wordpress page as PDF with optional Geshi Parsing.
 Version: 3.2.2
 Author: Florian 'fkrauthan' Krauthan
 Author URI: http://fkrauthan.de
 
-Copyright 2013  Florian Krauthan
+Copyright 2017  Florian Krauthan
 */
 
 /*
@@ -190,7 +190,6 @@ function mpdf_output($wp_content = '', $do_pdf = false , $outputToBrowser=true, 
 		global $pdf_footer;
 		global $pdf_header;
 
-		$mpdf->startPageNums();	// Required for TOC use after AddPage(), and to use Headers and Footers
 		if($pdf_html_header) {
 			$mpdf->SetHTMLHeader($pdf_header);
 		}
