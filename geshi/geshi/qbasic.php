@@ -4,7 +4,7 @@
  * ----------
  * Author: Nigel McNie (nigel@geshi.org)
  * Copyright: (c) 2004 Nigel McNie (http://qbnz.com/highlighter/)
- * Release Version: 1.0.8.4
+ * Release Version: 1.0.9.0
  * Date Started: 2004/06/20
  *
  * QBasic/QuickBASIC language file for GeSHi.
@@ -55,11 +55,17 @@ $language_data = array (
     'COMMENT_MULTI' => array(),
     'COMMENT_REGEXP' => array(
         //Single-Line Comments using REM command
-        2 => "/\bREM.*?$/i"
+        2 => "/\bREM.*?$/i",
+        //Line numbers
+        3 => "/^\s*\d+/im"
         ),
     'CASE_KEYWORDS' => GESHI_CAPS_UPPER,
     'QUOTEMARKS' => array('"'),
     'ESCAPE_CHAR' => '',
+    'NUMBERS' =>
+        GESHI_NUMBER_INT_BASIC | GESHI_NUMBER_FLT_NONSCI |
+        GESHI_NUMBER_FLT_NONSCI_F | GESHI_NUMBER_FLT_SCI_SHORT |
+        GESHI_NUMBER_FLT_SCI_ZERO,
     'KEYWORDS' => array(
         1 => array(
             'DO', 'LOOP', 'WHILE', 'WEND', 'THEN', 'ELSE', 'ELSEIF', 'IF',
@@ -93,7 +99,7 @@ $language_data = array (
             )
         ),
     'SYMBOLS' => array(
-        '(', ')', ',', '+', '-', '*', '/', '=', '<', '>'
+        '(', ')', ',', '+', '-', '*', '/', '=', '<', '>', '^'
         ),
     'CASE_SENSITIVE' => array(
         GESHI_COMMENTS => false,
@@ -107,7 +113,8 @@ $language_data = array (
             ),
         'COMMENTS' => array(
             1 => 'color: #808080;',
-            2 => 'color: #808080;'
+            2 => 'color: #808080;',
+            3 => 'color: #8080C0;'
             ),
         'BRACKETS' => array(
             0 => 'color: #66cc66;'
@@ -129,6 +136,8 @@ $language_data = array (
         'SCRIPT' => array(
             ),
         'REGEXPS' => array(
+            1 => 'color: #cc66cc;',
+            2 => 'color: #339933;'
             )
         ),
     'URLS' => array(
@@ -139,6 +148,8 @@ $language_data = array (
     'OBJECT_SPLITTERS' => array(
         ),
     'REGEXPS' => array(
+        1 => '&amp;(?:H[0-9a-fA-F]+|O[0-7]+)(?!\w)',
+        2 => '#[0-9]+(?!\w)'
         ),
     'STRICT_MODE_APPLIES' => GESHI_NEVER,
     'SCRIPT_DELIMITERS' => array(
@@ -147,5 +158,3 @@ $language_data = array (
         ),
     'TAB_WIDTH' => 8
 );
-
-?>

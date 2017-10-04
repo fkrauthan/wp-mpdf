@@ -19,7 +19,8 @@ Note: You can find the development repository at Github: <https://github.com/fkr
 
 = 3.3 =
 * Fixed some small bugs
-* Upgrade mpdf to version 6
+* Updated mpdf to version 6
+* Updated geshi to latest version
 * Made plugin compatible with PHP 7
 = 3.2.2 =
 * Fixed admin menu call

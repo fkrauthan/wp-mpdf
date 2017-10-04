@@ -4,7 +4,7 @@
  * ----------
  * Author: Nigel McNie (nigel@geshi.org)
  * Copyright: (c) 2004 Nigel McNie
- * Release Version: 1.0.8.1
+ * Release Version: 1.0.9.0
  * Date Started: 2004/05/20
  *
  * Application to generate custom CSS files for GeSHi (based on an idea by Andreas
@@ -30,7 +30,6 @@
  *
  ************************************************************************************/
 
-set_magic_quotes_runtime(0);
 //
 // Functions
 //
@@ -91,9 +90,9 @@ function make_header ( $title )
             if (cboxes[i].type == "checkbox") {
                 if (state == "true") {
                     cboxes[i].checked = true;
-                } else if (state == "false") {
+                } elseif (state == "false") {
                     cboxes[i].checked = false;
-                } else if (state == "invert") {
+                } elseif (state == "invert") {
                     cboxes[i].checked = !cboxes[i].checked;
                 }
             }
@@ -164,16 +163,24 @@ if ( !$step || $step == 1 )
     $geshi_path = get_var('geshi-path');
     $geshi_lang_path = get_var('geshi-lang-path');
 
+    if(strstr($geshi_path, '..')) {
+        $geshi_path = null;
+    }
+    if(strstr($geshi_lang_path, '..')) {
+        $geshi_lang_path = null;
+    }
+
     if ( !$geshi_path )
     {
-        $geshi_path = '../geshi.php';
+        $geshi_path = '../src/geshi.php';
     }
     if ( !$geshi_lang_path )
     {
-        $geshi_lang_path = '../geshi/';
+        $geshi_lang_path = '../src/geshi/';
     }
 
-
+    $no_geshi_dot_php_error = false;
+    $no_lang_dir_error = false;
     if ( is_file($geshi_path) && is_readable($geshi_path) )
     {
         // Get file contents and see if GeSHi is in here
@@ -272,6 +279,10 @@ elseif ( $step == 2 )
     {
         if ( $file == '.' || $file == '..' || $file == 'CVS' || $file == 'css-gen.cfg' )
         {
+            $file = readdir($dh);
+            continue;
+        }
+        if(!strstr(file_get_contents($dh . DIRECTORY_SEPARATOR . $file), '$language_data')) {
             $file = readdir($dh);
             continue;
         }
@@ -452,6 +463,3 @@ it includes most of the basic information.</p>';
 
     make_footer();
 }
-
-?>
-
