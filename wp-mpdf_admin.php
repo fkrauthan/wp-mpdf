@@ -464,6 +464,7 @@ function mpdf_admin_loginneededpages() {
 
 function mpdf_admin_cache() {
 	echo '<h2>Cache</h2>';
+	$path = dirname(__FILE__).'/cache/';
 	
 	if(isset($_GET['delfile'])) {
 		if(file_exists(dirname(__FILE__).'/cache/'.$_GET['delfile']))
@@ -474,7 +475,7 @@ function mpdf_admin_cache() {
 		echo '<p style="color: green;">Cache file "'.$_GET['delfile'].'" is deleted</p>';
 	}
 	if(isset($_GET['clearcache'])) {
-		if($dir = opendir(dirname(__FILE__).'/cache')) {
+		if($dir = opendir($path)) {
 			while($file = readdir($dir)) {
 				if(!is_dir($path.$file) && $file != "." && $file != "..")  {
 					unlink(dirname(__FILE__).'/cache/'.$file);
@@ -489,7 +490,7 @@ function mpdf_admin_cache() {
 	echo '<p><a href="?page='.$_GET['page'].'&amp;clearcache=1">Clear Cache</a></p>';
 	
 	echo '<table border="1">';
-	if($dir = opendir(dirname(__FILE__).'/cache')) {
+	if($dir = opendir($path)) {
 		while($file = readdir($dir)) {
 			if(!is_dir($path.$file) && $file != "." && $file != "..")  {
 				if(strtolower(substr($file, strlen($file)-5))=='cache') {
