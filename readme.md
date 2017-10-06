@@ -246,28 +246,17 @@ You should have received a copy of the GNU General Public License along with wp-
 
 ## Publish to wordpress ##
 
-### Setup git svn ###
+### Setup svn ###
 
-	git svn init -s https://plugins.svn.wordpress.org/wp-mpdf
-	git svn fetch
+You need to install the subversion client on your local system
 
-	git show-ref trunk
-	# Find last git commit for svn
-	echo "GIT_REV TRUNK_REV" >> .git/info/grafts
-	git svn rebase
+### Commit changes to git ###
+
+Make sure that all your changes are committed to the repository. The deployment script will stop in case there are uncommitted changes to prevent any mistakes.
 
 
-### Commit changes to wordpress svn ###
+### Publish new version ###
 
-	git svn rebase
-	git svn dcommit
+You just need to execute the `release.sh` script. It will take care of some basic validation and the full publish process.
 
-
-### Tagging new version ###
-
-	git svn tag "VERSION"
-	git tag -a VERSION -m "Tagging VERSION"
-
-	git pull --rebase origin master  
-	git push origin master  
-	git push origin --tags
+	./release.sh
