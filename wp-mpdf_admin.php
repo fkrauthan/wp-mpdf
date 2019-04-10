@@ -1,10 +1,10 @@
 <?php
 /*
  * This file is part of wp-mpdf.
- * wp-mpdf is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free  
+ * wp-mpdf is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
- * wp-mpdf is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or  
+ * wp-mpdf is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License along with wp-mpdf. If not, see <http://www.gnu.org/licenses/>.
@@ -58,43 +58,35 @@ function mpdf_admin_options() {
 
 	echo '<form action="?page=' . $_GET['page'] . '" method="post">';
 	echo '<table border="0">';
-	echo '<tr><td>Thema: </td><td>';
+	echo '<tr><td>Theme: </td><td>';
 	echo '<select name="theme">';
-	//Search for Themes
-	$existingFiles = array();
-	$path          = dirname( __FILE__ ) . '/../../wp-mpdf-themes/';
-	if ( is_dir( $path ) ) {
-		if ( $dir = opendir( $path ) ) {
-			while ( $file = readdir( $dir ) ) {
-				if ( ! is_dir( $path . $file ) && $file != "." && $file != ".." ) {
-					if ( strtolower( substr( $file, count( $file ) - 4 ) ) == 'php' ) {
-						$existingFiles[] = $file;
-						echo '<option value="' . substr( $file, 0, count( $file ) - 5 ) . '" ';
-						if ( get_option( 'mpdf_theme' ) == substr( $file, 0, count( $file ) - 5 ) ) {
-							echo 'selected="selected"';
-						}
-						echo '>' . str_replace( '_', ' ', substr( $file, 0, count( $file ) - 5 ) ) . '</option>';
-					}
-				}
-			}
-		}
-	}
-	$path = dirname( __FILE__ ) . '/themes/';
-	if ( is_dir( $path ) ) {
-		if ( $dir = opendir( $path ) ) {
-			while ( $file = readdir( $dir ) ) {
-				if ( ! is_dir( $path . $file ) && $file != "." && $file != ".." ) {
-					if ( strtolower( substr( $file, count( $file ) - 4 ) ) == 'php' && ! in_array( $file, $existingFiles ) ) {
-						echo '<option value="' . substr( $file, 0, count( $file ) - 5 ) . '" ';
-						if ( get_option( 'mpdf_theme' ) == substr( $file, 0, count( $file ) - 5 ) ) {
-							echo 'selected="selected"';
-						}
-						echo '>' . str_replace( '_', ' ', substr( $file, 0, count( $file ) - 5 ) ) . '</option>';
-					}
-				}
-			}
-		}
-	}
+
+    // Search for Themes
+    $existingFiles = array();
+    $themes_path   = array(
+        dirname( __FILE__ ) . '/../../wp-mpdf-themes/',
+        dirname( __FILE__ ) . '/themes/'
+    );
+
+    foreach ($themes_path as $path) {
+        if (is_dir($path) && $dir = opendir($path)) {
+            while ($file = readdir($dir)) {
+                if (is_dir($path . $file) || $file === '.' || $file === '..') {
+                    continue;
+                }
+
+                if ( mpdf_extension( $file ) !== 'php' || in_array( $file, $existingFiles ) ) {
+                    continue;
+                }
+
+                $filename = mpdf_filename($file);
+                $existingFiles[] = $file;
+
+                echo '<option value="' . $filename . '" ' . selected( get_option( 'mpdf_theme' ), $filename, false ) . '>';
+                echo str_replace( '_', ' ', $filename ) . '</option>';
+            }
+    	}
+    }
 
 	echo '</select>';
 	echo '</td></tr>';

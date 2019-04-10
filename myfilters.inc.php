@@ -27,12 +27,12 @@ function mpdf_myfilters( $content ) {
 }
 
 function mpdf_fixRelativUrls( $content ) {
-	$base_url = get_option( 'siteurl' );
+	$base_url = home_url();
 
 	if ( preg_match_all( '#<a.*href="(.*)".*>#iU', $content, $matches ) ) {
 		foreach ( $matches[1] as $ikey => $link ) {
 			if ( substr( $link, 0, 1 ) === '/' ) {
-				$content = str_replace( 'href="' . $link . '"', 'href="' . $base_url . '/' . $link . '"', $content );
+				$content = str_replace( 'href="' . $link . '"', 'href="' . $base_url . $link . '"', $content );
 			}
 		}
 	}
@@ -40,7 +40,7 @@ function mpdf_fixRelativUrls( $content ) {
 	if ( preg_match_all( "#<a.*href='(.*)'.*>#iU", $content, $matches ) ) {
 		foreach ( $matches[1] as $ikey => $link ) {
 			if ( substr( $link, 0, 1 ) === '/' ) {
-				$content = str_replace( "href='" . $link . "'", "href='" . $base_url . '/' . $link . "'", $content );
+				$content = str_replace( "href='" . $link . "'", "href='" . $base_url . $link . "'", $content );
 			}
 		}
 	}

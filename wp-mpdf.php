@@ -80,6 +80,16 @@ function mpdf_install() {
 	}
 }
 
+function mpdf_filename ($filename) {
+    return str_replace('.' . mpdf_extension($filename), '', $filename);
+}
+
+function mpdf_extension ($filename) {
+    $filename = substr($filename, strrpos($filename, '.'));
+
+    return strtolower(str_replace('.', '', $filename));
+}
+
 function mpdf_output( $wp_content = '', $do_pdf = false, $outputToBrowser = true, $pdfName = '', $templatePath = '' ) {
 	global $post;
 	$pdf_ofilename = $post->post_name . '.pdf';
@@ -460,9 +470,11 @@ function mpdf_exec( $outputToBrowser = '' ) {
 			$templateFile = $templatePath . get_option( 'mpdf_theme' ) . '.php';
 		}
 
+        $pdfName = isset($dsatz->pdfname) ? $dsatz->pdfname : '';
+
 		$pdf_output = '';
 		require( $templateFile );
-		mpdf_output( $pdf_output, true, $outputToBrowser, $dsatz->pdfname, $templatePath );
+		mpdf_output( $pdf_output, true, $outputToBrowser, $pdfName, $templatePath );
 
 		if ( $outputToBrowser == true ) {
 			exit;
