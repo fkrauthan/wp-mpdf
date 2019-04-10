@@ -33,7 +33,7 @@ PLUGINVERSION=`grep "Version:" $GITPATH/$MAINFILE | awk -F' ' '{print $NF}' | tr
 echo "$MAINFILE version: $PLUGINVERSION"
 READMEVERSION=`grep "^Stable tag:" $GITPATH/readme.txt | awk -F' ' '{print $NF}' | tr -d '\r'`
 echo "readme.txt version: $READMEVERSION"
-READMEMDVERSION=`grep "^**Stable tag:**" $GITPATH/readme.md | awk -F' ' '{print $NF}' | tr -d '\r'`
+READMEMDVERSION=`grep "^\*\*Stable tag:\*\*" $GITPATH/readme.md | awk -F' ' '{print $NF}' | tr -d '\r'`
 echo "readme.md version: $READMEMDVERSION"
 
 if [ "$READMEVERSION" = "trunk" ]; then
