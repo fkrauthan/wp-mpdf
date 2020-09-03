@@ -146,6 +146,11 @@ function mpdf_output( $wp_content = '', $do_pdf = false, $outputToBrowser = true
 		global $pdf_html_header;
 		global $pdf_html_footer;
 
+		global $pdf_format;
+		if ( $pdf_format == '' ) {
+			$pdf_format = 'A4';
+		}
+
 		if ( $pdf_margin_left !== 0 && $pdf_margin_left == '' ) {
 			$pdf_margin_left = 15;
 		}
@@ -181,7 +186,7 @@ function mpdf_output( $wp_content = '', $do_pdf = false, $outputToBrowser = true
 			$cp = get_option( 'mpdf_code_page' );
 		}
 
-		$mpdf = new mPDF( $cp, 'A4', '', '', $pdf_margin_left, $pdf_margin_right, $pdf_margin_top, $pdf_margin_bottom, $pdf_margin_header, $pdf_margin_footer, $pdf_orientation );
+		$mpdf = new mPDF( $cp, $pdf_format, '', '', $pdf_margin_left, $pdf_margin_right, $pdf_margin_top, $pdf_margin_bottom, $pdf_margin_header, $pdf_margin_footer, $pdf_orientation );
 
 		$mpdf->SetUserRights();
 		$mpdf->title2annots = false;
