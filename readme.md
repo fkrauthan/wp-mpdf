@@ -5,8 +5,8 @@
 **Wordpress plugin page:** [wordpress.org/extend/plugins/wp-mpdf/](http://wordpress.org/extend/plugins/wp-mpdf/)  
 **Tags:** print, printer, wp-mpdf, pdf, mpdf  
 **Requires at least:** 2.9  
-**Tested up to:** 5.1.1
-**Stable tag:** 3.5
+**Tested up to:** 5.7.2
+**Stable tag:** 3.5.1
 
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
@@ -16,6 +16,9 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 
 
 ## Changelog ##
+
+### 3.5.1 ###
+* Added some small security fixes to the admin page
 
 ### 3.5 ###
 * Added support to change page format inside template (thanks to conlaccento)
@@ -264,6 +267,6 @@ Make sure that all your changes are committed to the repository. The deployment 
 
 ### Publish new version ###
 
-You just need to execute the `release.sh` script. It will take care of some basic validation and the full publish process.
+You just need to execute the `release.sh` script. It will take care of some basic validation, and the full publish process.
 
 	./release.sh
