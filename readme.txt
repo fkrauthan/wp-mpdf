@@ -177,14 +177,35 @@ Note: You can find the development repository at Github: <https://github.com/fkr
 1. Upload the whole plugin folder to your /wp-content/plugins/ folder.
 2. Set write permission (777) to the plugin dir folder => /wp-content/plugins/wp-mpdf/cache
 3. Go to the plugins page and activate the plugin.
-4. Add to your template "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton(); ?&gt;" as a small button or "&lt;?php if(function&#95;exists('mpdf&#95;pdfbutton')) mpdf&#95;pdfbutton(false, 'my link', 'my login text'); ?&gt;" as a textlink. The second text specifies the text which should displayed if you have checked "needs login" and a user isn't logged in.
- (if you wish to open the pdf print in a new tab you may pass "true" for the first parameter)
+4. Add to your template
+```php
+if( function_exists( 'mpdf_pdfbutton' ) ) {
+	mpdf_pdfbutton();
+}
+```
+or as a small button
+```php
+if( function_exists( 'mpdf_pdfbutton' ) ) {
+	mpdf_pdfbutton( false, 'my link', 'my login text' );
+}
+```
+The second text specifies the text which should displayed if you have checked "needs login" and a user isn't logged in. (if you wish to open the pdf print in a new tab you may pass "true" for the first parameter)
 5. You can adjust some options: in your admin interface, click on plugins and then on wp-mpdf. For allowing or disabling pdf export you can use the checkbox when creating/editing a post or a page.
 6. Place your templates into /wp-content/wp-mpdf-themes
 
-The mpdf_pdfbutton function signature: `function mpdf_pdfbutton($opennewtab=false, $buttontext = '', $logintext = 'Login!', $print_button = true, $nofollow = false, $options = array())`
-
-The options array supports 'pdf_lock_image' => '/my/image/path/relative/to/wordpress/route' and 'pdf_image' => '/my/image/path/relative/to/wordpress/route' to overwrite which icon should be used.
+The mpdf_pdfbutton function signature:
+```php
+function mpdf_pdfbutton( $opennewtab = false, $buttontext = '', $logintext = 'Login!', $print_button = true, $nofollow = false, $options = array() )
+```
+The options array supports
+```php
+'pdf_lock_image' => '/my/image/path/relative/to/wordpress/route'
+```
+and
+```php
+'pdf_image' => '/my/image/path/relative/to/wordpress/route'
+```
+to overwrite which icon should be used.
 
 
 == License ==
