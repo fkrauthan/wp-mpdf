@@ -329,7 +329,7 @@ function mpdf_pdfbutton( $opennewtab = false, $buttontext = '', $logintext = 'Lo
 		$sql        = 'SELECT general,login FROM ' . $table_name . ' WHERE post_id=' . $post->ID . ' AND post_type="' . $post->post_type . '" LIMIT 1';
 		$dsatz      = $wpdb->get_row( $sql );
 
-		if ( get_option( 'mpdf_allow_all' ) == 2 && $dsatz->general == false || get_option( 'mpdf_allow_all' ) == 3 && $dsatz->general == true ) {
+		if ( get_option( 'mpdf_allow_all' ) == 2 && isset( $dsatz->general ) && $dsatz->general == false || get_option( 'mpdf_allow_all' ) == 3 && $dsatz->general == true ) {
 			return;
 		} else if ( ( get_option( 'mpdf_need_login' ) == 2 && $dsatz->login == false || get_option( 'mpdf_need_login' ) == 3 && $dsatz->login == true ) && is_user_logged_in() != true ) {
 			if ( empty( $buttontext ) ) {
