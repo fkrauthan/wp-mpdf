@@ -18,7 +18,7 @@ Note: You can find the development repository at Github: <https://github.com/fkr
 == Changelog ==
 
 = 3.5.2 =
-* Fixed a small security loop hole for the admin page
+* Added some small security improvements for the admin page
 * Fixed a PHP notice when "allow to print all pages" is disabled (thanks to grandeljay)
 = 3.5.1 =
 * Added some small security fixes to the admin page

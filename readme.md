@@ -18,7 +18,7 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 ## Changelog ##
 
 ### 3.5.2 ###
-* Fixed a small security loop hole for the admin page
+* Added some small security improvements for the admin page
 * Fixed a PHP notice when "allow to print all pages" is disabled (thanks to grandeljay)
 
 ### 3.5.1 ###
