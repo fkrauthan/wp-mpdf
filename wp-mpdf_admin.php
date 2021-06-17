@@ -32,6 +32,10 @@ function mpdf_admin_options() {
 	echo '<h2>Options</h2>';
 
 	if (isset($_POST['save_options'])) {
+		if ( !isset( $_POST['wp_mpdf_noncename'] ) || ! wp_verify_nonce( $_POST['wp_mpdf_noncename'], plugin_basename( __FILE__ ) ) ) {
+			return 'Illegal Access!';
+		}
+
 		update_option('mpdf_theme', $_POST['theme']);
 		update_option('mpdf_code_page', $_POST['codepage']);
 		update_option('mpdf_cron_user', $_POST['cron_user']);
@@ -57,6 +61,7 @@ function mpdf_admin_options() {
 	}
 
 	echo '<form action="?page=' . $_GET['page'] . '" method="post">';
+	echo '<input type="hidden" name="wp_mpdf_noncename" id="wp_mpdf_noncename" value="' . wp_create_nonce( plugin_basename( __FILE__ ) ) . '" />';
 	echo '<table border="0">';
 	echo '<tr><td>Theme: </td><td>';
 	echo '<select name="theme">';
