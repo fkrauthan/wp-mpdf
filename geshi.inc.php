@@ -17,5 +17,3 @@ function ParseGeshi( $content ) {
 
 	return $content;
 }
-
-?>

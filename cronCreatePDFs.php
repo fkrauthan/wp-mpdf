@@ -60,4 +60,3 @@ foreach ( $posts as $post ) {
 }
 
 echo "Caching finished\n";
-?>

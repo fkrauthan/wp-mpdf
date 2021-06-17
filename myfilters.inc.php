@@ -216,5 +216,3 @@ function mpdf_buildmenu( $content ) {
 
 	return $content;
 }
-
-?>

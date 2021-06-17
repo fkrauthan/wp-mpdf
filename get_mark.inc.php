@@ -28,5 +28,3 @@ function get_mark( $string, $mark ) {
 
 	return $ausgabe;
 }
-
-?>
