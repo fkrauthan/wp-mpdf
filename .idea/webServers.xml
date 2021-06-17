@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="f3e29581-3346-45d8-adb9-94f9871db36c" name="wp-mpdf-dev" url="http://localhost:8000">
+        <fileTransfer mountedRoot="$PROJECT_DIR$/dev/wordpress/wp-content/plugins" accessType="MOUNT" port="0" />
+      </webServer>
+    </option>
+  </component>
+</project>

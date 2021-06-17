@@ -1,0 +1,21 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="wp-dev: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+    <deployment type="docker-compose.yml">
+      <settings>
+        <option name="envFilePath" value="" />
+        <option name="envVars">
+          <list>
+            <DockerEnvVarImpl>
+              <option name="name" value="COMPOSE_PROJECT_NAME" />
+              <option name="value" value="wp-mpdf" />
+            </DockerEnvVarImpl>
+          </list>
+        </option>
+        <option name="sourceFilePath" value="dev/docker-compose.yml" />
+        <option name="upExitCodeFromService" value="" />
+        <option name="upTimeout" value="" />
+      </settings>
+    </deployment>
+    <method v="2" />
+  </configuration>
+</component>
