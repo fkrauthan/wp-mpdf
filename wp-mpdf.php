@@ -554,7 +554,7 @@ function mpdf_admin_printeditbox_old() {
 
 
 function mpdf_admin_savepost( $post_id ) {
-	if ( isset( $_POST['wp_mpdf_noncename'] ) && ! wp_verify_nonce( $_POST['wp_mpdf_noncename'], plugin_basename( __FILE__ ) ) ) {
+	if ( !isset( $_POST['wp_mpdf_noncename'] ) || ! wp_verify_nonce( $_POST['wp_mpdf_noncename'], plugin_basename( __FILE__ ) ) ) {
 		return $post_id;
 	}
 
