@@ -1,12 +1,12 @@
 # wp-mpdf #
 
 **Contributors:** fkrauthan  
-**Donate link:** [fkrauthan.de](http://fkrauthan.de)  
-**Wordpress plugin page:** [wordpress.org/extend/plugins/wp-mpdf/](http://wordpress.org/extend/plugins/wp-mpdf/)  
+**Donate link:** [fkrauthan.de](https://fkrauthan.de)  
+**Wordpress plugin page:** [wordpress.org/plugins/wp-mpdf/](https://wordpress.org/plugins/wp-mpdf/)  
 **Tags:** print, printer, wp-mpdf, pdf, mpdf  
 **Requires at least:** 2.9  
 **Tested up to:** 5.7.2
-**Stable tag:** 3.5.1
+**Stable tag:** 3.5.2
 
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
@@ -16,6 +16,10 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 
 
 ## Changelog ##
+
+### 3.5.2 ###
+* Fixed a small security loop hole for the admin page
+* Fixed a PHP notice when "allow to print all pages" is disabled (thanks to grandeljay)
 
 ### 3.5.1 ###
 * Added some small security fixes to the admin page
