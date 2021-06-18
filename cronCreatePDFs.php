@@ -10,53 +10,7 @@
  * You should have received a copy of the GNU General Public License along with wp-mpdf. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-//Call this script from a cron job to create/update the pdf cache
-require_once( dirname( __FILE__ ) . '/../../../wp-config.php' );
-require_once( dirname( __FILE__ ) . '/wp-mpdf.php' );
-
-
-//Disable the Timeout
-set_time_limit( 0 );
-
-
-//Check if Caching is enabled or not
-if ( get_option( 'mpdf_caching' ) != true ) {
-	echo "No caching enabled\n";
-	exit( - 1 );
-}
-
-
-//Do login if is whished
-if ( get_option( 'mpdf_cron_user' ) != '' ) {
-	$userId = get_option( 'mpdf_cron_user' );
-	if ( get_option( 'mpdf_cron_user' ) == 'auto' ) {
-		$aUsersID = $wpdb->get_col( $wpdb->prepare( 'SELECT ID FROM ' . $wpdb->users . ' LIMIT 1' ) );
-		foreach ( $aUsersID as $iUserID ) {
-			$userId = $iUserID;
-		}
-	}
-
-	wp_set_current_user( $userId );
-}
-
-
-//Cache the posts
-$_GET['output'] = 'pdf';
-echo "Start cache creating\n";
-
-$posts = get_posts( 'numberposts=-1&order=ASC&orderby=title' );
-foreach ( $posts as $post ) {
-	if ( $post->post_title == '' ) {
-		echo "Skip post creating: No Title (" . $post->ID . ")\n";
-		continue;
-	}
-
-	echo "Create cache for post (" . $post->ID . ")\n";
-
-
-	query_posts( 'p=' . $post->ID );
-	mpdf_exec( 'false' );
-}
-
-echo "Caching finished\n";
+echo "This cron script is no longer supported as per wordpress guidelines!\n";
+echo "It now uses the internal wp-cron system and if enabled in the admin section.\n";
+echo "Please use official plugins to change the schedule if required\n";
+exit( - 1 );

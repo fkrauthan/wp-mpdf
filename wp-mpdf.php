@@ -3,7 +3,7 @@
 Plugin Name: wp-mpdf
 Plugin URI: https://fkrauthan.de/projects/php/wp-mpdf.html
 Description: Print a wordpress page as PDF with optional Geshi Parsing.
-Version: 3.5.2
+Version: 3.6
 Author: Florian 'fkrauthan' Krauthan
 Author URI: http://fkrauthan.de
 
@@ -23,7 +23,6 @@ Copyright 2021  Florian Krauthan
 
 define( 'WP_MPDF_ALLOWED_POSTS_DB', 'wp_mpdf_allowed' );
 define( 'WP_MPDF_POSTS_DB', 'wp_mpdf_posts' );
-require_once( dirname( __FILE__ ) . '/php4.inc.php' );
 
 function mpdf_install() {
 	global $wpdb;
@@ -77,6 +76,15 @@ function mpdf_install() {
 			echo '<p>Can\'t create mpdf themes dir. Please create the dir "wp-content/wp-mpdf-themes" and give your webserver write permission to it.</p>';
 		}
 	}
+}
+
+function mpdf_deactivate () {
+	wp_clear_scheduled_hook( 'mpdf_generate_pdfs_hook' );
+}
+
+function mpdf_cron_generate_pdfs_exec() {
+	require_once( dirname( __FILE__ ) . '/wp-mpdf_cron.php' );
+	mpdf_cron_generate_pdfs();
 }
 
 function mpdf_filename( $filename ) {
@@ -487,7 +495,7 @@ function mpdf_exec( $outputToBrowser = '' ) {
 }
 
 function mpdf_admin() {
-	require_once( 'wp-mpdf_admin.php' );
+	require_once( dirname( __FILE__ ) . '/wp-mpdf_admin.php' );
 	mpdf_admin_display();
 }
 
@@ -632,6 +640,7 @@ function mpdf_admin_deletepost( $post_id ) {
 
 
 //Register Filter
+add_action( 'mpdf_generate_pdfs_hook', 'mpdf_cron_generate_pdfs_exec' );
 add_action( 'delete_post', 'mpdf_admin_deletepost' );
 
 add_action( 'template_redirect', 'mpdf_exec', 98 );
@@ -641,3 +650,4 @@ add_filter( 'the_content', 'mpdf_filter' );
 add_action( 'save_post', 'mpdf_admin_savepost' );
 
 register_activation_hook( __FILE__, 'mpdf_install' );
+register_deactivation_hook( __FILE__, 'mpdf_deactivate' );

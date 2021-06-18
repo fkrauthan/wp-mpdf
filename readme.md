@@ -6,7 +6,7 @@
 **Tags:** print, printer, wp-mpdf, pdf, mpdf  
 **Requires at least:** 2.9  
 **Tested up to:** 5.7.2
-**Stable tag:** 3.5.2
+**Stable tag:** 3.6
 
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
@@ -16,6 +16,10 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 
 
 ## Changelog ##
+
+### 3.6 ###
+* Removed manual cron job and used wp-cron instead for cache population (as per wordpress guidelines)
+* Removed PHP 4 support (don't think anyone is running that anymore)
 
 ### 3.5.2 ###
 * Added some small security improvements for the admin page

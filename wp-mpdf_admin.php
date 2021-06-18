@@ -73,8 +73,8 @@ function mpdf_admin_find_users() {
 function mpdf_admin_options() {
 	echo '<h2>Options</h2>';
 
-	$themes          = mpdf_admin_find_themes();
-	$CODEPAGES_ARRAY = [
+	$themes           = mpdf_admin_find_themes();
+	$CODEPAGES_ARRAY  = [
 		'utf-8',
 		'win-1251',
 		'win-1252',
@@ -87,7 +87,8 @@ function mpdf_admin_options() {
 		'uhc',
 		'shift_jis',
 	];
-	$aUsersID        = mpdf_admin_find_users();
+	$aUsersID         = mpdf_admin_find_users();
+	$allowedSchedules = wp_get_schedules();
 
 	if ( isset( $_POST['save_options'] ) ) {
 		if ( ! isset( $_POST['wp_mpdf_noncename'] ) || ! wp_verify_nonce( $_POST['wp_mpdf_noncename'], plugin_basename( __FILE__ ) ) ) {
@@ -108,6 +109,14 @@ function mpdf_admin_options() {
 		update_option( 'mpdf_geshi_linenumbers', isset( $_POST['geshi_linenumbers'] ) );
 		update_option( 'mpdf_stats', isset( $_POST['stats'] ) );
 		update_option( 'mpdf_debug', isset( $_POST['debug'] ) );
+
+		if ( ! isset( $_POST['enable_cron'] ) ) {
+			wp_clear_scheduled_hook( 'mpdf_generate_pdfs_hook' );
+		} else {
+			if ( array_key_exists( $_POST['enable_cron'], $allowedSchedules ) ) {
+				wp_schedule_event( time(), $_POST['enable_cron'], 'mpdf_generate_pdfs_hook' );
+			}
+		}
 
 		if ( isset( $_POST['allow_all'] ) ) {
 			update_option( 'mpdf_allow_all', true );
@@ -223,6 +232,19 @@ function mpdf_admin_options() {
 	}
 	echo '/></td></tr>';
 
+	//Enable cron job
+	echo '<tr><td>Enable pdf generating cron job: </td><td>';
+	if ( ! wp_next_scheduled( 'mpdf_generate_pdfs_hook' ) ) {
+		echo '<select name="enable_cron"><option value="" selected="selected">Off</option>';
+		foreach ( $allowedSchedules as $schedule => $scheduleInfo ) {
+			echo '<option value="' . $schedule . '">' . $scheduleInfo['display'] . '</option>';
+		}
+		echo '</select>';
+	} else {
+		echo '<input type="checkbox" name="enable_cron" checked=checked />';
+	}
+	echo '</td></tr>';
+
 	//Cron generating User
 	echo '<tr><td>User for generating per Cron: </td><td><select name="cron_user">';
 	echo '<option value="" ';
@@ -242,7 +264,7 @@ function mpdf_admin_options() {
 		if ( $iUserID == get_option( 'mpdf_cron_user' ) ) {
 			echo 'selected="selected"';
 		}
-		echo '>' . esc_html($user->user_nicename) . '</option>';
+		echo '>' . esc_html( $user->user_nicename ) . '</option>';
 	}
 	echo '</select></td></tr>';
 
@@ -260,7 +282,7 @@ function mpdf_admin_listposts() {
 			continue;
 		}
 
-		echo '<option value="' . esc_attr($post->ID) . '">' . esc_html($post->post_title) . '</option>';
+		echo '<option value="' . esc_attr( $post->ID ) . '">' . esc_html( $post->post_title ) . '</option>';
 	}
 	echo '</optgroup>';
 	echo '<optgroup label="Future">';
@@ -270,7 +292,7 @@ function mpdf_admin_listposts() {
 			continue;
 		}
 
-		echo '<option value="' . esc_attr($post->ID) . '">' . esc_html($post->post_title) . '</option>';
+		echo '<option value="' . esc_attr( $post->ID ) . '">' . esc_html( $post->post_title ) . '</option>';
 	}
 	echo '</optgroup>';
 	echo '<optgroup label="Private">';
@@ -280,7 +302,7 @@ function mpdf_admin_listposts() {
 			continue;
 		}
 
-		echo '<option value="' . esc_attr($post->ID) . '">' . esc_html($post->post_title) . '</option>';
+		echo '<option value="' . esc_attr( $post->ID ) . '">' . esc_html( $post->post_title ) . '</option>';
 	}
 	echo '</optgroup>';
 	echo '<optgroup label="Publish">';
@@ -290,7 +312,7 @@ function mpdf_admin_listposts() {
 			continue;
 		}
 
-		echo '<option value="' . esc_attr($post->ID) . '">' . esc_html($post->post_title) . '</option>';
+		echo '<option value="' . esc_attr( $post->ID ) . '">' . esc_html( $post->post_title ) . '</option>';
 	}
 	echo '</optgroup>';
 	echo '</select>';
@@ -387,17 +409,17 @@ function mpdf_admin_allowedprintedpages() {
 	$data = $wpdb->get_results( $sql, OBJECT );
 	for ( $i = 0; $i < count( $data ); $i ++ ) {
 		echo '<tr>';
-		echo '<td>' . esc_html($data[ $i ]->post_type) . '</td>';
+		echo '<td>' . esc_html( $data[ $i ]->post_type ) . '</td>';
 		echo '<td>&nbsp;&nbsp;&nbsp;</td>';
 		if ( $data[ $i ]->post_type == 'post' ) {
 			$post = get_post( $data[ $i ]->post_id );
-			echo '<td>' . esc_html($post->post_title) . '</td>';
+			echo '<td>' . esc_html( $post->post_title ) . '</td>';
 		} else {
 			$page = get_page( $data[ $i ]->post_id );
-			echo '<td>' . esc_html($page->post_title) . '</td>';
+			echo '<td>' . esc_html( $page->post_title ) . '</td>';
 		}
 		echo '<td>&nbsp;&nbsp;&nbsp;</td>';
-		echo '<td><a href="?page=' . $_GET['page'] . '&amp;delallowedprintedpage=' . esc_attr($data[ $i ]->id) . '&amp;' . $nonceURL . '">Delete</a></td>';
+		echo '<td><a href="?page=' . $_GET['page'] . '&amp;delallowedprintedpage=' . esc_attr( $data[ $i ]->id ) . '&amp;' . $nonceURL . '">Delete</a></td>';
 		echo '</tr>';
 	}
 	echo '</table>';
@@ -467,19 +489,19 @@ function mpdf_admin_pdfname() {
 	$data = $wpdb->get_results( $sql, OBJECT );
 	for ( $i = 0; $i < count( $data ); $i ++ ) {
 		echo '<tr>';
-		echo '<td>' . esc_html($data[ $i ]->post_type) . '</td>';
+		echo '<td>' . esc_html( $data[ $i ]->post_type ) . '</td>';
 		echo '<td>&nbsp;&nbsp;&nbsp;</td>';
 		if ( $data[ $i ]->post_type == 'post' ) {
 			$post = get_post( $data[ $i ]->post_id );
-			echo '<td>' . esc_html($post->post_title) . '</td>';
+			echo '<td>' . esc_html( $post->post_title ) . '</td>';
 		} else {
 			$page = get_page( $data[ $i ]->post_id );
-			echo '<td>' . esc_html($page->post_title) . '</td>';
+			echo '<td>' . esc_html( $page->post_title ) . '</td>';
 		}
 		echo '<td> -> </td>';
-		echo '<td>' . esc_html($data[ $i ]->pdfname) . '</td>';
+		echo '<td>' . esc_html( $data[ $i ]->pdfname ) . '</td>';
 		echo '<td>&nbsp;&nbsp;&nbsp;</td>';
-		echo '<td><a href="?page=' . $_GET['page'] . '&amp;delcustomname=' . esc_attr($data[ $i ]->id) . '&' . $nonceURL . '">Delete</a></td>';
+		echo '<td><a href="?page=' . $_GET['page'] . '&amp;delcustomname=' . esc_attr( $data[ $i ]->id ) . '&' . $nonceURL . '">Delete</a></td>';
 		echo '</tr>';
 	}
 	echo '</table>';
@@ -516,17 +538,17 @@ function mpdf_admin_stats() {
 		echo '<tr>';
 		echo '<td>' . ( $i + 1 ) . '.&nbsp;(' . $data[ $i ]->downloads . ')</td>';
 		echo '<td>&nbsp;&nbsp;&nbsp;</td>';
-		echo '<td>' . esc_html($data[ $i ]->post_type) . '</td>';
+		echo '<td>' . esc_html( $data[ $i ]->post_type ) . '</td>';
 		echo '<td>&nbsp;&nbsp;&nbsp;</td>';
 		if ( $data[ $i ]->post_type == 'post' ) {
 			$post = get_post( $data[ $i ]->post_id );
-			echo '<td>' . esc_html($post->post_title) . '</td>';
+			echo '<td>' . esc_html( $post->post_title ) . '</td>';
 		} else {
 			$page = get_page( $data[ $i ]->post_id );
-			echo '<td>' . esc_html($page->post_title) . '</td>';
+			echo '<td>' . esc_html( $page->post_title ) . '</td>';
 		}
 		echo '<td>&nbsp;&nbsp;&nbsp;</td>';
-		echo '<td><a href="?page=' . $_GET['page'] . '&amp;resetstat=' . esc_attr($data[ $i ]->id) . '&amp;' . $nonceURL . '">Clear</a></td>';
+		echo '<td><a href="?page=' . $_GET['page'] . '&amp;resetstat=' . esc_attr( $data[ $i ]->id ) . '&amp;' . $nonceURL . '">Clear</a></td>';
 		echo '</tr>';
 	}
 	echo '</table>';
@@ -592,17 +614,17 @@ function mpdf_admin_loginneededpages() {
 	$data = $wpdb->get_results( $sql, OBJECT );
 	for ( $i = 0; $i < count( $data ); $i ++ ) {
 		echo '<tr>';
-		echo '<td>' . esc_html($data[ $i ]->post_type) . '</td>';
+		echo '<td>' . esc_html( $data[ $i ]->post_type ) . '</td>';
 		echo '<td>&nbsp;&nbsp;&nbsp;</td>';
 		if ( $data[ $i ]->post_type == 'post' ) {
 			$post = get_post( $data[ $i ]->post_id );
-			echo '<td>' . esc_html($post->post_title) . '</td>';
+			echo '<td>' . esc_html( $post->post_title ) . '</td>';
 		} else {
 			$page = get_page( $data[ $i ]->post_id );
-			echo '<td>' . esc_html($page->post_title) . '</td>';
+			echo '<td>' . esc_html( $page->post_title ) . '</td>';
 		}
 		echo '<td>&nbsp;&nbsp;&nbsp;</td>';
-		echo '<td><a href="?page=' . $_GET['page'] . '&amp;delloginneededpages=' . esc_attr($data[ $i ]->id) . '&amp;' . $nonceURL . '">Delete</a></td>';
+		echo '<td><a href="?page=' . $_GET['page'] . '&amp;delloginneededpages=' . esc_attr( $data[ $i ]->id ) . '&amp;' . $nonceURL . '">Delete</a></td>';
 		echo '</tr>';
 	}
 	echo '</table>';
@@ -651,9 +673,9 @@ function mpdf_admin_cache() {
 				if ( strtolower( substr( $file, strlen( $file ) - 5 ) ) == 'cache' ) {
 					$pdffilename = substr( $file, 0, strlen( $file ) - 6 );
 					echo '<tr>';
-					echo '<td style="padding: 5px;">' . esc_html(file_get_contents( plugin_dir_path( __FILE__ ) . 'cache/' . $file )) . '</td>';
-					echo '<td style="padding: 5px;"><a href="' . esc_url(plugin_dir_url( __FILE__ ) . 'cache/' . $pdffilename) . '">' . esc_html($pdffilename) . '</a></td>';
-					echo '<td style="padding: 5px;"><a href="?page=' . $_GET['page'] . '&amp;delfile=' . esc_attr($pdffilename) . '&amp;' . $nonceURL . '">Delete</a></td>';
+					echo '<td style="padding: 5px;">' . esc_html( file_get_contents( plugin_dir_path( __FILE__ ) . 'cache/' . $file ) ) . '</td>';
+					echo '<td style="padding: 5px;"><a href="' . esc_url( plugin_dir_url( __FILE__ ) . 'cache/' . $pdffilename ) . '">' . esc_html( $pdffilename ) . '</a></td>';
+					echo '<td style="padding: 5px;"><a href="?page=' . $_GET['page'] . '&amp;delfile=' . esc_attr( $pdffilename ) . '&amp;' . $nonceURL . '">Delete</a></td>';
 					echo '</tr>';
 				}
 			}
