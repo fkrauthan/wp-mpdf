@@ -137,7 +137,7 @@ function mpdf_admin_options() {
 		echo '<p style="color: green;">Options Saved</p>';
 	}
 
-	echo '<form action="?page=' . $_GET['page'] . '" method="post">';
+	echo '<form action="?page=' . esc_attr($_GET['page']) . '" method="post">';
 	echo '<input type="hidden" name="wp_mpdf_noncename" id="wp_mpdf_noncename" value="' . wp_create_nonce( plugin_basename( __FILE__ ) ) . '" />';
 	echo '<table border="0">';
 	echo '<tr><td>Theme: </td><td>';
@@ -363,9 +363,9 @@ function mpdf_admin_allowedprintedpages() {
 		return;
 	}
 	if ( isset( $_GET['delallowedprintedpage'] ) && is_numeric( $_GET['delallowedprintedpage'] ) ) {
-		$wpdb->query( 'UPDATE ' . $table_name . ' SET general=0 WHERE id=' . $_GET['delallowedprintedpage'] . ' LIMIT 1' );
+		$wpdb->query( $wpdb->prepare( 'UPDATE ' . $table_name . ' SET general=0 WHERE id=%d LIMIT 1', $_GET['delallowedprintedpage'] ) );
 
-		echo '<p style="color: green;">Delete allowed Page with id "' . $_GET['delallowedprintedpage'] . '"</p>';
+		echo '<p style="color: green;">Delete allowed Page with id "' . esc_html($_GET['delallowedprintedpage']) . '"</p>';
 	}
 	if ( isset( $_GET['clearallowedpage'] ) ) {
 		$wpdb->query( 'UPDATE ' . $table_name . ' SET general=0' );
@@ -375,8 +375,8 @@ function mpdf_admin_allowedprintedpages() {
 	if ( isset( $_POST['addallowedpage'] ) ) {
 		$page = get_post( $_POST['post'] );
 		if ( $page != null ) {
-			$sql   = 'SELECT id FROM ' . $table_name . ' WHERE post_id=' . $page->ID . ' AND post_type="' . $page->post_type . '" LIMIT 1';
-			$db_id = $wpdb->get_var( $sql );
+			$sql   = 'SELECT id FROM ' . $table_name . ' WHERE post_id=%d AND post_type=%s LIMIT 1';
+			$db_id = $wpdb->get_var( $wpdb->prepare( $sql, $page->ID, $page->post_type ) );
 			if ( $db_id == null ) {
 				$sql = 'INSERT INTO ' . $table_name . ' (post_type, post_id, general, login, pdfname, downloads) VALUES (%s, %d, 1, 0, "", 0)';
 				$wpdb->query( $wpdb->prepare( $sql, $page->post_type, $page->ID ) );
@@ -391,7 +391,7 @@ function mpdf_admin_allowedprintedpages() {
 		}
 	} else {
 		if ( isset( $_GET['addallowedpage'] ) ) {
-			echo '<form action="?page=' . $_GET['page'] . '" method="post">';
+			echo '<form action="?page=' . esc_attr($_GET['page']) . '" method="post">';
 			echo 'Post: ';
 			mpdf_admin_listposts();
 			echo '<br />';
@@ -403,7 +403,7 @@ function mpdf_admin_allowedprintedpages() {
 	}
 
 	$nonceURL = 'wp_mpdf_noncename=' . wp_create_nonce( plugin_basename( __FILE__ ) );
-	echo '<a href="?page=' . $_GET['page'] . '&amp;addallowedpage=1">New Entry</a> <a href="?page=' . $_GET['page'] . '&amp;clearallowedpage=1&amp;' . $nonceURL . '">Clear All Entries</a>';
+	echo '<a href="?page=' . esc_attr($_GET['page']) . '&amp;addallowedpage=1">New Entry</a> <a href="?page=' . esc_attr($_GET['page']) . '&amp;clearallowedpage=1&amp;' . $nonceURL . '">Clear All Entries</a>';
 	echo '<table border="1">';
 	$sql  = 'SELECT id,post_type,post_id FROM ' . $table_name . ' WHERE general=1';
 	$data = $wpdb->get_results( $sql, OBJECT );
@@ -419,7 +419,7 @@ function mpdf_admin_allowedprintedpages() {
 			echo '<td>' . esc_html( $page->post_title ) . '</td>';
 		}
 		echo '<td>&nbsp;&nbsp;&nbsp;</td>';
-		echo '<td><a href="?page=' . $_GET['page'] . '&amp;delallowedprintedpage=' . esc_attr( $data[ $i ]->id ) . '&amp;' . $nonceURL . '">Delete</a></td>';
+		echo '<td><a href="?page=' . esc_attr($_GET['page']) . '&amp;delallowedprintedpage=' . esc_attr( $data[ $i ]->id ) . '&amp;' . $nonceURL . '">Delete</a></td>';
 		echo '</tr>';
 	}
 	echo '</table>';
@@ -440,9 +440,9 @@ function mpdf_admin_pdfname() {
 		return;
 	}
 	if ( isset( $_GET['delcustomname'] ) && is_numeric( $_GET['delcustomname'] ) ) {
-		$wpdb->query( 'UPDATE ' . $table_name . ' SET pdfname="" WHERE id=' . $_GET['delcustomname'] . ' LIMIT 1' );
+		$wpdb->query( $wpdb->prepare('UPDATE ' . $table_name . ' SET pdfname="" WHERE id=%d LIMIT 1', $_GET['delcustomname'] ) );
 
-		echo '<p style="color: green;">Delete pdf name from page with id "' . $_GET['delcustomname'] . '"</p>';
+		echo '<p style="color: green;">Delete pdf name from page with id "' . esc_html($_GET['delcustomname']) . '"</p>';
 	}
 	if ( isset( $_GET['clearcustomname'] ) ) {
 		$wpdb->query( 'UPDATE ' . $table_name . ' SET pdfname=""' );
@@ -452,8 +452,8 @@ function mpdf_admin_pdfname() {
 	if ( isset( $_POST['addcustomname'] ) ) {
 		$page = get_post( $_POST['post'] );
 		if ( $page != null ) {
-			$sql   = 'SELECT id FROM ' . $table_name . ' WHERE post_id=' . $page->ID . ' AND post_type="' . $page->post_type . '" LIMIT 1';
-			$db_id = $wpdb->get_var( $sql );
+			$sql   = 'SELECT id FROM ' . $table_name . ' WHERE post_id=%d AND post_type=%s LIMIT 1';
+			$db_id = $wpdb->get_var( $wpdb->prepare( $sql, $page->ID, $page->post_type ) );
 
 			$pdfname = sanitize_file_name( $_POST['pdfname'] );
 			if ( $db_id == null ) {
@@ -470,7 +470,7 @@ function mpdf_admin_pdfname() {
 		}
 	} else {
 		if ( isset( $_GET['addcustomname'] ) ) {
-			echo '<form action="?page=' . $_GET['page'] . '" method="post">';
+			echo '<form action="?page=' . esc_attr($_GET['page']) . '" method="post">';
 			echo 'Post: ';
 			mpdf_admin_listposts();
 			echo '<br />';
@@ -483,7 +483,7 @@ function mpdf_admin_pdfname() {
 	}
 
 	$nonceURL = 'wp_mpdf_noncename=' . wp_create_nonce( plugin_basename( __FILE__ ) );
-	echo '<a href="?page=' . $_GET['page'] . '&amp;addcustomname=1">New Entry</a> <a href="?page=' . $_GET['page'] . '&amp;clearcustomname=1&amp;' . $nonceURL . '">Clear All Entries</a>';
+	echo '<a href="?page=' . esc_attr($_GET['page']) . '&amp;addcustomname=1">New Entry</a> <a href="?page=' . esc_attr($_GET['page']) . '&amp;clearcustomname=1&amp;' . $nonceURL . '">Clear All Entries</a>';
 	echo '<table border="1">';
 	$sql  = 'SELECT id,post_type,post_id,pdfname FROM ' . $table_name . ' WHERE pdfname!=""';
 	$data = $wpdb->get_results( $sql, OBJECT );
@@ -501,7 +501,7 @@ function mpdf_admin_pdfname() {
 		echo '<td> -> </td>';
 		echo '<td>' . esc_html( $data[ $i ]->pdfname ) . '</td>';
 		echo '<td>&nbsp;&nbsp;&nbsp;</td>';
-		echo '<td><a href="?page=' . $_GET['page'] . '&amp;delcustomname=' . esc_attr( $data[ $i ]->id ) . '&' . $nonceURL . '">Delete</a></td>';
+		echo '<td><a href="?page=' . esc_attr($_GET['page']) . '&amp;delcustomname=' . esc_attr( $data[ $i ]->id ) . '&' . $nonceURL . '">Delete</a></td>';
 		echo '</tr>';
 	}
 	echo '</table>';
@@ -519,9 +519,9 @@ function mpdf_admin_stats() {
 		return;
 	}
 	if ( isset( $_GET['resetstat'] ) && is_numeric( $_GET['resetstat'] ) ) {
-		$wpdb->query( 'UPDATE ' . $table_name . ' SET downloads=0 WHERE id=' . $_GET['resetstat'] . ' LIMIT 1' );
+		$wpdb->query( $wpdb->prepare('UPDATE ' . $table_name . ' SET downloads=0 WHERE id=%d LIMIT 1', $_GET['resetstat'] ) );
 
-		echo '<p style="color: green;">Stats for page with id "' . $_GET['resetstat'] . '" is resetet</p>';
+		echo '<p style="color: green;">Stats for page with id "' . esc_html($_GET['resetstat']) . '" is resetet</p>';
 	}
 	if ( isset( $_GET['clearstats'] ) ) {
 		$wpdb->query( 'UPDATE ' . $table_name . ' SET downloads=0' );
@@ -530,7 +530,7 @@ function mpdf_admin_stats() {
 	}
 
 	$nonceURL = 'wp_mpdf_noncename=' . wp_create_nonce( plugin_basename( __FILE__ ) );
-	echo '<a href="?page=' . $_GET['page'] . '&amp;clearstats=1&amp;' . $nonceURL . '">Clear All</a>';
+	echo '<a href="?page=' . esc_attr($_GET['page']) . '&amp;clearstats=1&amp;' . $nonceURL . '">Clear All</a>';
 	echo '<table border="1">';
 	$sql  = 'SELECT id,post_type,post_id,downloads FROM ' . $table_name . ' ORDER BY downloads DESC';
 	$data = $wpdb->get_results( $sql, OBJECT );
@@ -548,7 +548,7 @@ function mpdf_admin_stats() {
 			echo '<td>' . esc_html( $page->post_title ) . '</td>';
 		}
 		echo '<td>&nbsp;&nbsp;&nbsp;</td>';
-		echo '<td><a href="?page=' . $_GET['page'] . '&amp;resetstat=' . esc_attr( $data[ $i ]->id ) . '&amp;' . $nonceURL . '">Clear</a></td>';
+		echo '<td><a href="?page=' . esc_attr($_GET['page']) . '&amp;resetstat=' . esc_attr( $data[ $i ]->id ) . '&amp;' . $nonceURL . '">Clear</a></td>';
 		echo '</tr>';
 	}
 	echo '</table>';
@@ -569,9 +569,9 @@ function mpdf_admin_loginneededpages() {
 		return;
 	}
 	if ( isset( $_GET['delloginneededpages'] ) && is_numeric( $_GET['delloginneededpages'] ) ) {
-		$wpdb->query( 'UPDATE ' . $table_name . ' SET login=0 WHERE id=' . $_GET['delloginneededpages'] . ' LIMIT 1' );
+		$wpdb->query( $wpdb->prepare( 'UPDATE ' . $table_name . ' SET login=0 WHERE id=%d LIMIT 1', $_GET['delloginneededpages'] ) );
 
-		echo '<p style="color: green;">Delete allowed Page with id "' . $_GET['delloginneededpages'] . '"</p>';
+		echo '<p style="color: green;">Delete allowed Page with id "' . esc_html($_GET['delloginneededpages']) . '"</p>';
 	}
 	if ( isset( $_GET['clearloginneededpages'] ) ) {
 		$wpdb->query( 'UPDATE ' . $table_name . ' SET login=0' );
@@ -597,7 +597,7 @@ function mpdf_admin_loginneededpages() {
 		}
 	} else {
 		if ( isset( $_GET['addneedloginpage'] ) ) {
-			echo '<form action="?page=' . $_GET['page'] . '" method="post">';
+			echo '<form action="?page=' . esc_attr($_GET['page']) . '" method="post">';
 			mpdf_admin_listposts();
 			echo '<br />';
 			echo '<input type="hidden" name="wp_mpdf_noncename" id="wp_mpdf_noncename" value="' . wp_create_nonce( plugin_basename( __FILE__ ) ) . '" />';
@@ -608,7 +608,7 @@ function mpdf_admin_loginneededpages() {
 	}
 
 	$nonceURL = 'wp_mpdf_noncename=' . wp_create_nonce( plugin_basename( __FILE__ ) );
-	echo '<a href="?page=' . $_GET['page'] . '&amp;addneedloginpage=1">New Entry</a> <a href="?page=' . $_GET['page'] . '&amp;clearloginneededpages=1&amp;' . $nonceURL . '">Clear All Entries</a>';
+	echo '<a href="?page=' . esc_attr($_GET['page']) . '&amp;addneedloginpage=1">New Entry</a> <a href="?page=' . esc_attr($_GET['page']) . '&amp;clearloginneededpages=1&amp;' . $nonceURL . '">Clear All Entries</a>';
 	echo '<table border="1">';
 	$sql  = 'SELECT id,post_type,post_id FROM ' . $table_name . ' WHERE login=1';
 	$data = $wpdb->get_results( $sql, OBJECT );
@@ -624,7 +624,7 @@ function mpdf_admin_loginneededpages() {
 			echo '<td>' . esc_html( $page->post_title ) . '</td>';
 		}
 		echo '<td>&nbsp;&nbsp;&nbsp;</td>';
-		echo '<td><a href="?page=' . $_GET['page'] . '&amp;delloginneededpages=' . esc_attr( $data[ $i ]->id ) . '&amp;' . $nonceURL . '">Delete</a></td>';
+		echo '<td><a href="?page=' . esc_attr($_GET['page']) . '&amp;delloginneededpages=' . esc_attr( $data[ $i ]->id ) . '&amp;' . $nonceURL . '">Delete</a></td>';
 		echo '</tr>';
 	}
 	echo '</table>';
@@ -664,7 +664,7 @@ function mpdf_admin_cache() {
 
 
 	$nonceURL = 'wp_mpdf_noncename=' . wp_create_nonce( plugin_basename( __FILE__ ) );
-	echo '<p><a href="?page=' . $_GET['page'] . '&amp;clearcache=1&amp;' . $nonceURL . '">Clear Cache</a></p>';
+	echo '<p><a href="?page=' . esc_attr($_GET['page']) . '&amp;clearcache=1&amp;' . $nonceURL . '">Clear Cache</a></p>';
 
 	echo '<table border="1">';
 	if ( $dir = opendir( $path ) ) {
@@ -675,7 +675,7 @@ function mpdf_admin_cache() {
 					echo '<tr>';
 					echo '<td style="padding: 5px;">' . esc_html( file_get_contents( plugin_dir_path( __FILE__ ) . 'cache/' . $file ) ) . '</td>';
 					echo '<td style="padding: 5px;"><a href="' . esc_url( plugin_dir_url( __FILE__ ) . 'cache/' . $pdffilename ) . '">' . esc_html( $pdffilename ) . '</a></td>';
-					echo '<td style="padding: 5px;"><a href="?page=' . $_GET['page'] . '&amp;delfile=' . esc_attr( $pdffilename ) . '&amp;' . $nonceURL . '">Delete</a></td>';
+					echo '<td style="padding: 5px;"><a href="?page=' . esc_attr($_GET['page']) . '&amp;delfile=' . esc_attr( $pdffilename ) . '&amp;' . $nonceURL . '">Delete</a></td>';
 					echo '</tr>';
 				}
 			}
