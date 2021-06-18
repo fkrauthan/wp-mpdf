@@ -19,12 +19,6 @@
 #  Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
 
-
-if ( ! class_exists( 'GeSHi' ) ) {
-	require_once( dirname( __FILE__ ) . '/geshi/geshi.php' );
-}
-
-
 if ( ! defined( "WP_CONTENT_URL" ) ) {
 	define( "WP_CONTENT_URL", get_option( "siteurl" ) . "/wp-content" );
 }

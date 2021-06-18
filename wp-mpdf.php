@@ -98,6 +98,10 @@ function mpdf_extension( $filename ) {
 }
 
 function mpdf_output( $wp_content = '', $do_pdf = false, $outputToBrowser = true, $pdfName = '', $templatePath = '' ) {
+	if ( is_readable( dirname(__FILE__) . '/vendor/autoload.php' ) ) {
+		require dirname(__FILE__) . '/vendor/autoload.php';
+	}
+
 	global $post;
 	$pdf_ofilename = $post->post_name . '.pdf';
 	if ( ! empty( $pdfName ) ) {
@@ -109,7 +113,7 @@ function mpdf_output( $wp_content = '', $do_pdf = false, $outputToBrowser = true
 	/**
 	 * Allow to override the pdf file name
 	 */
-	$pdf_filename = apply_filters( 'mpdf_output_pdf_filename', $pdf_filename );
+	$pdf_filename = sanitize_file_name(apply_filters( 'mpdf_output_pdf_filename', $pdf_filename ));
 
 	/**
 	 * Geshi Support
@@ -137,11 +141,6 @@ function mpdf_output( $wp_content = '', $do_pdf = false, $outputToBrowser = true
 		if ( ! is_dir( $cacheDirectory . 'tmp' ) ) {
 			@mkdir( $cacheDirectory . 'tmp' );
 		}
-
-		define( '_MPDF_PATH', plugin_dir_path( __FILE__ ) . 'mpdf/' );
-		define( '_MPDF_TEMP_PATH', $cacheDirectory . 'tmp/' );
-		define( '_MPDF_TTFONTDATAPATH', _MPDF_TEMP_PATH );
-		require_once( _MPDF_PATH . 'mpdf.php' );
 
 		global $pdf_margin_left;
 		global $pdf_margin_right;
@@ -193,12 +192,24 @@ function mpdf_output( $wp_content = '', $do_pdf = false, $outputToBrowser = true
 			$cp = get_option( 'mpdf_code_page' );
 		}
 
-		$mpdf = new mPDF( $cp, $pdf_format, '', '', $pdf_margin_left, $pdf_margin_right, $pdf_margin_top, $pdf_margin_bottom, $pdf_margin_header, $pdf_margin_footer, $pdf_orientation );
+		$mpdf = new \Mpdf\Mpdf(array(
+			'tempDir' => $cacheDirectory . 'tmp/',
 
-		$mpdf->SetUserRights();
+			'format' => $pdf_format,
+			'orientation' => $pdf_orientation,
+
+			'margin_left' => $pdf_margin_left,
+			'margin_right' => $pdf_margin_right,
+			'margin_top' => $pdf_margin_top,
+			'margin_bottom' => $pdf_margin_bottom,
+			'margin_header' => $pdf_margin_header,
+			'margin_footer' => $pdf_margin_footer,
+		));
+
+		$mpdf->charset_in = $cp;
 		$mpdf->title2annots = false;
 		//$mpdf->annotMargin = 12;
-		$mpdf->use_embeddedfonts_1252 = true;    // false is default
+		$mpdf->onlyCoreFonts = true;    // false is default
 		$mpdf->SetBasePath( $templatePath );
 
 		//Set PDF Template if it's set
@@ -206,10 +217,8 @@ function mpdf_output( $wp_content = '', $do_pdf = false, $outputToBrowser = true
 		global $pdf_template_pdfpage_page;
 		global $pdf_template_pdfdoc;
 		if ( isset( $pdf_template_pdfdoc ) && $pdf_template_pdfdoc != '' ) {
-			$mpdf->SetImportUse();
 			$mpdf->SetDocTemplate( $templatePath . $pdf_template_pdfdoc, true );
 		} else if ( isset( $pdf_template_pdfpage ) && $pdf_template_pdfpage != '' && isset( $pdf_template_pdfpage_page ) && is_numeric( $pdf_template_pdfpage_page ) ) {
-			$mpdf->SetImportUse();
 			$pagecount = $mpdf->SetSourceFile( $templatePath . $pdf_template_pdfpage );
 			if ( $pdf_template_pdfpage_page < 1 ) {
 				$pdf_template_pdfpage_page = 1;
@@ -242,10 +251,16 @@ function mpdf_output( $wp_content = '', $do_pdf = false, $outputToBrowser = true
 		}
 
 
+		/**
+		 * Allow to override any settings before writing the output
+		 */
+		$mpdf = apply_filters( 'mpdf_adjust_settings', $mpdf );
+
+
 		if ( get_option( 'mpdf_theme' ) != '' && file_exists( $templatePath . get_option( 'mpdf_theme' ) . '.css' ) ) {
 			//Read the StyleCSS
 			$tmpCSS = file_get_contents( $templatePath . get_option( 'mpdf_theme' ) . '.css' );
-			$mpdf->WriteHTML( $tmpCSS, 1 );
+			$mpdf->WriteHTML( $tmpCSS, \Mpdf\HTMLParserMode::HEADER_CSS );
 		}
 
 		//My Filters
@@ -271,11 +286,11 @@ function mpdf_output( $wp_content = '', $do_pdf = false, $outputToBrowser = true
 			file_put_contents( mpdf_getcachedir() . get_option( 'mpdf_theme' ) . '_' . $pdf_ofilename . '.cache', $post->post_modified_gmt );
 			$mpdf->Output( mpdf_getcachedir() . get_option( 'mpdf_theme' ) . '_' . $pdf_ofilename, 'F' );
 			if ( $outputToBrowser == true ) {
-				$mpdf->Output( $pdf_filename, 'I' );
+				$mpdf->Output( $pdf_filename, \Mpdf\Output\Destination::INLINE );
 			}
 		} else {
 			if ( $outputToBrowser == true ) {
-				$mpdf->Output( $pdf_filename, 'I' );
+				$mpdf->Output( $pdf_filename, \Mpdf\Output\Destination::INLINE );
 			}
 		}
 	}
@@ -300,7 +315,7 @@ function mpdf_filter( $wp_content = '', $do_pdf = false, $convert = false ) {
 	$wp_content = str_replace( $d1a, '', $wp_content );
 	$wp_content = str_replace( $d1b, '', $wp_content );
 
-	$ctpdf_wp_content = preg_replace( "/$d2a(.*?)$d2b/s", '', $wp_content );
+	$wp_content = preg_replace( "/$d2a(.*?)$d2b/s", '', $wp_content );
 
 
 	if ( $convert == true ) {

@@ -11,6 +11,8 @@ svn/
 
 ### Local development files
 dev/wordpress/
+vendor/
+composer.phar
 
 
 ### JetBrains template
