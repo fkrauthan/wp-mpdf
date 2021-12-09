@@ -1,0 +1,29 @@
+name: Release
+
+on:
+  push:
+    tags: [ '*.*', '*.*.*' ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+
+      - name: Deploy to Wordpress Repo
+        shell: bash
+        env:
+          SVNPASSWORD: ${{ secrets.SVNPASSWORD }}
+        run: ./release.sh

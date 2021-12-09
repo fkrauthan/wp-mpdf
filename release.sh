@@ -78,8 +78,12 @@ else
 fi
 
 # Tag new version
-echo "Tagging new version in git"
-git tag -a "$PLUGINVERSION" -m "Tagging version $PLUGINVERSION"
+if [[ $GITHUB_ACTIONS ]]; then
+  echo "Skip tagging for github actions deploy"
+else
+  echo "Tagging new version in git"
+  git tag -a "$PLUGINVERSION" -m "Tagging version $PLUGINVERSION"
+fi
 
 # Push changes back up to master
 #echo "Pushing git master to origin, with tags"
@@ -100,7 +104,7 @@ echo "Ignoring GitHub/IDEA and dev specific files"
 svn propset svn:ignore "readme.md
 changelog.md
 Thumbs.db
-.github/*
+.github
 .idea
 dev
 composer.phar
@@ -115,7 +119,11 @@ cd $SVNPATH/trunk/
 svn status | grep -v "^.[ \t]*\..*" | grep "^\!" | sed 's/! *//' | xargs -I% svn del --force %
 # Add all new files that are not set to be ignored
 svn status | grep -v "^.[ \t]*\..*" | grep "^?" | sed 's/\? *//' | xargs svn add
-svn commit --username=$SVNUSER -m "Preparing for $PLUGINVERSION release"
+if [[ $SVNPASSWORD ]]; then
+  svn commit --username=$SVNUSER --password="$SVNPASSWORD" --no-auth-cache --non-interactive -m "Preparing for $PLUGINVERSION release"
+else
+  svn commit --username=$SVNUSER -m "Preparing for $PLUGINVERSION release"
+fi
 
 echo "Creating new SVN tag and committing it"
 cd $SVNPATH
@@ -124,7 +132,11 @@ svn copy --quiet trunk/ tags/$PLUGINVERSION/
 
 # Commit new tag
 cd $SVNPATH/tags/$PLUGINVERSION
-svn commit --username=$SVNUSER -m "Tagging version $PLUGINVERSION"
+if [[ $SVNPASSWORD ]]; then
+  svn commit --username=$SVNUSER --password="$SVNPASSWORD" --no-auth-cache --non-interactive -m "Tagging version $PLUGINVERSION"
+else
+  svn commit --username=$SVNUSER -m "Tagging version $PLUGINVERSION"
+fi
 
 echo "Removing temporary directory $SVNPATH"
 cd $SVNPATH
