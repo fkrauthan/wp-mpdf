@@ -445,8 +445,8 @@ function mpdf_exec( $outputToBrowser = '' ) {
 		global $wpdb;
 		global $post;
 		$table_name = $wpdb->prefix . WP_MPDF_POSTS_DB;
-		$sql        = 'SELECT id,general,login,pdfname FROM ' . $table_name . ' WHERE post_id=' . $post->ID . ' AND post_type="' . $post->post_type . '" LIMIT 1';
-		$dsatz      = $wpdb->get_row( $sql );
+		$sql        = 'SELECT id,general,login,pdfname FROM ' . $table_name . ' WHERE post_id=%d AND post_type=%s LIMIT 1';
+		$dsatz      = $wpdb->get_row( $wpdb->prepare( $sql, $post->ID, $post->post_type ) );
 
 		if ( post_password_required( $post ) ) {
 			return;

@@ -20,7 +20,8 @@ Note: You can find the development repository at Github: <https://github.com/fkr
 = 3.7 =
 * Updated mpdf to version 8
 * Added mpdf_adjust_settings filter to allow overwriting any mpdf settings
-
+= 3.6.1 =
+* Fixed release tag to prevent install issues
 = 3.6 =
 * Removed manual cron job and used wp-cron instead for cache population (as per wordpress guidelines)
 * Removed PHP 4 support (don't think anyone is running that anymore)
