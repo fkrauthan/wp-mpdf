@@ -48,7 +48,7 @@ fi
 
 # Ensure dependencies are installed
 echo "Installing dependencies for deployment"
-php ./composer.phar install --no-dev --optimize-autoloader
+php ./composer.phar install -q --no-dev --optimize-autoloader --no-ansi --no-interaction --no-progress
 
 # Check version in readme.txt is the same as plugin file after translating both to unix line breaks to work around grep's failure to identify mac line breaks
 PLUGINVERSION=$(grep "Version:" $GITPATH/$MAINFILE | awk -F' ' '{print $NF}' | tr -d '\r')
