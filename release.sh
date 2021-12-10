@@ -111,6 +111,7 @@ composer.phar
 .git
 .gitattributes
 release.sh
+prepare.sh
 .gitignore" "$SVNPATH/trunk/"
 
 echo "Changing directory to SVN and committing to trunk"
