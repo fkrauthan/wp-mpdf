@@ -1,7 +1,8 @@
 {
   "name": "fkrauthan/wp-mpdf",
+  "description": "Print Wordpress posts as PDF",
   "type": "wordpress-plugin",
-  "license": "GPL-3.0",
+  "license": "GPL-3.0-or-later",
   "authors": [
     {
       "name": "Florian Krauthan",
