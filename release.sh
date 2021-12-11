@@ -71,10 +71,19 @@ elif [ "$PLUGINVERSION" = "$READMEVERSION" ] && [ "$PLUGINVERSION" = "$READMEMDV
 fi
 
 if git show-ref --tags --quiet --verify -- "refs/tags/$PLUGINVERSION"; then
-  echo "Version $PLUGINVERSION already exists as git tag. Exiting...."
-  exit 1
+  if [[ $GITHUB_ACTIONS ]]; then
+    echo "Version $PLUGINVERSION git tag found"
+  else
+    echo "Version $PLUGINVERSION already exists as git tag. Exiting...."
+    exit 1
+  fi
 else
-  echo "Git version does not exist. Let's proceed..."
+  if [[ $GITHUB_ACTIONS ]]; then
+    echo "Git version does not exist. This is required to proceed. Exiting...."
+    exit 1
+  else
+    echo "Git version does not exist. Let's proceed..."
+  fi
 fi
 
 # Tag new version
