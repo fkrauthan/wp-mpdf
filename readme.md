@@ -6,7 +6,7 @@
 **Tags:** print, printer, wp-mpdf, pdf, mpdf  
 **Requires at least:** 2.9  
 **Tested up to:** 5.8.2
-**Stable tag:** 3.7
+**Stable tag:** 3.7.1
 
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
@@ -16,6 +16,9 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 
 
 ## Changelog ##
+
+### 3.7.1 ###
+* Added missing files to plugin
 
 ### 3.7 ###
 * Updated mpdf to version 8
