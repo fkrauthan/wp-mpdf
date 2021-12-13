@@ -109,6 +109,9 @@ echo "Exporting the HEAD of master from git to the trunk of SVN"
 rm -Rf $SVNPATH/trunk/
 git checkout-index -a -f --prefix=$SVNPATH/trunk/
 
+echo "Copying the vendor folder to trunk of SVN"
+cp -R $PLUGINDIR/vendor $SVNPATH/trunk/vendor
+
 echo "Ignoring GitHub/IDEA and dev specific files"
 svn propset svn:ignore "readme.md
 changelog.md
