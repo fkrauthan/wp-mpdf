@@ -403,15 +403,18 @@ function mpdf_pdfbutton( $opennewtab = false, $buttontext = '', $logintext = 'Lo
 }
 
 function mpdf_getcachedir() {
-	$directory = plugin_dir_path( __FILE__ ) . '/cache/';
-	if ( ! is_dir( $directory ) || ! is_writable( $directory ) ) {
-		$directory = WP_CONTENT_DIR . '/wp-mpdf-themes/cache/';
-		if ( ! is_dir( $directory ) || ! is_writable( $directory ) ) {
-			die( 'wp-mpdf can\'t access cache directory. Please verify your setup!' );
-		}
+
+	$sCacheDirPath = WP_CONTENT_DIR . '/uploads/wp-mpdf/';
+	if( !is_dir($sCacheDirPath) ){
+		mkdir($sCacheDirPath);
 	}
 
-	return $directory;
+	if( !is_writable($sCacheDirPath) ){
+		die( "wp-mpdf can\'t access cache directory in $sCacheDirPath - Please verify your setup!" );
+	}
+
+	return $sCacheDirPath;
+
 }
 
 function mpdf_readcachedfile( $name, $pdfname ) {
