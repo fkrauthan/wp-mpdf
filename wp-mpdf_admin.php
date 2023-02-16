@@ -634,6 +634,9 @@ function mpdf_admin_cache() {
 	echo '<h2>Cache</h2>';
 	$path = mpdf_getcachedir();
 
+	$aUploadDir = wp_get_upload_dir();
+	$sUploadUrl = $aUploadDir['baseurl'] .'/wp-mpdf/';
+
 	if ( ! check_nonce_if_param_exists_in_request( array( 'delfile', 'clearcache' ), array() ) ) {
 		echo '<p style="color: red;">Illegal Access!</p>';
 
@@ -674,7 +677,7 @@ function mpdf_admin_cache() {
 					$pdffilename = substr( $file, 0, strlen( $file ) - 6 );
 					echo '<tr>';
 					echo '<td style="padding: 5px;">' . esc_html( file_get_contents( plugin_dir_path( __FILE__ ) . 'cache/' . $file ) ) . '</td>';
-					echo '<td style="padding: 5px;"><a href="' . esc_url( plugin_dir_url( __FILE__ ) . 'cache/' . $pdffilename ) . '">' . esc_html( $pdffilename ) . '</a></td>';
+					echo '<td style="padding: 5px;"><a href="' . esc_url( $sUploadUrl . $pdffilename ) . '">' . esc_html( $pdffilename ) . '</a></td>';
 					echo '<td style="padding: 5px;"><a href="?page=' . esc_attr($_GET['page']) . '&amp;delfile=' . esc_attr( $pdffilename ) . '&amp;' . $nonceURL . '">Delete</a></td>';
 					echo '</tr>';
 				}
