@@ -632,7 +632,7 @@ function mpdf_admin_loginneededpages() {
 
 function mpdf_admin_cache() {
 	echo '<h2>Cache</h2>';
-	$path = plugin_dir_path( __FILE__ ) . 'cache/';
+	$path = mpdf_getcachedir();
 
 	if ( ! check_nonce_if_param_exists_in_request( array( 'delfile', 'clearcache' ), array() ) ) {
 		echo '<p style="color: red;">Illegal Access!</p>';
