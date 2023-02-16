@@ -59,15 +59,15 @@ function mpdf_admin_find_themes() {
 }
 
 function mpdf_admin_find_users() {
-	global $wpdb;
-	$userIds = $wpdb->get_results( 'SELECT ID FROM ' . $wpdb->users . ' ORDER BY user_nicename ASC' );
 
-	$result = array();
-	foreach ( $userIds as $iUserID ) {
-		$result[] = $iUserID->ID;
-	}
+	$aUserQueryArgs = [
+		'role' => 'administrator',
+		'fields' => 'ID'
+	];
 
-	return $result;
+	$oUserQuery = new WP_User_Query($aUserQueryArgs);
+	return $oUserQuery->get_results();
+
 }
 
 function mpdf_admin_options() {
