@@ -18,7 +18,7 @@ Note: You can find the development repository at Github: <https://github.com/fkr
 == Changelog ==
 
 = 3.8 =
-* Updated mpdf version to
+* Updated mpdf version
 * Removed a file from geshi that could be abused
 = 3.7.1 =
 * Added missing files to plugin
