@@ -19,6 +19,7 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 
 ### 3.7.2 ###
 * Removed a file from geshi that could be abused
+* Updated mpdf version
 
 ### 3.7.1 ###
 * Added missing files to plugin

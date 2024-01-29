@@ -11,8 +11,8 @@
   ],
   "require": {
     "php": ">=5.5.0",
-    "composer/installers": "~1.0",
-    "mpdf/mpdf": "v8.0.*",
+    "composer/installers": "~2.0",
+    "mpdf/mpdf": "v8.2.*",
     "geshi/geshi": "v1.0.*"
   },
   "archive": {
