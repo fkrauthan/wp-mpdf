@@ -112,6 +112,9 @@ git checkout-index -a -f --prefix=$SVNPATH/trunk/
 echo "Copying the vendor folder to trunk of SVN"
 cp -R $PLUGINDIR/vendor $SVNPATH/trunk/vendor
 
+echo "Remove security related files"
+rm -Rf $SVNPATH/trunk/vendor/geshi/geshi/contrib
+
 echo "Ignoring GitHub/IDEA and dev specific files"
 svn propset svn:ignore "readme.md
 changelog.md
