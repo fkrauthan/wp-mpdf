@@ -19,7 +19,14 @@
   "archive": {
     "exclude": [
       ".gitignore",
-      "dev"
+      "dev",
+      ".idea",
+      ".github"
     ]
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
+    }
   }
 }
