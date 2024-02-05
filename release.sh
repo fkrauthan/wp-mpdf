@@ -1,4 +1,7 @@
 #!/bin/bash
+
+set -e
+
 # A modification of Dean Clatworthy's deploy script as found here: https://github.com/GaryJones/wordpress-plugin-git-flow-svn-deploy
 # The difference is that this script lives in the plugin's git repo, auto sets parameters and checks for a readme.md in addition to readme.txt
 
