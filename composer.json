@@ -13,7 +13,8 @@
     "php": ">=5.5.0",
     "composer/installers": "~2.0",
     "mpdf/mpdf": "v8.2.*",
-    "geshi/geshi": "v1.0.*"
+    "geshi/geshi": "v1.0.*",
+    "psr/log": "^1.0.0"
   },
   "archive": {
     "exclude": [
