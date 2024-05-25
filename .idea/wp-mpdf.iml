@@ -2,6 +2,7 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/dev/wordpress/wp-includes" isTestSource="false" packagePrefix="PHPMailer" />
       <excludeFolder url="file://$MODULE_DIR$/dev/wordpress/wp-content/plugins/wp-mpdf" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/log" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/myclabs/deep-copy" />

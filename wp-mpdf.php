@@ -349,7 +349,7 @@ function mpdf_pdfbutton( $opennewtab = false, $buttontext = '', $logintext = 'Lo
 		global $post;
 		$table_name = $wpdb->prefix . WP_MPDF_POSTS_DB;
 		$sql        = 'SELECT general,login FROM ' . $table_name . ' WHERE post_id=' . $post->ID . ' AND post_type="' . $post->post_type . '" LIMIT 1';
-		$dsatz      = $wpdb->get_row( $sql );
+		$dsatz      = $wpdb->get_row( $sql ) ?: _mpdf_default_post();
 
 		if ( get_option( 'mpdf_allow_all' ) == 2 && isset( $dsatz->general ) && $dsatz->general == false || get_option( 'mpdf_allow_all' ) == 3 && $dsatz->general == true ) {
 			return;
@@ -446,7 +446,7 @@ function mpdf_exec( $outputToBrowser = '' ) {
 		global $post;
 		$table_name = $wpdb->prefix . WP_MPDF_POSTS_DB;
 		$sql        = 'SELECT id,general,login,pdfname FROM ' . $table_name . ' WHERE post_id=%d AND post_type=%s LIMIT 1';
-		$dsatz      = $wpdb->get_row( $wpdb->prepare( $sql, $post->ID, $post->post_type ) );
+		$dsatz      = $wpdb->get_row( $wpdb->prepare( $sql, $post->ID, $post->post_type ) ) ?: _mpdf_default_post();
 
 		if ( post_password_required( $post ) ) {
 			return;
@@ -460,7 +460,7 @@ function mpdf_exec( $outputToBrowser = '' ) {
 
 		//Update download stats if enabled
 		if ( get_option( 'mpdf_stats' ) == true ) {
-			if ( $dsatz == null ) {
+			if ( $dsatz->id == null ) {
 				$sql = 'INSERT INTO ' . $table_name . ' (post_type, post_id, general, login, pdfname, downloads) VALUES (%s, %d, %d, %d, %s, 1)';
 				$wpdb->query( $wpdb->prepare( $sql, $post->post_type, $post->ID, false, false, '' ) );
 			} else {
@@ -526,13 +526,22 @@ function mpdf_create_admin_menu() {
 	}
 }
 
+function _mpdf_default_post() {
+	return (object) array(
+		'id' => null,
+		'login' => false,
+		'general' => false,
+		'pdfname' => '',
+	);
+}
+
 function mpdf_admin_printeditbox() {
 	global $wpdb;
 	global $post;
 
 	$table_name = $wpdb->prefix . WP_MPDF_POSTS_DB;
 	$sql        = 'SELECT * FROM ' . $table_name . ' WHERE post_id=' . $post->ID . ' AND post_type="' . $post->post_type . '" LIMIT 1';
-	$datas      = $wpdb->get_row( $sql );
+	$datas      = $wpdb->get_row( $sql ) ?: _mpdf_default_post();
 
 	echo '<input type="hidden" name="wp_mpdf_noncename" id="wp_mpdf_noncename" value="' . wp_create_nonce( plugin_basename( __FILE__ ) ) . '" />';
 
