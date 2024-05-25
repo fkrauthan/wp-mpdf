@@ -18,6 +18,7 @@ Note: You can find the development repository at Github: <https://github.com/fkr
 == Changelog ==
 
 = 3.9 =
+* Added `mpdfbutton` shortcode to print the PDF button
 * Fixed a php warning
 = 3.8.3 =
 * Fixed deployment of 3.8.2

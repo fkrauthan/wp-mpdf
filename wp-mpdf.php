@@ -316,7 +316,7 @@ function mpdf_filter( $wp_content = '', $do_pdf = false, $convert = false ) {
 	$wp_content = str_replace( $d1b, '', $wp_content );
 
 	$wp_content = preg_replace( "/$d2a(.*?)$d2b/s", '', $wp_content );
-
+	$wp_content = preg_replace( "/\[mpdfbutton[^\]]*\]/s", '', $wp_content );
 
 	if ( $convert == true ) {
 		$wp_content = mb_convert_encoding( $wp_content, "ISO-8859-1", "UTF-8" );
@@ -335,6 +335,24 @@ function mpdf_mysql2unix( $timestamp ) {
 	$second = substr( $timestamp, 17, 2 );
 
 	return mktime( $hour, $minute, $second, $month, $day, $year );
+}
+
+function mpdf_pdfbutton_shortcode($atts = [], $content = null, $tag = '') {
+	$atts = array_change_key_case((array) $atts, CASE_LOWER);
+	$mpdf_atts = shortcode_atts(
+		array(
+			'opennewtab' => false,
+			'buttontext' => '',
+			'logintext' => '',
+			'nofollow' => false,
+		), $atts, $tag
+	);
+
+	return mpdf_pdfbutton($mpdf_atts['opennewtab'], $mpdf_atts['buttontext'], $mpdf_atts['logintext'], false,  $mpdf_atts['nofollow']);
+}
+
+function mpdf_shortcodes_init() {
+	add_shortcode( 'mpdfbutton', 'mpdf_pdfbutton_shortcode' );
 }
 
 function mpdf_pdfbutton( $opennewtab = false, $buttontext = '', $logintext = 'Login!', $print_button = true, $nofollow = false, $options = array() ) {
@@ -672,6 +690,8 @@ add_action( 'admin_menu', 'mpdf_create_admin_menu' );
 add_filter( 'the_content', 'mpdf_filter' );
 
 add_action( 'save_post', 'mpdf_admin_savepost' );
+
+add_action( 'init', 'mpdf_shortcodes_init' );
 
 register_activation_hook( __FILE__, 'mpdf_install' );
 register_deactivation_hook( __FILE__, 'mpdf_deactivate' );

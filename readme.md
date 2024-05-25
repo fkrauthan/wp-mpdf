@@ -18,6 +18,7 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 ## Changelog ##
 
 ### 3.9 ###
+* Added `mpdfbutton` shortcode to print the PDF button
 * Fixed a php warning
 
 ### 3.8.3 ###
