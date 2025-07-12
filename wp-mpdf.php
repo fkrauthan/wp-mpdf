@@ -7,7 +7,7 @@ Version: 3.9.1
 Author: Florian 'fkrauthan' Krauthan
 Author URI: http://fkrauthan.ca
 
-Copyright 2024  Florian Krauthan
+Copyright 2025  Florian Krauthan
 */
 
 /*
