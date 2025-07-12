@@ -3,6 +3,26 @@
 This is an archive of older changelog entries. Most recent entries are maintained in [readme.md](./readme.md)
 
 
+### 3.5.2 ###
+* Added some small security improvements for the admin page
+* Fixed a PHP notice when "allow to print all pages" is disabled (thanks to grandeljay)
+
+### 3.5.1 ###
+* Added some small security fixes to the admin page
+
+### 3.5 ###
+* Added support to change page format inside template (thanks to conlaccento)
+
+### 3.4 ###
+* Made codebase PHP 7.3 compatible (thanks to nopticon)
+* Fixed issues with newer wordpress versions (thanks to nopticon)
+
+### 3.3 ###
+* Fixed some small bugs
+* Updated mpdf to version 6
+* Updated geshi to latest version
+* Made plugin compatible with PHP 7
+
 ### 3.2.2 ###
 * Fixed admin menu call
 

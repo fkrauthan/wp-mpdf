@@ -5,8 +5,8 @@
 **Wordpress plugin page:** [wordpress.org/plugins/wp-mpdf/](https://wordpress.org/plugins/wp-mpdf/)  
 **Tags:** print, printer, wp-mpdf, pdf, mpdf  
 **Requires at least:** 2.9  
-**Tested up to:** 6.5.3
-**Stable tag:** 3.9
+**Tested up to:** 6.8.1
+**Stable tag:** 3.9.1
 
 Print Wordpress posts as PDF. Optional with Geshi highlighting.
 
@@ -16,6 +16,9 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 
 
 ## Changelog ##
+
+### 3.9.1 ###
+* Updated mpdf version to `8.2.5`
 
 ### 3.9 ###
 * Added `mpdfbutton` shortcode to print the PDF button
@@ -48,25 +51,6 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 * Removed manual cron job and used wp-cron instead for cache population (as per wordpress guidelines)
 * Removed PHP 4 support (don't think anyone is running that anymore)
 
-### 3.5.2 ###
-* Added some small security improvements for the admin page
-* Fixed a PHP notice when "allow to print all pages" is disabled (thanks to grandeljay)
-
-### 3.5.1 ###
-* Added some small security fixes to the admin page
-
-### 3.5 ###
-* Added support to change page format inside template (thanks to conlaccento)
-
-### 3.4 ###
-* Made codebase PHP 7.3 compatible (thanks to nopticon)
-* Fixed issues with newer wordpress versions (thanks to nopticon)
-
-### 3.3 ###
-* Fixed some small bugs
-* Updated mpdf to version 6
-* Updated geshi to latest version
-* Made plugin compatible with PHP 7
 
 ### Earlier versions ###
 
