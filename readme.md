@@ -19,6 +19,7 @@ Print Wordpress posts as PDF. Optional with Geshi highlighting. It also has supp
 
 ### 3.9.2 ###
 * Added input sanitation for the `mpdfbutton` shortcode (thanks to Muhammad Yudha - DJ for reporting)
+* Updated mpdf version to `8.2.6`
 
 ### 3.9.1 ###
 * Updated mpdf version to `8.2.5`

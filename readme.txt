@@ -19,6 +19,7 @@ Note: You can find the development repository at Github: <https://github.com/fkr
 
 = 3.9.2 =
 * Added input sanitation for the mpdfbutton shortcode (thanks to Muhammad Yudha - DJ for reporting)
+* Updated mpdf version to `8.2.6`
 = 3.9.1 =
 * Updated mpdf version to `8.2.5`
 = 3.9 =
