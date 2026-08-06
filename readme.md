@@ -1,5 +1,10 @@
 # wp-mpdf #
 
+
+> **Notice** This project is no longer maintained.
+
+
+
 **Contributors:** fkrauthan  
 **Donate link:** [fkrauthan.ca](https://fkrauthan.ca)  
 **Wordpress plugin page:** [wordpress.org/plugins/wp-mpdf/](https://wordpress.org/plugins/wp-mpdf/)  
